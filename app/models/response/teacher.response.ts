@@ -2,16 +2,16 @@ import { AcademicStatus, type BranchModel, type MetaPagination, type UserModel }
 
 
 export interface TeacherResponse extends MetaPagination {
-  data: UserModel[];
+  data: TeacherModel[];
 }
 
 export interface TeacherModel  {
-  id: number;
+  userId: string;
   zone: string;
   address: string;
   major: string;
   academicStatus: AcademicStatus;
   startJob: Date;
   branches: BranchModel[];
-  user: UserModel
+  user: UserModel;
 }

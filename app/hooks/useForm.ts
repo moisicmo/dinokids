@@ -3,101 +3,80 @@ import { useEffect, useMemo, useState } from 'react';
 export const useForm = (initialForm: any = {}, formValidations: any = {}) => {
 
   const [formState, setFormState] = useState({ ...initialForm });
-  const [formValidation, setFormValidation] = useState<string | any>({});
+  const [formValidation, setFormValidation] = useState<any>({});
 
   useEffect(() => {
     createValidators();
-  }, [formState])
+  }, [formState]);
 
   useEffect(() => {
     setFormState({ ...initialForm });
-  }, [initialForm])
-
+  }, [initialForm]);
 
   const isFormValid = useMemo(() => {
-    for (const formValue of Object.keys(formValidation)) {
-      if (formValidation[formValue] !== null) return false;
-    }
+    const checkValidity = (obj: any) => {
+      for (const key in obj) {
+        if (typeof obj[key] === 'object' && obj[key] !== null) {
+          if (!checkValidity(obj[key])) return false;
+        } else {
+          if (obj[key] !== null) return false;
+        }
+      }
+      return true;
+    };
 
-    return true;
-  }, [formValidation])
+    return checkValidity(formValidation);
+  }, [formValidation]);
 
-  const onInputChange = ({ target }: { target: any }, uppercase = false, onlynumber = false) => {
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormState((prevState: any) => setNestedValue(prevState, name, value));
+  };
 
-    const { name, value } = target;
-    if (onlynumber) {
-      const regex = /^[0-9\b]+$/;
-      return setFormState({
-        ...formState,
-        [name]: regex.test(value) ? value : ""
-      })
-    }
-    setFormState({
-      ...formState,
-      [name]: uppercase ? value.toUpperCase() : value
-    })
-  }
-
-  const isSelectChange = (name: string, text: string) => {
-    setFormState({
-      ...formState,
-      [name]: text
-    })
-  }
-  const onFileChange = (name: string, file: File) => {
-    setFormState({
-      ...formState,
-      [name]: file
-    })
-  }
-
-  const onSwitchChange = (name: string, state: boolean) => {
-    setFormState({
-      ...formState,
-      [name]: state
-    })
-  }
-
-  const onArrayChange = (name: string, state: Array<any>) => {
-    setFormState({
-      ...formState,
-      [name]: state
-    })
-  }
-
-  const onValueChange = (name: string, state: any) => {
-    setFormState({
-      ...formState,
-      [name]: state
-    })
-  }
+  const onValueChange = (name: string, value: any) => {
+    setFormState((prevState: any) => setNestedValue(prevState, name, value));
+  };
 
   const onResetForm = () => {
     setFormState(initialForm);
-  }
+  };
+
+  const setNestedValue = (obj: any, path: string, value: any) => {
+    const keys = path.split('.');
+    const updated = { ...obj };
+    let current = updated;
+    for (let i = 0; i < keys.length - 1; i++) {
+      current[keys[i]] = { ...current[keys[i]] };
+      current = current[keys[i]];
+    }
+    current[keys[keys.length - 1]] = value;
+    return updated;
+  };
 
   const createValidators = () => {
-    const formCheckedValues: any = {};
-    for (const formField of Object.keys(formValidations)) {
-      const [fn, errorMessage] = formValidations[formField];
-      formCheckedValues[`${formField}Valid`] = fn(formState[formField]) ? null : errorMessage;
-    }
+    const buildValidation = (state: any, validations: any) => {
+      const result: any = {};
+      for (const key in validations) {
+        if (typeof validations[key] === 'object' && !Array.isArray(validations[key])) {
+          result[`${key}Valid`] = buildValidation(state[key] ?? {}, validations[key]);
+        } else {
+          const [fn, message] = validations[key];
+          result[`${key}Valid`] = fn(state[key]) ? null : message;
+        }
+      }
+      return result;
+    };
 
-    setFormValidation(formCheckedValues);
-  }
+    setFormValidation(buildValidation(formState, formValidations));
+  };
 
   return {
     ...formState,
     formState,
+    ...formValidation,
     onInputChange,
-    isSelectChange,
-    onFileChange,
-    onSwitchChange,
-    onArrayChange,
     onValueChange,
     onResetForm,
-
-    ...formValidation,
-    isFormValid
-  }
-}
+    isFormValid,
+  };
+};

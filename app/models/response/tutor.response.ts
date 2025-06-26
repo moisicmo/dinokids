@@ -2,13 +2,13 @@ import type { MetaPagination, UserModel } from "..";
 
 
 export interface TutorResponse extends MetaPagination {
-  data: UserModel[];
+  data: TutorModel[];
 }
 
 export interface TutorModel  {
-  user?: UserModel;
-  id: number;
+  userId: string;
   city: string;
   zone: string;
   address: string;
+  user: UserModel;
 }

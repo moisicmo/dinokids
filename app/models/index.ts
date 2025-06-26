@@ -7,11 +7,11 @@ export * from './request/schedule';
 export * from './request/specialty';
 export * from './request/inscription';
 
-export * from './request/tutor';
-export * from './request/student';
-export * from './request/staff.request';
-export * from './request/teacher';
 export * from './request/user.request';
+export * from './request/tutor.request';
+export * from './request/student.request';
+export * from './request/staff.request';
+export * from './request/teacher.request';
 export * from './request/permission.request';
 export * from './request/role.request';
 

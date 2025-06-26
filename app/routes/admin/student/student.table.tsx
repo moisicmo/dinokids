@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { UserModel } from '@/models';
+import type { StudentModel, UserModel } from '@/models';
 import { useDebounce, useStudentStore } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
@@ -7,9 +7,9 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 interface Props {
-  handleEdit: (user: UserModel) => void;
+  handleEdit: (student: StudentModel) => void;
   limitInit?: number;
-  itemSelect?: (user: UserModel) => void;
+  itemSelect?: (student: StudentModel) => void;
 }
 
 export const StudentTable = (props: Props) => {
@@ -66,24 +66,24 @@ export const StudentTable = (props: Props) => {
           </thead>
           <tbody>
             {dataStudent.data.map((item) => (
-              <tr key={item.id} className="border-b hover:bg-gray-50 group">
-                <td className="px-6 py-3">{item.student?.code}</td>
-                <td className="px-6 py-3">{item.numberDocument}</td>
-                <td className="px-6 py-3">{item.name}</td>
-                <td className="px-6 py-3">{item.lastName}</td>
-                <td className="px-6 py-3">{item.email}</td>
+              <tr key={item.userId} className="border-b hover:bg-gray-50 group">
+                <td className="px-6 py-3">{item.code}</td>
+                <td className="px-6 py-3">{item.user.numberDocument}</td>
+                <td className="px-6 py-3">{item.user.name}</td>
+                <td className="px-6 py-3">{item.user.lastName}</td>
+                <td className="px-6 py-3">{item.user.email}</td>
                 <td className="px-6 py-3">
-                  {item.student ? format(new Date(item.student.birthdate), 'dd-MMMM-yyyy', { locale: es }) : ''}
+                  {format(new Date(item.birthdate), 'dd-MMMM-yyyy', { locale: es })}
                 </td>
-                <td className="px-6 py-3">{item.student?.gender}</td>
-                <td className="px-6 py-3">{item.student?.school}</td>
-                <td className="px-6 py-3">{item.student?.grade}</td>
-                <td className="px-6 py-3">{item.student?.educationLevel}</td>
+                <td className="px-6 py-3">{item.gender}</td>
+                <td className="px-6 py-3">{item.school}</td>
+                <td className="px-6 py-3">{item.grade}</td>
+                <td className="px-6 py-3">{item.educationLevel}</td>
                 <td className="px-6 py-3">
                   <ul className="list-disc list-inside space-y-1">
                     {
-                      item.student?.tutors.map((tutor) => (
-                        <li key={tutor.id}>
+                      item.tutors.map((tutor) => (
+                        <li key={tutor.userId}>
                           {tutor.user?.name}
                         </li>))
                     }

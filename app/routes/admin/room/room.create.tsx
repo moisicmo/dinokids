@@ -157,11 +157,11 @@ export const RoomCreate = (props: Props) => {
           />
           <SelectCustom
             label="Profesor"
-            options={dataTeacher.data?.map((teacher) => ({ id: teacher.id, value: teacher.name })) ?? []}
-            selected={teacher ? { id: teacher.id, value: teacher.name } : null}
+            options={dataTeacher.data?.map((teacher) => ({ id: teacher.userId, value: teacher.user.name })) ?? []}
+            selected={teacher ? { id: teacher.id, value: teacher.user.name } : null}
             onSelect={(value) => {
               if (value && !Array.isArray(value)) {
-                const selected = dataTeacher.data?.find((r) => r.id === value.id);
+                const selected = dataTeacher.data?.find((r) => r.userId === value.id);
                 onValueChange('teacher', selected);
               }
             }}

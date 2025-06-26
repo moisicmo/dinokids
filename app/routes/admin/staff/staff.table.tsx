@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import type { UserModel } from '@/models';
+import type { StaffModel, UserModel } from '@/models';
 import { useDebounce, useStaffStore } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
 
 interface Props {
-  handleEdit: (user: UserModel) => void;
+  handleEdit: (staff: StaffModel) => void;
   limitInit?: number;
-  itemSelect?: (user: UserModel) => void;
+  itemSelect?: (staff: StaffModel) => void;
 }
 
 export const StaffTable = (props: Props) => {
@@ -58,13 +58,13 @@ export const StaffTable = (props: Props) => {
           </thead>
           <tbody>
             {dataStaff.data.map((item) => (
-              <tr key={item.id} className="border-b hover:bg-gray-50 group">
-                <td className="px-6 py-3">{item.numberDocument}</td>
-                <td className="px-6 py-3">{item.name}</td>
-                <td className="px-6 py-3">{item.lastName}</td>
-                <td className="px-6 py-3">{item.email}</td>
-                <td className="px-6 py-3">{item.phone}</td>
-                <td className="px-6 py-3">{item.staff?.role.name}</td>
+              <tr key={item.userId} className="border-b hover:bg-gray-50 group">
+                <td className="px-6 py-3">{item.user.numberDocument}</td>
+                <td className="px-6 py-3">{item.user.name}</td>
+                <td className="px-6 py-3">{item.user.lastName}</td>
+                <td className="px-6 py-3">{item.user.email}</td>
+                <td className="px-6 py-3">{item.user.phone}</td>
+                <td className="px-6 py-3">{item.role.name}</td>
                 <td className="px-6 py-3 sticky right-0 bg-white z-10 group-hover:bg-gray-50">
                   <ActionButtons item={item} onEdit={handleEdit} onDelete={deleteStaff} />
                 </td>

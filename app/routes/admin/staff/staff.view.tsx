@@ -1,11 +1,11 @@
 import { useCallback, useState } from 'react';
-import type { UserModel } from '@/models';
+import type { StaffModel } from '@/models';
 import { StaffCreate, StaffTable } from '.';
 import { ButtonCustom } from '@/components';
 
 const staffView = () => {
   const [openDialog, setOpenDialog] = useState(false);
-  const [itemEdit, setItemEdit] = useState<UserModel | null>(null);
+  const [itemEdit, setItemEdit] = useState<StaffModel | null>(null);
 
   const handleDialog = useCallback((value: boolean) => {
     if (!value) setItemEdit(null);
@@ -36,7 +36,7 @@ const staffView = () => {
         <StaffCreate
           open={openDialog}
           handleClose={() => handleDialog(false)}
-          item={itemEdit == null ? null : { ...itemEdit, ...itemEdit.staff }}
+          item={itemEdit == null ? null : itemEdit}
         />
       )}
     </>

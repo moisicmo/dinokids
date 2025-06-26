@@ -1,39 +1,14 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useStudentStore, useForm, useTutorStore } from '@/hooks';
 import { ButtonCustom, DateTimePickerCustom, InputCustom, SelectCustom, type ValueSelect } from '@/components';
-import { type FormStudentModel, type FormStudentValidations, type UserModel, type TutorModel, Gender, EducationLevel } from '@/models';
+import { type TutorModel, Gender, EducationLevel, formStudentValidations, formStudentInit, type StudentModel } from '@/models';
 
 interface Props {
   open: boolean;
   handleClose: () => void;
-  item: any;
+  item: StudentModel | null;
 }
 
-const formFields: FormStudentModel = {
-  numberDocument: '',
-  name: '',
-  lastName: '',
-  email: '',
-  birthdate: null,
-  gender: null,
-  school: '',
-  grade: 0,
-  educationLevel: null,
-  tutors: [],
-};
-
-const formValidations: FormStudentValidations = {
-  numberDocument: [(value) => value.length >= 0, 'Debe ingresar el número de documento'],
-  name: [(value) => value.length >= 0, 'Debe ingresar el nombre'],
-  lastName: [(value) => value.length > 0, 'Debe ingresar el apellido'],
-  email: [(value) => value.length > 0, 'Debe ingresar el correo electrónico'],
-  birthdate: [(value) => value != null, 'Debe ingresar la fecha de nacimiento'],
-  gender: [(value) => value != null, 'Debe ingresar el género'],
-  school: [(value) => value.length > 0, 'Debe ingresar el colegio'],
-  grade: [(value) => value > 0, 'Debe ingresar el grado'],
-  educationLevel: [(value) => value != null, 'Debe ingresar el nivel'],
-  tutors: [(value) => value.length > 0, 'Debe ingresar al menos un tutor'],
-};
 
 export const StudentCreate = (props: Props) => {
   const {
@@ -46,10 +21,7 @@ export const StudentCreate = (props: Props) => {
 
 
   const {
-    numberDocument,
-    name,
-    lastName,
-    email,
+    user,
     birthdate,
     gender,
     school,
@@ -60,17 +32,14 @@ export const StudentCreate = (props: Props) => {
     onResetForm,
     isFormValid,
     onValueChange,
-    numberDocumentValid,
-    nameValid,
-    lastNameValid,
-    emailValid,
+    userValid,
     birthdateValid,
     genderValid,
     schoolValid,
     gradeValid,
     educationLevelValid,
     tutorsValid,
-  } = useForm(item ?? formFields, formValidations);
+  } = useForm(item ?? formStudentInit, formStudentValidations);
 
   const [formSubmitted, setFormSubmitted] = useState(false);
 
@@ -81,31 +50,31 @@ export const StudentCreate = (props: Props) => {
 
     if (item == null) {
       await createStudent({
-        numberDocument,
+        numberDocument:user.numberDocument,
         typeDocument: 'DNI',
-        name: name.trim(),
-        lastName: lastName.trim(),
-        email: email.trim(),
+        name: user.name.trim(),
+        lastName: user.lastName.trim(),
+        email: user.email.trim(),
         birthdate,
         gender,
         school: school.trim(),
         grade: parseInt(grade),
         educationLevel,
-        tutorIds: tutors.map((tutor: TutorModel) => tutor.id),
+        tutorIds: tutors.map((tutor: TutorModel) => tutor.userId),
       });
     } else {
-      await updateStudent(item.id, {
-        numberDocument,
+      await updateStudent(item.userId, {
+        numberDocument:user.numberDocument,
         typeDocument: 'DNI',
-        name: name.trim(),
-        lastName: lastName.trim(),
-        email: email.trim(),
+        name: user.name.trim(),
+        lastName: user.lastName.trim(),
+        email: user.email.trim(),
         birthdate,
         gender,
         school: school.trim(),
         grade: parseInt(grade),
         educationLevel,
-        tutorIds: tutors.map((tutor: TutorModel) => tutor.id),
+        tutorIds: tutors.map((tutor: TutorModel) => tutor.userId),
       });
     }
 
@@ -144,19 +113,19 @@ export const StudentCreate = (props: Props) => {
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg w-full max-w-lg p-6">
         <h2 className="text-xl font-bold mb-4">
-          {item ? `Editar ${item.name}` : 'Nuevo Estudiante'}
+          {item ? `Editar ${item.user.name}` : 'Nuevo Estudiante'}
         </h2>
 
         <form onSubmit={sendSubmit} className="space-y-4">
           <SelectCustom
             multiple
             label="Tutores"
-            options={dataTutor.data?.map((tutor) => ({ id: tutor.id, value: tutor.name })) ?? []}
-            selected={tutors.map((s: UserModel) => ({ id: s.id, value: s.name }))}
+            options={dataTutor.data?.map((tutor) => ({ id: tutor.userId, value: tutor.user.name })) ?? []}
+            selected={tutors.map((s: TutorModel) => ({ id: s.userId, value: s.user.id }))}
             onSelect={(values) => {
               if (Array.isArray(values)) {
                 const select = dataTutor.data?.filter((r) =>
-                  values.some((v) => v.id === r.id)
+                  values.some((v) => v.id === r.userId)
                 ) ?? [];
                 onValueChange('tutors', select);
               }
@@ -167,36 +136,36 @@ export const StudentCreate = (props: Props) => {
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
 
             <InputCustom
-              name="numberDocument"
-              value={numberDocument}
+              name="user.numberDocument"
+              value={user.numberDocument}
               label="Numero de documento"
               onChange={onInputChange}
-              error={!!numberDocumentValid && formSubmitted}
-              helperText={formSubmitted ? numberDocumentValid : ''}
+              error={!!userValid?.numberDocumentValid && formSubmitted}
+              helperText={formSubmitted ? userValid?.numberDocumentValid : ''}
             />
             <InputCustom
-              name="name"
-              value={name}
+              name="user.name"
+              value={user.name}
               label="Nombre"
               onChange={onInputChange}
-              error={!!nameValid && formSubmitted}
-              helperText={formSubmitted ? nameValid : ''}
+              error={!!userValid?.nameValid && formSubmitted}
+              helperText={formSubmitted ? userValid?.nameValid : ''}
             />
             <InputCustom
-              name="lastName"
-              value={lastName}
+              name="user.lastName"
+              value={user.lastName}
               label="Apellido"
               onChange={onInputChange}
-              error={!!lastNameValid && formSubmitted}
-              helperText={formSubmitted ? lastNameValid : ''}
+              error={!!userValid?.lastNameValid && formSubmitted}
+              helperText={formSubmitted ? userValid?.lastNameValid : ''}
             />
             <InputCustom
-              name="email"
-              value={email}
+              name="user.email"
+              value={user.email}
               label="Correo electrónico"
               onChange={onInputChange}
-              error={!!emailValid && formSubmitted}
-              helperText={formSubmitted ? emailValid : ''}
+              error={!!userValid?.emailValid && formSubmitted}
+              helperText={formSubmitted ? userValid?.emailValid : ''}
             />
             <DateTimePickerCustom
               name="birthdate"

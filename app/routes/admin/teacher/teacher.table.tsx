@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { UserModel } from '@/models';
+import type { TeacherModel } from '@/models';
 import { useDebounce, useTeacherStore } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
@@ -7,9 +7,9 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 interface Props {
-  handleEdit: (user: UserModel) => void;
+  handleEdit: (teacher: TeacherModel) => void;
   limitInit?: number;
-  itemSelect?: (user: UserModel) => void;
+  itemSelect?: (teacher: TeacherModel) => void;
 }
 
 export const TeacherTable = (props: Props) => {
@@ -65,18 +65,18 @@ export const TeacherTable = (props: Props) => {
           </thead>
           <tbody>
             {dataTeacher.data.map((item) => (
-              <tr key={item.id} className="border-b hover:bg-gray-50 group">
-                <td className="px-6 py-3">{item.numberDocument}</td>
-                <td className="px-6 py-3">{item.name}</td>
-                <td className="px-6 py-3">{item.lastName}</td>
-                <td className="px-6 py-3">{item.email}</td>
-                <td className="px-6 py-3">{item.phone}</td>
-                <td className="px-6 py-3">{item.teacher?.zone}</td>
-                <td className="px-6 py-3">{item.teacher?.address}</td>
-                <td className="px-6 py-3">{item.teacher?.major}</td>
-                <td className="px-6 py-3">{item.teacher?.academicStatus}</td>
+              <tr key={item.userId} className="border-b hover:bg-gray-50 group">
+                <td className="px-6 py-3">{item.user.numberDocument}</td>
+                <td className="px-6 py-3">{item.user.name}</td>
+                <td className="px-6 py-3">{item.user.lastName}</td>
+                <td className="px-6 py-3">{item.user.email}</td>
+                <td className="px-6 py-3">{item.user.phone}</td>
+                <td className="px-6 py-3">{item.zone}</td>
+                <td className="px-6 py-3">{item.address}</td>
+                <td className="px-6 py-3">{item.major}</td>
+                <td className="px-6 py-3">{item.academicStatus}</td>
                 <td className="px-6 py-3">
-                  {item.teacher ? format(new Date(item.teacher.startJob), 'dd-MMMM-yyyy', { locale: es }) : ''}
+                  {format(new Date(item.startJob), 'dd-MMMM-yyyy', { locale: es })}
                 </td>
                 <td className="px-6 py-3 sticky right-0 bg-white z-10 group-hover:bg-gray-50">
                   <ActionButtons item={item} onEdit={handleEdit} onDelete={deleteTeacher} />

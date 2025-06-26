@@ -1,11 +1,11 @@
 import { useCallback, useState } from 'react';
-import type { UserModel } from '@/models';
+import type { StudentModel, UserModel } from '@/models';
 import { StudentCreate, StudentTable } from '.';
 import { ButtonCustom } from '@/components';
 
 const studentView = () => {
   const [openDialog, setOpenDialog] = useState(false);
-  const [itemEdit, setItemEdit] = useState<UserModel | null>(null);
+  const [itemEdit, setItemEdit] = useState<StudentModel | null>(null);
 
   const handleDialog = useCallback((value: boolean) => {
     if (!value) setItemEdit(null);
@@ -38,8 +38,7 @@ const studentView = () => {
           handleClose={() => handleDialog(false)}
           item={itemEdit == null ? null : {
             ...itemEdit,
-            ...itemEdit.student,
-            birthdate:  itemEdit.student? new Date(itemEdit.student?.birthdate): null,
+            birthdate:  new Date(itemEdit.birthdate),
            }}
         />
       )}

@@ -1,33 +1,13 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useTutorStore, useForm } from '@/hooks';
 import { ButtonCustom, InputCustom, type ValueSelect } from '@/components';
-import { type FormTutorModel, type FormTutorValidations, type UserModel, AcademicStatus } from '@/models';
+import { AcademicStatus, formTutorInit, formTutorValidations, type TutorModel } from '@/models';
 
 interface Props {
   open: boolean;
   handleClose: () => void;
-  item: any;
+  item: TutorModel | null;
 }
-
-const formFields: FormTutorModel = {
-  numberDocument: '',
-  name: '',
-  lastName: '',
-  email: '',
-  city: '',
-  zone: '',
-  address: '',
-};
-
-const formValidations: FormTutorValidations = {
-  numberDocument: [(value) => value.length > 0, 'Debe ingresar el número de documento'],
-  name: [(value) => value.length > 0, 'Debe ingresar el nombre'],
-  lastName: [(value) => value.length > 0, 'Debe ingresar el apellido'],
-  email: [(value) => value.length > 0, 'Debe ingresar el correo electrónico'],
-  city: [(value) => value.length > 0, 'Debe ingresar la ciudad'],
-  zone: [(value) => value.length > 0, 'Debe ingresar la zona'],
-  address: [(value) => value.length > 0, 'Debe ingresar la direccion'],
-};
 
 export const TutorCreate = (props: Props) => {
   const {
@@ -39,11 +19,7 @@ export const TutorCreate = (props: Props) => {
 
 
   const {
-    numberDocument,
-    name,
-    lastName,
-    email,
-    phone,
+    user,
     city,
     zone,
     address,
@@ -52,15 +28,11 @@ export const TutorCreate = (props: Props) => {
     isFormValid,
     onValueChange,
     handleFieldChange,
-    numberDocumentValid,
-    nameValid,
-    lastNameValid,
-    emailValid,
-    phoneValid,
+    userValid,
     cityValid,
     zoneValid,
     addressValid,
-  } = useForm(item ?? formFields, formValidations);
+  } = useForm(item ?? formTutorInit, formTutorValidations);
 
   const [formSubmitted, setFormSubmitted] = useState(false);
 
@@ -71,24 +43,24 @@ export const TutorCreate = (props: Props) => {
 
     if (item == null) {
       await createTutor({
-        numberDocument,
+        numberDocument:user.numberDocument,
         typeDocument: 'DNI',
-        name: name.trim(),
-        lastName: lastName.trim(),
-        email: email.trim(),
-        phone: phone.trim(),
+        name: user.name.trim(),
+        lastName: user.lastName.trim(),
+        email: user.email.trim(),
+        phone: user.phone.trim(),
         city: city.trim(),
         zone: zone.trim(),
         address: address.trim(),
       });
     } else {
-      await updateTutor(item.id, {
-        numberDocument,
+      await updateTutor(item.userId, {
+        numberDocument:user.numberDocument,
         typeDocument: 'DNI',
-        name: name.trim(),
-        lastName: lastName.trim(),
-        email: email.trim(),
-        phone: phone.trim(),
+        name: user.name.trim(),
+        lastName: user.lastName.trim(),
+        email: user.email.trim(),
+        phone: user.phone.trim(),
         city: city.trim(),
         zone: zone.trim(),
         address: address.trim(),
@@ -117,52 +89,52 @@ export const TutorCreate = (props: Props) => {
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg w-full max-w-lg p-6">
         <h2 className="text-xl font-bold mb-4">
-          {item ? `Editar ${item.name}` : 'Nuevo Tutor'}
+          {item ? `Editar ${item.user.name}` : 'Nuevo Tutor'}
         </h2>
 
         <form onSubmit={sendSubmit} className="space-y-4">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
 
             <InputCustom
-              name="numberDocument"
-              value={numberDocument}
+              name="user.numberDocument"
+              value={user.numberDocument}
               label="Numero de documento"
               onChange={onInputChange}
-              error={!!numberDocumentValid && formSubmitted}
-              helperText={formSubmitted ? numberDocumentValid : ''}
+              error={!!userValid?.numberDocumentValid && formSubmitted}
+              helperText={formSubmitted ? userValid?.numberDocumentValid : ''}
             />
             <InputCustom
-              name="name"
-              value={name}
+              name="user.name"
+              value={user.name}
               label="Nombre"
               onChange={onInputChange}
-              error={!!nameValid && formSubmitted}
-              helperText={formSubmitted ? nameValid : ''}
+              error={!!userValid?.nameValid && formSubmitted}
+              helperText={formSubmitted ? userValid?.nameValid : ''}
             />
             <InputCustom
-              name="lastName"
-              value={lastName}
+              name="user.lastName"
+              value={user.lastName}
               label="Apellido"
               onChange={onInputChange}
-              error={!!lastNameValid && formSubmitted}
-              helperText={formSubmitted ? lastNameValid : ''}
+              error={!!userValid?.lastNameValid && formSubmitted}
+              helperText={formSubmitted ? userValid?.lastNameValid : ''}
             />
             <InputCustom
-              name="email"
-              value={email}
+              name="user.email"
+              value={user.email}
               label="Correo electrónico"
               onChange={onInputChange}
-              error={!!emailValid && formSubmitted}
-              helperText={formSubmitted ? emailValid : ''}
+              error={!!userValid?.emailValid && formSubmitted}
+              helperText={formSubmitted ? userValid?.emailValid : ''}
             />
             <InputCustom
-              name="phone"
-              value={phone}
+              name="user.phone"
+              value={user.phone}
               type="phone"
               label="Teléfono"
               onChange={onInputChange}
-              error={!!phoneValid && formSubmitted}
-              helperText={formSubmitted ? phoneValid : ''}
+              error={!!userValid?.phoneValid && formSubmitted}
+              helperText={formSubmitted ? userValid?.phoneValid : ''}
             />
             <InputCustom
               name="city"

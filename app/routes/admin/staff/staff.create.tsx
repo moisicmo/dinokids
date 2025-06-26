@@ -1,32 +1,13 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useStaffStore, useForm, useRoleStore, useBranchStore } from '@/hooks';
 import { ButtonCustom, InputCustom, SelectCustom } from '@/components';
-import type { FormStaffModel, FormStaffValidations, BranchModel, UserModel } from '@/models';
+import { type BranchModel, formStaffInit, formStaffValidations, type StaffModel } from '@/models';
 
 interface Props {
   open: boolean;
   handleClose: () => void;
-  item: any;
+  item: StaffModel | null;
 }
-
-const formFields: FormStaffModel = {
-  numberDocument: '',
-  name: '',
-  lastName: '',
-  email: '',
-  phone: '',
-  role: null,
-  branches: [],
-};
-
-const formValidations: FormStaffValidations = {
-  numberDocument: [(value) => value.length >= 0, 'Debe ingresar el número de documento'],
-  name: [(value) => value.length >= 0, 'Debe ingresar el nombre'],
-  lastName: [(value) => value.length > 0, 'Debe ingresar el apellido'],
-  email: [(value) => value.length > 0, 'Debe ingresar el correo electrónico'],
-  role: [(value) => value != null, 'Debe ingresar un rol'],
-  branches: [(value) => value.length > 0, 'Debe ingresar al menos una sucursal'],
-};
 
 export const StaffCreate = (props: Props) => {
   const {
@@ -39,25 +20,17 @@ export const StaffCreate = (props: Props) => {
   const { dataBranch, getBranches } = useBranchStore();
 
   const {
-    numberDocument,
-    name,
-    lastName,
-    email,
-    phone,
+    user,
     role,
     branches,
     onInputChange,
     onResetForm,
     isFormValid,
     onValueChange,
-    numberDocumentValid,
-    nameValid,
-    lastNameValid,
-    emailValid,
-    phoneValid,
+    userValid,
     roleValid,
     branchesValid,
-  } = useForm(item ?? formFields, formValidations);
+  } = useForm(item ?? formStaffInit, formStaffValidations);
 
   const [formSubmitted, setFormSubmitted] = useState(false);
 
@@ -68,23 +41,23 @@ export const StaffCreate = (props: Props) => {
 
     if (item == null) {
       await createStaff({
-        numberDocument,
+        numberDocument:user.numberDocument,
         typeDocument: 'DNI',
-        name,
-        lastName,
-        email,
-        phone,
+        name: user.name.trim(),
+        lastName: user.lastName.trim(),
+        email: user.email.trim(),
+        phone: user.phone.trim(),
         roleId: role?.id ?? '',
         brancheIds: branches.map((branch: BranchModel) => branch.id),
       });
     } else {
-      await updateStaff(item.id, {
-        numberDocument,
+      await updateStaff(item.userId, {
+        numberDocument:user.numberDocument,
         typeDocument: 'DNI',
-        name,
-        lastName,
-        email,
-        phone,
+        name: user.name.trim(),
+        lastName: user.lastName.trim(),
+        email: user.email.trim(),
+        phone: user.phone.trim(),
         roleId: role?.id ?? '',
         brancheIds: branches.map((branch: BranchModel) => branch.id),
       });
@@ -112,52 +85,53 @@ export const StaffCreate = (props: Props) => {
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg w-full max-w-lg p-6">
         <h2 className="text-xl font-bold mb-4">
-          {item ? `Editar ${item.name}` : 'Nuevo Staff'}
+          {item ? `Editar ${item.user.name}` : 'Nuevo Staff'}
         </h2>
 
         <form onSubmit={sendSubmit} className="space-y-4">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
 
             <InputCustom
-              name="numberDocument"
-              value={numberDocument}
+              name="user.numberDocument"
+              value={user.numberDocument}
               label="Numero de documento"
               onChange={onInputChange}
-              error={!!numberDocumentValid && formSubmitted}
-              helperText={formSubmitted ? numberDocumentValid : ''}
+              error={!!userValid?.numberDocumentValid && formSubmitted}
+              helperText={formSubmitted ? userValid?.numberDocumentValid : ''}
             />
             <InputCustom
-              name="name"
-              value={name}
+              name="user.name"
+              value={user.name}
               label="Nombre"
               onChange={onInputChange}
-              error={!!nameValid && formSubmitted}
-              helperText={formSubmitted ? nameValid : ''}
+              error={!!userValid?.nameValid && formSubmitted}
+              helperText={formSubmitted ? userValid?.nameValid : ''}
             />
             <InputCustom
-              name="lastName"
-              value={lastName}
+              name="user.lastName"
+              value={user.lastName}
               label="Apellido"
               onChange={onInputChange}
-              error={!!lastNameValid && formSubmitted}
-              helperText={formSubmitted ? lastNameValid : ''}
+              error={!!userValid?.lastNameValid && formSubmitted}
+              helperText={formSubmitted ? userValid?.lastNameValid : ''}
             />
             <InputCustom
-              name="email"
-              value={email}
+              name="user.email"
+              value={user.email}
+              type="email"
               label="Correo electrónico"
               onChange={onInputChange}
-              error={!!emailValid && formSubmitted}
-              helperText={formSubmitted ? emailValid : ''}
+              error={!!userValid?.emailValid && formSubmitted}
+              helperText={formSubmitted ? userValid?.emailValid : ''}
             />
             <InputCustom
-              name="phone"
-              value={phone}
+              name="user.phone"
+              value={user.phone}
               type="phone"
               label="Teléfono"
               onChange={onInputChange}
-              error={!!phoneValid && formSubmitted}
-              helperText={formSubmitted ? phoneValid : ''}
+              error={!!userValid?.phoneValid && formSubmitted}
+              helperText={formSubmitted ? userValid?.phoneValid : ''}
             />
             <SelectCustom
               label="Rol"
