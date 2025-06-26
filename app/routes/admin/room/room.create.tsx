@@ -111,7 +111,7 @@ export const RoomCreate = (props: Props) => {
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg w-full max-w-lg p-6">
         <h2 className="text-xl font-bold mb-4">
-          {item ? 'Editar Sucursal' : 'Nueva Sucursal'}
+          {item ? `Editar ${item.name}` : 'Nueva Aula'}
         </h2>
 
         <form onSubmit={sendSubmit} className="space-y-4">

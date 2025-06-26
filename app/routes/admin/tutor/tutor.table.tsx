@@ -45,7 +45,7 @@ export const TutorTable = (props: Props) => {
       </div>
 
       {/* Tabla en desktop */}
-      <div className="hidden md:block overflow-x-auto rounded-lg">
+      <div className="overflow-x-auto rounded-lg pb-3">
         <table className="min-w-max text-sm text-left w-full">
           <thead className="bg-gray-100 text-gray-700 uppercase text-xs">
             <tr>
@@ -57,12 +57,12 @@ export const TutorTable = (props: Props) => {
               <th className="px-6 py-3">Ciudad</th>
               <th className="px-6 py-3">Zona</th>
               <th className="px-6 py-3">Dirección</th>
-              <th className="px-6 py-3 text-center">Acciones</th>
+              <th className="px-6 py-3 sticky right-0 bg-gray-100 z-10">Acciones</th>
             </tr>
           </thead>
           <tbody>
             {dataTutor.data.map((item) => (
-              <tr key={item.id} className="border-b hover:bg-gray-50">
+              <tr key={item.id} className="border-b hover:bg-gray-50 group">
                 <td className="px-6 py-3">{item.numberDocument}</td>
                 <td className="px-6 py-3">{item.name}</td>
                 <td className="px-6 py-3">{item.lastName}</td>
@@ -71,7 +71,7 @@ export const TutorTable = (props: Props) => {
                 <td className="px-6 py-3">{item.tutor?.city}</td>
                 <td className="px-6 py-3">{item.tutor?.zone}</td>
                 <td className="px-6 py-3">{item.tutor?.address}</td>
-                <td className="px-6 py-3">
+                <td className="px-6 py-3 sticky right-0 bg-white z-10 group-hover:bg-gray-50">
                   <ActionButtons item={item} onEdit={handleEdit} onDelete={deleteTutor} />
                 </td>
               </tr>

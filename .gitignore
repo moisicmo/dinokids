@@ -4,4 +4,7 @@
 # React Router
 /.react-router/
 /build/
-/.vscode
+
+
+# IDE - VSCode
+.vscode/*

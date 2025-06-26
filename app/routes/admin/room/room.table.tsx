@@ -45,8 +45,7 @@ export const RoomTable = (props: Props) => {
         />
       </div>
 
-      {/* Tabla en desktop */}
-      <div className="hidden md:block overflow-x-auto rounded-lg">
+      <div className="overflow-x-auto rounded-lg pb-3">
         <table className="min-w-max text-sm text-left w-full">
           <thead className="bg-gray-100 text-gray-700 uppercase text-xs">
             <tr>
@@ -56,12 +55,12 @@ export const RoomTable = (props: Props) => {
               <th className="px-6 py-3">Rango de edad</th>
               <th className="px-6 py-3">Especialidad</th>
               <th className="px-6 py-3">Profesor</th>
-              <th className="px-6 py-3 text-center">Acciones</th>
+              <th className="px-6 py-3 sticky right-0 bg-gray-100 z-10">Acciones</th>
             </tr>
           </thead>
           <tbody>
             {dataRoom.data.map((item) => (
-              <tr key={item.id} className="border-b hover:bg-gray-50">
+              <tr key={item.id} className="border-b hover:bg-gray-50 group">
                 <td className="px-6 py-3">{item.name}</td>
                 <td className="px-6 py-3">{item.branch.name}</td>
                 <td className="px-6 py-3">{item.capacity}</td>
@@ -74,7 +73,7 @@ export const RoomTable = (props: Props) => {
                 </td>
                 <td className="px-6 py-3">{item.specialty.name}</td>
                 <td className="px-6 py-3">{item.teacher.user.name}</td>
-                <td className="px-6 py-3">
+                <td className="px-6 py-3 sticky right-0 bg-white z-10 group-hover:bg-gray-50">
                   <ActionButtons
                     item={item}
                     onEdit={handleEdit}
@@ -85,51 +84,6 @@ export const RoomTable = (props: Props) => {
             ))}
           </tbody>
         </table>
-      </div>
-
-      {/* Tabla en móvil */}
-      <div className="md:hidden space-y-4">
-        {dataRoom.data.map((item) => (
-          <div key={item.id} className="border rounded-lg p-4 shadow-sm bg-white">
-            <div className="grid grid-cols-[1fr_auto] gap-4">
-              <div className="space-y-1">
-                <div className="flex text-sm">
-                  <span className="w-20 text-gray-500">Nombre:</span>
-                  <span className="font-medium text-gray-900">{item.name}</span>
-                </div>
-                <div className="flex text-sm">
-                  <span className="w-20 text-gray-500">Capacidad:</span>
-                  <span className="font-medium text-gray-900">{item.capacity}</span>
-                </div>
-                <div className="flex text-sm">
-                  <span className="w-20 text-gray-500">Rango de edad:</span>
-                  <span className="font-medium text-gray-900 break-all">
-                    {item.rangeYears?.length === 2
-                      ? item.rangeYears[0] === item.rangeYears[1]
-                        ? `${item.rangeYears[0]} años`
-                        : `${item.rangeYears[0]} a ${item.rangeYears[1]} años`
-                      : 'No especificado'}
-                  </span>
-
-
-                </div>
-                <div className="flex text-sm">
-                  <span className="w-20 text-gray-500">Especialidad:</span>
-                  <span className="font-medium text-gray-900 break-all">{item.specialty.name}</span>
-                </div>
-                <div className="flex text-sm">
-                  <span className="w-20 text-gray-500">Profesor:</span>
-                  <span className="font-medium text-gray-900 break-all">{item.teacher.user.name}</span>
-                </div>
-              </div>
-              <ActionButtons
-                item={item}
-                onEdit={handleEdit}
-                onDelete={deleteRoom}
-              />
-            </div>
-          </div>
-        ))}
       </div>
       {/* Controles de paginación */}
       <PaginationControls

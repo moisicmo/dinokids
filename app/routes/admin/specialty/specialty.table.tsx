@@ -45,8 +45,7 @@ export const SpecialtyTable = (props: Props) => {
         />
       </div>
 
-      {/* Tabla en desktop */}
-      <div className="hidden md:block overflow-x-auto rounded-lg">
+      <div className="overflow-x-auto rounded-lg pb-3">
         <table className="min-w-max text-sm text-left w-full">
           <thead className="bg-gray-100 text-gray-700 uppercase text-xs">
             <tr>
@@ -54,59 +53,27 @@ export const SpecialtyTable = (props: Props) => {
               <th className="px-6 py-3">Sucursal</th>
               <th className="px-6 py-3">Número de sesiones</th>
               <th className="px-6 py-3">Costo estimado por sesión</th>
-              <th className="px-6 py-3 text-center">Acciones</th>
+              <th className="px-6 py-3 sticky right-0 bg-gray-100 z-10">Acciones</th>
             </tr>
           </thead>
           <tbody>
             {dataSpecialty.data.map((specialty) => specialty.branchSpecialties.map((branchSpecialty) => (
-              <tr key={branchSpecialty.specialty.id} className="border-b hover:bg-gray-50">
+              <tr key={branchSpecialty.specialty.id} className="border-b hover:bg-gray-50 group">
                 <td className="px-6 py-3">{branchSpecialty.specialty.name}</td>
                 <td className="px-6 py-3">{branchSpecialty.branch.name}</td>
                 <td className="px-6 py-3">{branchSpecialty.numberSessions}</td>
                 <td className="px-6 py-3">{branchSpecialty.estimatedSessionCost}</td>
-                <td className="px-6 py-3">
+                <td className="px-6 py-3 sticky right-0 bg-white z-10 group-hover:bg-gray-50">
                   <ActionButtons
                     item={specialty}
                     onEdit={handleEdit}
                     onDelete={deleteSpecialty}
                   />
                 </td>
-              </tr>)))}
+              </tr>
+            )))}
           </tbody>
         </table>
-      </div>
-
-      {/* Tabla en móvil */}
-      <div className="md:hidden space-y-4">
-        {dataSpecialty.data.map((specialty) => specialty.branchSpecialties.map((branchSpecialty) => (
-          <div key={branchSpecialty.specialty.id} className="border rounded-lg p-4 shadow-sm bg-white">
-            <div className="grid grid-cols-[1fr_auto] gap-4">
-              <div className="space-y-1">
-                <div className="flex text-sm">
-                  <span className="w-20 text-gray-500">Nombre:</span>
-                  <span className="font-medium text-gray-900">{branchSpecialty.specialty.name}</span>
-                </div>
-                <div className="flex text-sm">
-                  <span className="w-20 text-gray-500">Sucursal:</span>
-                  <span className="font-medium text-gray-900">{branchSpecialty.branch.name}</span>
-                </div>
-                <div className="flex text-sm">
-                  <span className="w-20 text-gray-500">Número de sesiones:</span>
-                  <span className="font-medium text-gray-900">{branchSpecialty.numberSessions}</span>
-                </div>
-                <div className="flex text-sm">
-                  <span className="w-20 text-gray-500">Costo estimado por sesión:</span>
-                  <span className="font-medium text-gray-900 break-all">{branchSpecialty.estimatedSessionCost}</span>
-                </div>
-              </div>
-              <ActionButtons
-                item={specialty}
-                onEdit={handleEdit}
-              onDelete={deleteSpecialty}
-              />
-            </div>
-          </div>
-        )))}
       </div>
       {/* Controles de paginación */}
       <PaginationControls

@@ -12,7 +12,7 @@ export const ActionButtons = <T extends { id: string }>({
   onDelete,
 }: ActionButtonsProps<T>) => {
   return (
-    <div className="flex flex-col md:flex-row justify-center items-center gap-3 pt-2 md:pt-0">
+<div className="flex justify-center items-center gap-3">
       {onEdit && (
         <button onClick={() => onEdit(item)} title="Editar" className="cursor-pointer">
           <Pencil color="var(--color-info)" className="w-5 h-5" />
