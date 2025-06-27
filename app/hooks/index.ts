@@ -16,7 +16,6 @@ export * from './usePermissionStore';
 export * from './useRoleStore';
 export * from './useSpecialtyStore';
 export * from './useRoomStore';
-export * from './useScheduleStore';
 export * from './useTutorStore';
 export * from './useCartStore';
 export * from './useReportStore';

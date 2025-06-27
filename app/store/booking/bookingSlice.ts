@@ -1,25 +1,24 @@
-import type { DataModel } from '@/models';
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { BookingResponse } from '@/models';
 
-const initialData: DataModel = {
-  page: 0,
-  limit: 10,
+const initialData: BookingResponse = {
+  page: 1,
   total: 0,
-  bookings: []
-}
+  lastPage: 0,
+  data: [],
+};
+
 export const bookingSlice = createSlice({
   name: 'booking',
   initialState: {
     dataBooking: initialData,
   },
   reducers: {
-    setBookings: (state, action) => {
+    setBookings: (state, action: PayloadAction<BookingResponse>) => {
       state.dataBooking = action.payload;
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const {
-  setBookings,
-} = bookingSlice.actions;
+export const { setBookings } = bookingSlice.actions;

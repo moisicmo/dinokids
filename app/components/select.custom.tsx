@@ -50,6 +50,7 @@ export const SelectCustom = ({
       } else {
         onSelect([...current, found]);
       }
+      setOpen(false);
     } else {
       onSelect(found);
       setOpen(false);

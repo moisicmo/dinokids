@@ -33,6 +33,33 @@ export const useForm = (initialForm: any = {}, formValidations: any = {}) => {
     setFormState((prevState: any) => setNestedValue(prevState, name, value));
   };
 
+  const isSelectChange = (name: string, text: string) => {
+    setFormState({
+      ...formState,
+      [name]: text
+    })
+  }
+  const onFileChange = (name: string, file: File) => {
+    setFormState({
+      ...formState,
+      [name]: file
+    })
+  }
+
+  const onSwitchChange = (name: string, state: boolean) => {
+    setFormState({
+      ...formState,
+      [name]: state
+    })
+  }
+
+  const onArrayChange = (name: string, state: Array<any>) => {
+    setFormState({
+      ...formState,
+      [name]: state
+    })
+  }
+
   const onValueChange = (name: string, value: any) => {
     setFormState((prevState: any) => setNestedValue(prevState, name, value));
   };
@@ -75,6 +102,10 @@ export const useForm = (initialForm: any = {}, formValidations: any = {}) => {
     formState,
     ...formValidation,
     onInputChange,
+    isSelectChange,
+    onFileChange,
+    onSwitchChange,
+    onArrayChange,
     onValueChange,
     onResetForm,
     isFormValid,

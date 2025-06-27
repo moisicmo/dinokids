@@ -1,12 +1,11 @@
 // REQUEST
-export * from './request/authRequest';
-export * from './request/booking';
-export * from './request/branch';
-export * from './request/room';
-export * from './request/schedule';
-export * from './request/specialty';
-export * from './request/inscription';
-
+export * from './request/auth.request';
+export * from './request/booking.request';
+export * from './request/branch.request';
+export * from './request/room.request';
+export * from './request/schedule.request';
+export * from './request/specialty.request';
+export * from './request/inscription.request';
 export * from './request/user.request';
 export * from './request/tutor.request';
 export * from './request/student.request';
@@ -14,6 +13,9 @@ export * from './request/staff.request';
 export * from './request/teacher.request';
 export * from './request/permission.request';
 export * from './request/role.request';
+export * from './request/price.request';
+export * from './request/assignment-schedule.request';
+export * from './request/assignment-room.request';
 
 // RESPONSE
 export * from './response/auth.response';
@@ -29,9 +31,12 @@ export * from './response/role.response';
 export * from './response/inscription.response';
 export * from './response/branch.response';
 export * from './response/permission.response';
+export * from './response/booking.response';
+export * from './response/price.response';
+export * from './response/assignment-room.response';
+export * from './response/assignment-schedule.response';
 
 export * from './inscriptionDebt';
-export * from './price';
 export * from './cart';
 export * from './pagination';
 export * from './dashboard';

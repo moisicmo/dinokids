@@ -3,6 +3,7 @@ import type { RoomModel } from '@/models';
 import { useRoomStore, useDebounce } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
+import { CalendarClock } from 'lucide-react';
 
 interface Props {
   handleEdit: (room: RoomModel) => void;
@@ -55,7 +56,8 @@ export const RoomTable = (props: Props) => {
               <th className="px-6 py-3">Rango de edad</th>
               <th className="px-6 py-3">Especialidad</th>
               <th className="px-6 py-3">Profesor</th>
-              <th className="px-6 py-3 sticky right-0 bg-gray-100 z-10">Acciones</th>
+              <th className="px-2 py-3 sticky right-0 bg-gray-100 z-10">Horario</th>
+              <th className="px-2 py-3 sticky right-0 bg-gray-100 z-10">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -73,7 +75,12 @@ export const RoomTable = (props: Props) => {
                 </td>
                 <td className="px-6 py-3">{item.specialty.name}</td>
                 <td className="px-6 py-3">{item.teacher.user.name}</td>
-                <td className="px-6 py-3 sticky right-0 bg-white z-10 group-hover:bg-gray-50">
+                <td className="px-2 py-3 sticky right-0 bg-white z-10 group-hover:bg-gray-50">
+                  <button onClick={() => { }} title="Horario" className="cursor-pointer">
+                    <CalendarClock color="var(--color-info)" className="w-5 h-5" />
+                  </button>
+                </td>
+                <td className="px-2 py-3 sticky right-0 bg-white z-10 group-hover:bg-gray-50">
                   <ActionButtons
                     item={item}
                     onEdit={handleEdit}

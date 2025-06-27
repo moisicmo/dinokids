@@ -29,6 +29,9 @@ export const SliderCustom = ({
     onChange(vals);
   };
 
+  const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
+  const primaryColor300 = getComputedStyle(document.documentElement).getPropertyValue('--color-primary-300').trim();
+
   return (
     <div className="w-full px-4">
       <label className="block mb-2 text-sm font-medium text-gray-700">{label}</label>
@@ -50,7 +53,7 @@ export const SliderCustom = ({
               style={{
                 background: getTrackBackground({
                   values: localValues,
-                  colors: ['#ccc', '#3b82f6', '#ccc'],
+                  colors: [primaryColor300, primaryColor, primaryColor300],
                   min,
                   max,
                 }),
@@ -61,17 +64,23 @@ export const SliderCustom = ({
             </div>
           </div>
         )}
-        renderThumb={({ props, isDragged }) => (
-          <div
-            {...props}
-            className="h-5 w-5 rounded-full bg-white border border-gray-400 shadow-md flex items-center justify-center"
-          >
+        renderThumb={({ props, isDragged }) => {
+          const { key, ...restProps } = props;
+
+          return (
             <div
-              className="w-1 h-4"
-              style={{ backgroundColor: isDragged ? '#3b82f6' : '#ccc' }}
-            />
-          </div>
-        )}
+              key={key}
+              {...restProps}
+              className="h-5 w-5 rounded-full bg-white border border-white shadow-md flex items-center justify-center"
+            >
+              <div
+                className="w-1 h-4"
+                style={{ backgroundColor: primaryColor }}
+              />
+            </div>
+          );
+        }}
+
       />
       <div className="mt-2 text-sm text-gray-600">
         Rango seleccionado: <strong>{localValues[0]}</strong> a <strong>{localValues[1]}</strong>

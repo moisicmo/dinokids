@@ -1,4 +1,4 @@
-import type { BranchModel, RoomSelectedRequest } from "..";
+import type { BranchModel } from "..";
 
 export interface BookingRequest {
   days: number;
@@ -6,7 +6,7 @@ export interface BookingRequest {
   name: string;
   amount: number;
   branch?: BranchModel;
-  rooms?: RoomSelectedRequest[];
+  // rooms?: RoomSelectedRequest[];
 }
 // export interface InscriptionRequest {
 //   student?: StudentModel;

@@ -16,7 +16,7 @@ export const SideNav = ({ open, onClose }: { open: boolean; onClose: () => void 
   }, []);
 
   const content = (
-    <nav className="w-[190px] h-full p-4 shadow-md">
+    <nav className="w-[190px] h-full p-4 shadow-md overflow-y-auto">
       <div className="flex flex-col items-center">
         <img src={logo} alt="Logo" className="w-24 mb-4" />
         <ul className="w-full space-y-2">
@@ -67,9 +67,8 @@ export const SideNav = ({ open, onClose }: { open: boolean; onClose: () => void 
       )}
 
       <aside
-        className={`fixed top-0 left-0 h-full z-50 bg-white w-[190px] transform ${
-          open ? 'translate-x-0' : '-translate-x-full'
-        } transition-transform duration-300`}
+        className={`fixed top-0 left-0 h-full z-50 bg-white w-[190px] transform ${open ? 'translate-x-0' : '-translate-x-full'
+          } transition-transform duration-300`}
       >
         {content}
       </aside>

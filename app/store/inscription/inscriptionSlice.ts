@@ -1,48 +1,24 @@
-import type { DataModel } from '@/models';
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { InscriptionResponse } from '@/models';
 
-const initialData: DataModel = {
-  page: 0,
-  limit: 10,
+const initialData: InscriptionResponse = {
+  page: 1,
   total: 0,
-  inscriptions: []
-}
+  lastPage: 0,
+  data: [],
+};
+
 export const inscriptionSlice = createSlice({
   name: 'inscription',
   initialState: {
     dataInscription: initialData,
   },
   reducers: {
-    setInscriptions: (state, action) => {
+    setInscriptions: (state, action: PayloadAction<InscriptionResponse>) => {
       state.dataInscription = action.payload;
     },
-    
-
-
-
-    // addPayment: (state, action) => {
-    //   state.inscriptions = state.inscriptions.map((inscription) => {
-    //     return {
-    //       ...inscription,
-    //       inscriptionDebts: inscription.inscriptionDebts.map((insDebt) => {
-    //         const payment:PaymentModel = action.payload.payments.find(
-    //           (payment:PaymentModel) => insDebt.id === payment.inscriptionDebt.id
-    //         );
-    //         if (!payment)return insDebt;
-    //         return {
-    //           ...insDebt,
-    //           reaminingBalance: payment.inscriptionDebt.reaminingBalance,
-    //           dueDate: payment.inscriptionDebt.dueDate,
-    //           payments: [...(insDebt.payments || []), payment],
-    //         };
-    //       }),
-    //     };
-    //   });
-    // },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const {
-  setInscriptions,
-} = inscriptionSlice.actions;
+export const { setInscriptions } = inscriptionSlice.actions;

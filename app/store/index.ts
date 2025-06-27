@@ -10,7 +10,6 @@ export * from './role/roleSlice';
 export * from './specialty/specialtySlice';
 export * from './branch/branchSlice';
 export * from './room/roomSlice';
-export * from './schedule/scheduleSlice';
 export * from './monthlyFee/monthlyFeeSlice';
 export * from './cart/cartSlice';
 export * from './report/reportSlice';

@@ -1,9 +1,8 @@
-// import { AssignmentSchedule, DayOfWeek } from "..";
+import type { DayOfWeek } from "..";
 
 export interface ScheduleModel {
-  id: number;
-  // days: DayOfWeek[];
+  id: String;
+  days: DayOfWeek[];
   start: Date;
   end: Date;
-  // assignmentSchedules: AssignmentSchedule[]
 }

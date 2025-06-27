@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux';
 import { coffeApi } from '@/services';
 import { setTutors } from '@/store';
 import { useAlertStore, useAppSelector, useErrorStore } from '.';
-import type { DataModel, TutorRequest, TutorResponse } from '@/models';
+import type { TutorRequest, TutorResponse } from '@/models';
 
 export const useTutorStore = () => {
   const { dataTutor } = useAppSelector(state => state.tutors);

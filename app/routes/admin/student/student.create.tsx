@@ -111,7 +111,7 @@ export const StudentCreate = (props: Props) => {
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-lg p-6">
+      <div className="bg-white rounded-lg w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-bold mb-4">
           {item ? `Editar ${item.user.name}` : 'Nuevo Estudiante'}
         </h2>
@@ -121,7 +121,7 @@ export const StudentCreate = (props: Props) => {
             multiple
             label="Tutores"
             options={dataTutor.data?.map((tutor) => ({ id: tutor.userId, value: tutor.user.name })) ?? []}
-            selected={tutors.map((s: TutorModel) => ({ id: s.userId, value: s.user.id }))}
+            selected={tutors.map((tutor: TutorModel) => ({ id: tutor.userId, value: tutor.user.name }))}
             onSelect={(values) => {
               if (Array.isArray(values)) {
                 const select = dataTutor.data?.filter((r) =>

@@ -1,24 +1,14 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useRoleStore, useForm } from '@/hooks';
 import { ButtonCustom, InputCustom } from '@/components';
-import type { FormRoleModel, FormRoleValidations, RoleModel } from '@/models';
-import { PermisosForm } from './permission.create';
+import { formRoleInit, formRoleValidations, type RoleModel } from '@/models';
+import { PermissionForm } from './permission.create';
 
 interface Props {
   open: boolean;
   handleClose: () => void;
   item: RoleModel | null;
 }
-
-const formFields: FormRoleModel = {
-  name: '',
-  permissions: [],
-};
-
-const formValidations: FormRoleValidations = {
-  name: [(value) => value.length >= 1, 'Debe ingresar el nombre'],
-  permissions: [(value) => value.length > 0, 'Debe ingresar almenos 1 permiso'],
-};
 
 export const RoleCreate = (props: Props) => {
   const {
@@ -37,7 +27,7 @@ export const RoleCreate = (props: Props) => {
     onArrayChange,
     nameValid,
     permissionsValid,
-  } = useForm(item ?? formFields, formValidations);
+  } = useForm(item ?? formRoleInit, formRoleValidations);
 
   const [formSubmitted, setFormSubmitted] = useState(false);
 
@@ -73,7 +63,7 @@ export const RoleCreate = (props: Props) => {
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-lg p-6">
+      <div className="bg-white rounded-lg w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-bold mb-4">
           {item ? `Editar ${item.name}` : 'Nuevo rol'}
         </h2>
@@ -87,7 +77,7 @@ export const RoleCreate = (props: Props) => {
             error={!!nameValid && formSubmitted}
             helperText={formSubmitted ? nameValid : ''}
           />
-          <PermisosForm
+          <PermissionForm
             permissions={permissions}
             onChange={(newPermissions) => onArrayChange('permissions', newPermissions)}
             formSubmitted={formSubmitted}

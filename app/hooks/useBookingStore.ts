@@ -1,18 +1,11 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { coffeApi } from '@/services';
-import {
-  setBookings,
-} from '@/store';
-import { useAlertStore, useErrorStore } from '.';
-import type { BookingRequest, DataModel } from '@/models';
+import { setBookings } from '@/store';
+import { useAlertStore, useAppSelector, useErrorStore } from '.';
+import type { BookingRequest, BookingResponse } from '@/models';
 
-interface RootState {
-  bookings: {
-    dataBooking: DataModel;
-  };
-}
 export const useBookingStore = () => {
-  const { dataBooking } = useSelector((state: RootState) => state.bookings);
+  const { dataBooking } = useAppSelector(state => state.bookings);
   const dispatch = useDispatch();
   const { handleError } = useErrorStore();
   const { showSuccess, showWarning, showError } = useAlertStore();
@@ -20,9 +13,14 @@ export const useBookingStore = () => {
 
   const getbookings = async (page: number = 0, limit: number = 10, keys: string = '') => {
     try {
-      const { data } = await coffeApi.get(`/${baseUrl}?page=${page}&limit=${limit}&keys=${keys}`);
-      console.log(data);
-      dispatch(setBookings(data));
+      const res = await coffeApi.get(`/${baseUrl}?page=${page}&limit=${limit}&keys=${keys}`);
+      const { data, meta } = res.data;
+      console.log(res.data);
+      const payload: BookingResponse = {
+        ...meta,
+        data,
+      };
+      dispatch(setBookings(payload));
     } catch (error) {
       throw handleError(error);
     }
@@ -37,7 +35,7 @@ export const useBookingStore = () => {
       throw handleError(error);
     }
   };
-  const updateBooking = async (id: number, body: BookingRequest) => {
+  const updateBooking = async (id: string, body: BookingRequest) => {
     try {
       const { data } = await coffeApi.patch(`/${baseUrl}/${id}`, body);
       console.log(data);
@@ -47,7 +45,7 @@ export const useBookingStore = () => {
       throw handleError(error);
     }
   };
-  const deleteBooking = async (id: number) => {
+  const deleteBooking = async (id: string) => {
     try {
       const result = await showWarning();
       if (result.isConfirmed) {

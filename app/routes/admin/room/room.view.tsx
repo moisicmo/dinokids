@@ -36,7 +36,18 @@ const roomView = () => {
         <RoomCreate
           open={openDialog}
           handleClose={() => handleDialog(false)}
-          item={itemEdit == null ? null : { ...itemEdit }}
+          item={itemEdit == null ? null : {
+            ...itemEdit,
+            schedules: [
+              ...itemEdit.schedules.map(schedule=>{
+                return {
+                  ...schedule,
+                  start: new Date(schedule.start),
+                  end: new Date(schedule.end),
+                }
+              })
+            ]
+          }}
         />
       )}
     </>

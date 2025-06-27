@@ -1,6 +1,6 @@
-import { Plus, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import { ButtonCustom, InputCustom, SelectCustom, type ValueSelect } from '@/components';
-import { TypeAction, TypeSubject, type FormPermissionModel, type FormPermissionValidations } from '@/models';
+import { TypeAction, TypeSubject, type FormPermissionModel } from '@/models';
 
 interface Props {
   permissions: FormPermissionModel[];
@@ -9,23 +9,28 @@ interface Props {
   permissionsValid?: string | null;
 }
 
-export const PermisosForm = ({ permissions, onChange, formSubmitted, permissionsValid }: Props) => {
+export const PermissionForm = (props: Props) => {
+  const {
+    permissions,
+    onChange,
+    formSubmitted,
+    permissionsValid,
+  } = props;
   const handleAdd = () => {
-    const nuevoPermiso: FormPermissionModel = {
+    const newPermission: FormPermissionModel = {
       action: null,
       subject: null,
       reason: ''
     };
 
-    onChange([...permissions, nuevoPermiso]);
+    onChange([...permissions, newPermission]);
   };
 
   const handleRemove = (index: number) => {
+    if (permissions.length == 1) return;
     const updated = permissions.filter((_, i) => i !== index);
     onChange(updated);
   };
-
-
 
   const handleFieldChange = (
     index: number,
@@ -56,25 +61,31 @@ export const PermisosForm = ({ permissions, onChange, formSubmitted, permissions
 
   return (
     <div className="space-y-2">
-      <h2 className="text-lg font-semibold">Permisos:</h2>
+      <div className="flex items-center justify-between mb-2">
+
+        <h2 className="text-lg font-semibold">Permisos:</h2>
+        <ButtonCustom
+          onClick={handleAdd}
+          text='Agregar Permiso'
+        />
+      </div>
       <div className="max-h-[60vh] overflow-y-auto pr-3 space-y-2">
-        {permissions.map((permiso, idx) => (
+        {permissions.map((permission, idx) => (
           <div key={idx} className="border p-4 rounded-md relative">
             <button
               type="button"
               onClick={() => handleRemove(idx)}
-              className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+              className="absolute top-2 right-2 text-error w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-100 transition cursor-pointer z-10"
             >
               <Trash2 size={18} />
             </button>
-
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <SelectCustom
                 label="Acción"
                 options={actionOptions}
                 selected={
-                  permiso.action
-                    ? actionOptions.find((opt) => opt.id === permiso.action) ?? null
+                  permission.action
+                    ? actionOptions.find((opt) => opt.id === permission.action) ?? null
                     : null
                 }
                 onSelect={(value) => {
@@ -82,15 +93,15 @@ export const PermisosForm = ({ permissions, onChange, formSubmitted, permissions
                     handleFieldChange(idx, 'action', value.id as TypeAction);
                   }
                 }}
-                error={formSubmitted && !permiso.action}
-                helperText={formSubmitted && !permiso.action ? 'Campo requerido' : ''}
+                error={formSubmitted && !permission.action}
+                helperText={formSubmitted && !permission.action ? 'Campo requerido' : ''}
               />
               <SelectCustom
                 label="Recurso"
                 options={subjectOptions}
                 selected={
-                  permiso.subject
-                    ? subjectOptions.find((opt) => opt.id === permiso.subject) ?? null
+                  permission.subject
+                    ? subjectOptions.find((opt) => opt.id === permission.subject) ?? null
                     : null
                 }
                 onSelect={(value) => {
@@ -98,17 +109,17 @@ export const PermisosForm = ({ permissions, onChange, formSubmitted, permissions
                     handleFieldChange(idx, 'subject', value.id as TypeSubject);
                   }
                 }}
-                error={formSubmitted && !permiso.subject}
-                helperText={formSubmitted && !permiso.subject ? 'Campo requerido' : ''}
+                error={formSubmitted && !permission.subject}
+                helperText={formSubmitted && !permission.subject ? 'Campo requerido' : ''}
               />
             </div>
             <InputCustom
               name={`reason-${idx}`}
               label="Motivo"
-              value={permiso.reason}
+              value={permission.reason}
               onChange={(e) => handleFieldChange(idx, 'reason', e.target.value)}
-              error={formSubmitted && permiso.reason.trim() === ''}
-              helperText={formSubmitted && permiso.reason.trim() === '' ? 'Campo requerido' : ''}
+              error={formSubmitted && permission.reason.trim() === ''}
+              helperText={formSubmitted && permission.reason.trim() === '' ? 'Campo requerido' : ''}
             />
           </div>
         ))}
@@ -116,10 +127,6 @@ export const PermisosForm = ({ permissions, onChange, formSubmitted, permissions
       {formSubmitted && permissionsValid && (
         <p className="text-sm text-red-600 font-medium">{permissionsValid}</p>
       )}
-      <ButtonCustom
-        onClick={handleAdd}
-        text='Agregar Permiso'
-      />
     </div>
   );
 

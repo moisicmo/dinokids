@@ -8,13 +8,13 @@ export enum EducationLevel {
 }
 
 export enum DayOfWeek {
-  lunes = 'MONDAY',
-  martes = 'TUESDAY',
-  miercoles = 'WEDNESDAY',
-  jueves = 'THURSDAY',
-  viernes = 'FRIDAY',
-  sabado = 'SATURDAY',
-  domingo = 'SUNDAY',
+  MONDAY = 'lunes',
+  TUESDAY = 'martes',
+  WEDNESDAY = 'miercoles',
+  THURSDAY = 'jueves',
+  FRIDAY = 'viernes',
+  SATURDAY = 'sábado',
+  SUNDAY = 'domingo',
 }
 
 export enum AcademicStatus {

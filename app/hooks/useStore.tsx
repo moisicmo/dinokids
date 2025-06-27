@@ -1,4 +1,4 @@
-import { branchSlice, permissionSlice, roleSlice, roomSlice, specialtySlice, staffSlice, studentSlice, teacherSlice, tutorSlice } from '@/store';
+import { bookingSlice, branchSlice, inscriptionSlice, permissionSlice, roleSlice, roomSlice, specialtySlice, staffSlice, studentSlice, teacherSlice, tutorSlice } from '@/store';
 import { configureStore } from '@reduxjs/toolkit';
 import { type TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
@@ -13,6 +13,8 @@ export const store = configureStore({
     roles: roleSlice.reducer,
     permissions: permissionSlice.reducer,
     specialties: specialtySlice.reducer,
+    inscriptions: inscriptionSlice.reducer,
+    bookings: bookingSlice.reducer,
     // aquí puedes seguir agregando más reducers...
   },
 });
