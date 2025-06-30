@@ -36,7 +36,25 @@ const inscriptionView = () => {
         <InscriptionCreate
           open={openDialog}
           handleClose={() => handleDialog(false)}
-          item={itemEdit == null ? null : itemEdit}
+          item={itemEdit == null ? null : {
+            ...itemEdit,
+            assignmentRooms: itemEdit.assignmentRooms.map(assigmentRoom => {
+              return {
+                ...assigmentRoom,
+                start: new Date(assigmentRoom.start),
+                assignmentSchedules: assigmentRoom.assignmentSchedules.map(assignmentSchedule => {
+                  return {
+                    ...assignmentSchedule,
+                    schedule: {
+                      ...assignmentSchedule.schedule,
+                      start: new Date(assignmentSchedule.schedule.start),
+                      end: new Date(assignmentSchedule.schedule.end),
+                    }
+                  }
+                })
+              }
+            })
+          }}
         />
       )}
     </>

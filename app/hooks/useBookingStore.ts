@@ -11,7 +11,7 @@ export const useBookingStore = () => {
   const { showSuccess, showWarning, showError } = useAlertStore();
   const baseUrl = 'booking';
 
-  const getbookings = async (page: number = 0, limit: number = 10, keys: string = '') => {
+  const getBookings = async (page: number = 1, limit: number = 10, keys: string = '') => {
     try {
       const res = await coffeApi.get(`/${baseUrl}?page=${page}&limit=${limit}&keys=${keys}`);
       const { data, meta } = res.data;
@@ -29,7 +29,7 @@ export const useBookingStore = () => {
     try {
       const { data } = await coffeApi.post(`/${baseUrl}/`, body);
       console.log(data);
-      getbookings();
+      getBookings();
       showSuccess('Reserva creado correctamente');
     } catch (error) {
       throw handleError(error);
@@ -39,7 +39,7 @@ export const useBookingStore = () => {
     try {
       const { data } = await coffeApi.patch(`/${baseUrl}/${id}`, body);
       console.log(data);
-      getbookings();
+      getBookings();
       showSuccess('Reserva editado correctamente');
     } catch (error) {
       throw handleError(error);
@@ -50,7 +50,7 @@ export const useBookingStore = () => {
       const result = await showWarning();
       if (result.isConfirmed) {
         await coffeApi.delete(`/${baseUrl}/${id}`);
-        getbookings();
+        getBookings();
         showSuccess('Reserva eliminada correctamente');
       } else {
         showError('Cancelado', 'La reserva esta a salvo :)');
@@ -64,7 +64,7 @@ export const useBookingStore = () => {
     //* Propiedades
     dataBooking,
     //* Métodos
-    getbookings,
+    getBookings,
     createBooking,
     updateBooking,
     deleteBooking,

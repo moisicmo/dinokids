@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useRoomStore, useForm, useBranchStore, useTeacherStore, useSpecialtyStore } from '@/hooks';
 import { ButtonCustom, InputCustom, SelectCustom, SliderCustom } from '@/components';
-import { type RoomModel, formRoomValidations, formRoomInit } from '@/models';
+import { type RoomModel, formRoomValidations, formRoomInit, type FormScheduleModel, type ScheduleRequest } from '@/models';
 import { ScheduleForm } from './schedule.create';
 
 interface Props {
@@ -49,6 +49,10 @@ export const RoomCreate = (props: Props) => {
   const sendSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormSubmitted(true);
+    const hasInvalid = schedules.some((schedule: FormScheduleModel) =>
+      !schedule.days || !schedule.end || !schedule.start
+    );
+    if (hasInvalid) return;
     if (!isFormValid) return;
 
     if (item == null) {
@@ -92,16 +96,19 @@ export const RoomCreate = (props: Props) => {
   }, [])
 
   useEffect(() => {
-    onValueChange('specialty', null);
+    if (item) {
+      onValueChange('specialty', specialty);
+    } else {
+      onValueChange('specialty', null);
+    }
     if (branch == null) return;
     getSpecialtiesByBranch(branch.id);
   }, [branch])
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div
-        className={`bg-white rounded-lg ${step === 2 ? 'max-w-5xl' : 'max-w-lg'} p-6 max-h-[90vh] overflow-y-auto`}
-      >        <h2 className="text-xl font-bold mb-4">
+      <div className={`bg-white rounded-lg ${step === 2 ? 'max-w-5xl' : 'max-w-lg'} p-6 max-h-[90vh] overflow-y-auto`}>
+        <h2 className="text-xl font-bold mb-4">
           {item ? `Editar ${item.name}` : 'Nueva Aula'}
         </h2>
         <form onSubmit={sendSubmit} className="space-y-4">
@@ -145,7 +152,7 @@ export const RoomCreate = (props: Props) => {
                     if (value && !Array.isArray(value)) {
                       const selected = dataBranch.data?.find((r) => r.id === value.id);
                       onValueChange('branch', selected);
-
+                      onValueChange('specialty', null);
                     }
                   }}
                   error={!!branchValid && formSubmitted}
@@ -153,8 +160,8 @@ export const RoomCreate = (props: Props) => {
                 />
                 <SelectCustom
                   label="Profesor"
-                  options={dataTeacher.data?.map((teacher) => ({ id: teacher.userId, value: teacher.user.name })) ?? []}
-                  selected={teacher ? { id: teacher.id, value: teacher.user.name } : null}
+                  options={dataTeacher.data?.map((teacher) => ({ id: teacher.userId, value: `${teacher.user.name} ${teacher.user.lastName}` })) ?? []}
+                  selected={teacher ? { id: teacher.id, value: `${teacher.user.name} ${teacher.user.lastName}` } : null}
                   onSelect={(value) => {
                     if (value && !Array.isArray(value)) {
                       const selected = dataTeacher.data?.find((r) => r.userId === value.id);
@@ -210,7 +217,20 @@ export const RoomCreate = (props: Props) => {
 
             {step === 1 && (
               <ButtonCustom
-                onClick={() => setStep(2)}
+                onClick={() => {
+                  setFormSubmitted(true);
+                  // Validamos manualmente si hay algún error en los campos del paso 1
+                  const hasError =
+                    !!nameValid ||
+                    !!capacityValid ||
+                    !!rangeYearsValid ||
+                    !!branchValid ||
+                    !!teacherValid ||
+                    !!specialtyValid;
+
+                  if (hasError) return; // No avanzamos si hay errores
+                  setStep(2); // Avanzamos al paso 2 si todo está bien
+                }}
                 text="Siguiente"
               />
             )}

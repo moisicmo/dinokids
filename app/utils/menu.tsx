@@ -27,6 +27,11 @@ export const menu = () => {
       permission: 'show-rent',
       group: [
         {
+          path: '/admin/inscription/debt',
+          title: 'Pagos',
+          icon: <Debt size={18} />,
+        },
+        {
           path: '/admin/inscription',
           title: 'Inscripciones',
           icon: <Inscription size={18} />,
@@ -99,11 +104,6 @@ export const menu = () => {
           permission: 'show-halls',
         },
       ],
-    },
-    {
-      path: '/inscriptionDebt',
-      title: 'Cobros',
-      icon: <Debt size={18} />,
     },
     {
       title: 'Reportes',

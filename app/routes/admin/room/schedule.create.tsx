@@ -1,5 +1,5 @@
 import { Trash2 } from 'lucide-react';
-import { ButtonCustom, DateTimePickerCustom, ScheulerCustom, SelectCustom, type ValueSelect } from '@/components';
+import { ButtonCustom, DateTimePickerCustom, ScheduleCustom, SelectCustom, type ValueSelect } from '@/components';
 import { DayOfWeek, type FormScheduleModel } from '@/models';
 
 interface Props {
@@ -124,7 +124,7 @@ export const ScheduleForm = ({
       {/* Vista del horario */}
       <div className="flex-1">
 
-        <ScheulerCustom
+        <ScheduleCustom
           schedules={schedules}
           onEventClick={(e: any) => alert(`Clic en evento: ${e.day} de ${e.start} a ${e.end}`)}
 

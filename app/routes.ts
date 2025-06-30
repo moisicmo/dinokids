@@ -18,6 +18,8 @@ export default [
       route("student", "routes/admin/student/student.view.tsx"),
       route("teacher", "routes/admin/teacher/teacher.view.tsx"),
       route("tutor", "routes/admin/tutor/tutor.view.tsx"),
+      route("inscription/debt", "routes/admin/inscription-debt/inscription-debt.view.tsx"),
+      
     ]),
   ]),
 

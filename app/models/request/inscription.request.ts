@@ -1,4 +1,4 @@
-import type { AssignmentRoomRequest, FormAssignmentRoomModel, StudentModel } from "..";
+import type { AssignmentRoomRequest, FormAssignmentRoomModel, FormBookingModel, StudentModel } from "..";
 
 
 
@@ -8,10 +8,9 @@ export interface InscriptionRequest {
   monthPrice: number;
   assignmentRooms: AssignmentRoomRequest[];
 }
-
-
 export interface FormInscriptionModel {
   student: StudentModel | null;
+  booking: FormBookingModel | null;
   inscriptionPrice: number;
   monthPrice: number;
   assignmentRooms: FormAssignmentRoomModel[];
@@ -19,20 +18,24 @@ export interface FormInscriptionModel {
 
 export const formInscriptionInit: FormInscriptionModel = {
   student: null,
+  booking: null,
   inscriptionPrice: 0,
   monthPrice: 0,
-  assignmentRooms: []
+  assignmentRooms: [
+    {
+      room: null,
+      start: null,
+      assignmentSchedules: [],
+    }
+  ]
 };
 
-
-export interface FormInscriptionValidations {
+interface FormInscriptionValidations {
   student: [(value: StudentModel) => boolean, string];
   inscriptionPrice: [(value: number) => boolean, string];
   monthPrice: [(value: number) => boolean, string];
   assignmentRooms: [(value: FormAssignmentRoomModel[]) => boolean, string];
 }
-
-
 
 export const formInscriptionValidations: FormInscriptionValidations = {
   student: [(value) => value != null, 'Debe ingresar el estudiante'],

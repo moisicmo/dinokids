@@ -112,14 +112,14 @@ export const DateTimePickerCustom = memo((props: Props) => {
         min={min}
         max={max}
         className={`
-    mt-1 block w-full rounded-md border px-3 py-2 text-sm
-    focus:outline-none focus:ring-2
-    focus:ring-[var(--color-primary)]
-    focus:border-[var(--color-primary)]
-    acent:color-[var(--color-primary)]
-    ${error ? 'border-red-500' : 'border-gray-300'}
-    ${className}
-  `}
+          mt-1 block w-full rounded-md border px-3 py-2 text-sm
+          focus:outline-none focus:ring-2
+          focus:ring-[var(--color-primary)]
+          focus:border-[var(--color-primary)]
+          acent:color-[var(--color-primary)]
+          ${error ? 'border-red-500' : 'border-gray-300'}
+          ${className}
+        `}
       />
       {helperText && (
         <p className={`text-sm mt-1 ${error ? 'text-error' : 'text-gray-500'}`}>

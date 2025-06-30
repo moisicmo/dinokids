@@ -1,7 +1,7 @@
 import type { DayOfWeek } from "..";
 
 export interface ScheduleModel {
-  id: String;
+  id: string;
   days: DayOfWeek[];
   start: Date;
   end: Date;

@@ -1,8 +1,19 @@
 import Swal from 'sweetalert2';
 
 export const useAlertStore = () => {
+
+   const showLoading = (title: string = 'Cargando...') => {
+    Swal.fire({
+      title,
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+  };
+
   const showSuccess = (message: string) => {
-    Swal.fire(message, '', 'success');
+    return Swal.fire(message, '', 'success');
   };
 
   const showWarning = () => {
@@ -35,11 +46,16 @@ export const useAlertStore = () => {
     });
   }
 
+  const swalClose = () => {
+    Swal.close();
+  };
 
   return {
+    showLoading,
     showSuccess,
     showWarning,
     showError,
     showDesition,
+    swalClose,
   };
 };

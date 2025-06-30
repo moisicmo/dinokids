@@ -1,9 +1,10 @@
-import { DayOfWeek, type FormScheduleModel } from '@/models';
+import { DayOfWeek, type FormAssignmentScheduleModel, type FormScheduleModel } from '@/models';
 import React from 'react';
 
 interface Props {
   schedules: FormScheduleModel[];
-  onEventClick?: (event: { day: string; start: string; end: string }) => void;
+  selectedSchedules: FormAssignmentScheduleModel[];
+  onEventClick?: (event: { id?: string; day: string; start: string; end: string }) => void;
 }
 
 const dayEnumMap: Record<string, DayOfWeek> = {
@@ -76,7 +77,8 @@ const getOverlapStyle = (dateStart: Date, dateEnd: Date, hour: string) => {
   }
 };
 
-export const ScheulerCustom: React.FC<Props> = ({ schedules, onEventClick }) => {
+export const ScheduleCustom: React.FC<Props> = ({ schedules,selectedSchedules, onEventClick }) => {
+
 
   const getEvent = (dayKey: string, hour: string) => {
     const enumValue = dayEnumMap[dayKey];
@@ -90,6 +92,9 @@ export const ScheulerCustom: React.FC<Props> = ({ schedules, onEventClick }) => 
       })()
     );
   };
+
+  const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
+  const primaryColor200 = getComputedStyle(document.documentElement).getPropertyValue('--color-primary-200').trim();
 
   return (
     <div className="w-full overflow-x-auto">
@@ -118,13 +123,14 @@ export const ScheulerCustom: React.FC<Props> = ({ schedules, onEventClick }) => 
             {displayDays.map(([key]) => {
               const event = getEvent(key, hour);
               const overlapStyle = event ? getOverlapStyle(new Date(event.start!), new Date(event.end!), hour) : null;
+                const isSelected = selectedSchedules?.some(sel => sel.schedule.id === event?.id && sel.day === key );
 
               return (
                 <div
                   key={key + hour}
                   style={{
                     position: 'relative',
-                    height: 40, // Ajusta la altura que quieras para las celdas
+                    height: 40,
                     border: '0.1px solid #ddd',
                     cursor: event ? 'pointer' : 'default',
                     textAlign: 'center',
@@ -134,7 +140,12 @@ export const ScheulerCustom: React.FC<Props> = ({ schedules, onEventClick }) => 
                     if (event && onEventClick && event.start && event.end) {
                       const start = new Date(event.start).toTimeString().slice(0, 5);
                       const end = new Date(event.end).toTimeString().slice(0, 5);
-                      onEventClick({ day: key, start, end });
+                      onEventClick({
+                        id: event.id ?? undefined, // Devuelve el id si existe
+                        day: key,
+                        start,
+                        end,
+                      });
                     }
                   }}
                 >
@@ -144,7 +155,7 @@ export const ScheulerCustom: React.FC<Props> = ({ schedules, onEventClick }) => 
                         position: 'absolute',
                         left: 0,
                         right: 0,
-                        backgroundColor: '#ffcc80',
+                        backgroundColor: isSelected ? primaryColor : primaryColor200,
                         transition: 'height 0.3s ease',
                         ...overlapStyle,
                       }}

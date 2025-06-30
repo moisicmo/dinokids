@@ -1,7 +1,15 @@
 import type { DayOfWeek } from "..";
 
+
+interface ScheduleRequest {
+  id: string;
+  days: DayOfWeek[];
+  start: Date;
+  end: Date;
+  active?: boolean;
+}
 export interface AssignmentScheduleRequest {
-  scheduleId: string;
+  schedule: ScheduleRequest;
   day: DayOfWeek;
 }
 

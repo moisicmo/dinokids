@@ -1,22 +1,24 @@
 import { useLocation } from 'react-router';
-import { useEffect, useState } from 'react';
 import { menu } from '@/utils/menu';
 import logo from '@/assets/images/logo.png';
 import { SideNavCustom } from '@/components';
 
-export const SideNav = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
-  const { pathname } = useLocation();
-  const [isLargeScreen, setIsLargeScreen] = useState(false);
+interface Props {
+  open: boolean;
+  onClose: () => void;
+  isLargeScreen: boolean;
+}
 
-  useEffect(() => {
-    const updateSize = () => setIsLargeScreen(window.innerWidth >= 1024);
-    updateSize();
-    window.addEventListener('resize', updateSize);
-    return () => window.removeEventListener('resize', updateSize);
-  }, []);
+export const SideNav = (props: Props) => {
+  const {
+    open,
+    onClose,
+    isLargeScreen,
+  } = props;
+  const { pathname } = useLocation();
 
   const content = (
-    <nav className="w-[190px] h-full p-4 shadow-md overflow-y-auto">
+    <nav className="w-[180px] h-full px-2 py-4  shadow-md overflow-y-auto ">
       <div className="flex flex-col items-center">
         <img src={logo} alt="Logo" className="w-24 mb-4" />
         <ul className="w-full space-y-2">
@@ -31,7 +33,7 @@ export const SideNav = ({ open, onClose }: { open: boolean; onClose: () => void 
                 />
               ) : (
                 <>
-                  <p className="text-sm font-semibold uppercase px-3 mb-1">{item.title}</p>
+                  <p className="text-sm font-semibold uppercase mb-1">{item.title}</p>
                   {item.group?.map((element: any) => (
                     <SideNavCustom
                       key={element.title}
@@ -53,9 +55,10 @@ export const SideNav = ({ open, onClose }: { open: boolean; onClose: () => void 
   // 👉 Sidebar permanente en pantallas grandes
   if (isLargeScreen) {
     return (
-      <aside className="h-screen bg-white w-[190px] shadow-md">
+      <aside className="h-screen fixed top-0 left-0 bg-white w-[180px]  z-40">
         {content}
       </aside>
+
     );
   }
 

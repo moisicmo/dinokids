@@ -24,7 +24,7 @@ export const SideNavCustom = (props: Props) => {
     {
       'bg-secondary text-white font-semibold': active,
       'hover:bg-gray-100 text-slate-600': !active,
-      'pl-6': !isTitle,
+      'pl-4': !isTitle,
     }
   );
 

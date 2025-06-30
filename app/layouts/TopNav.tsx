@@ -1,36 +1,56 @@
-import { Menu } from 'lucide-react'; // ✅ Importa el icono
-import { useRef, useEffect } from "react";
+import { Menu } from 'lucide-react';
+import { usePopover } from '@/hooks';
+import noimage from '@/assets/images/profile.png';
+import { AccountPopover } from './account.popover';
 
 interface TopNavProps {
   onNavOpen: () => void;
 }
 
 export const TopNav = ({ onNavOpen }: TopNavProps) => {
-  const avatarRef = useRef<HTMLImageElement>(null);
-
-  useEffect(() => {
-    // Aquí podrías usar un popover o menú contextual
-  }, []);
+  const accountPopover = usePopover();
 
   return (
-    <header className="sticky top-0 w-full border-b border-gray-50border-gray-50">
+    <header className="sticky top-0 w-full bg-white z-30 shadow-sm">
       <div className="px-4 py-2 h-[56px] flex items-center justify-between">
-
-        {/* Menú hamburguesa y título/logo */}
+        {/* Botón menú hamburguesa */}
+        <div className="lg:hidden">
           <button
             onClick={onNavOpen}
-            className="lg:hidden text-gray-700text-white focus:outline-none"
+            className="text-gray-700 focus:outline-none"
             aria-label="Abrir menú"
           >
             <Menu className="w-6 h-6" />
           </button>
+        </div>
 
-        {/* Área derecha: íconos, avatar, etc. */}
-        <div className="flex items-center gap-4">
-          {/* Placeholder para íconos adicionales */}
-          {/* <Bell className="w-5 h-5 text-gray-500 dark:text-gray-300" /> */}
+        {/* Este div ocupa el espacio izquierdo cuando el botón está oculto */}
+        <div className="hidden lg:block w-6 h-6"></div>
+
+        {/* Avatar */}
+        <div className="relative flex items-center gap-4">
+          <div
+            ref={accountPopover.anchorRef}
+            onClick={accountPopover.handleOpen}
+            className="cursor-pointer w-11 h-11 rounded-full overflow-hidden border border-gray-300"
+          >
+            <img
+              src={noimage}
+              alt="User Avatar"
+              className="w-full h-full object-cover"
+            />
+          </div>
         </div>
       </div>
+
+
+      {/* Popover */}
+      <AccountPopover
+        anchorEl={accountPopover.anchorRef.current}
+        open={accountPopover.open}
+        onClose={accountPopover.handleClose}
+        onTapSettings={() => console.log('Abrir configuraciones')}
+      />
     </header>
   );
 };

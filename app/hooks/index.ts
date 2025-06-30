@@ -11,6 +11,7 @@ export * from './useStaffStore';
 export * from './useTeacherStore';
 export * from './useStudentStore';
 export * from './useInscriptionStore';
+export * from './useInscriptionDebtStore';
 export * from './useBookingStore';
 export * from './usePermissionStore';
 export * from './useRoleStore';
@@ -20,7 +21,4 @@ export * from './useTutorStore';
 export * from './useCartStore';
 export * from './useReportStore';
 export * from './useDebounce';
-
-// pay hooks
-
-export * from './useMonthlyFeeStore';
+export * from './usePrint';

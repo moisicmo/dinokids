@@ -5,9 +5,8 @@ export interface AssignmentRoomRequest {
   start: Date;
   assignmentSchedules: AssignmentScheduleRequest[];
 }
-
 export interface FormAssignmentRoomModel {
-  room: RoomModel;
-  start: Date;
+  room: RoomModel | null;
+  start: Date | null;
   assignmentSchedules: FormAssignmentScheduleModel[];
 }

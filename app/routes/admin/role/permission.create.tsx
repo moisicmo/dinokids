@@ -62,7 +62,6 @@ export const PermissionForm = (props: Props) => {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between mb-2">
-
         <h2 className="text-lg font-semibold">Permisos:</h2>
         <ButtonCustom
           onClick={handleAdd}

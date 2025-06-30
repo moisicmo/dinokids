@@ -1,41 +1,41 @@
 import { useEffect, useState } from 'react';
-import { DayOfWeek, type InscriptionModel } from '@/models';
-import { useInscriptionStore, useDebounce } from '@/hooks';
+import { DayOfWeek, type BookingModel, type InscriptionModel } from '@/models';
+import { useBookingStore, useDebounce } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
+import { CalendarClock } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { CalendarClock } from 'lucide-react';
+
 interface Props {
   handleEdit: (inscription: InscriptionModel) => void;
   limitInit?: number;
   itemSelect?: (inscription: InscriptionModel) => void;
 }
 
-export const InscriptionTable = (props: Props) => {
+export const BookingTable = (props: Props) => {
   const {
     handleEdit,
     itemSelect,
     limitInit = 10,
   } = props;
 
-  const { dataInscription, getInscriptions, deleteInscription, getPdf } = useInscriptionStore();
+  const { dataBooking, getBookings, deleteBooking } = useBookingStore();
 
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(limitInit);
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 1500);
   useEffect(() => {
-    const maxPage = Math.max(1, Math.ceil(dataInscription.total / rowsPerPage));
+    const maxPage = Math.max(1, Math.ceil(dataBooking.total / rowsPerPage));
     if (page > maxPage) {
       setPage(maxPage);
     }
-  }, [dataInscription.total, rowsPerPage]);
+  }, [dataBooking.total, rowsPerPage]);
 
   useEffect(() => {
-    getInscriptions(page, rowsPerPage, debouncedQuery);
+    getBookings(page, rowsPerPage, debouncedQuery);
   }, [page, rowsPerPage, debouncedQuery]);
-
 
   const dayOptions = Object.entries(DayOfWeek).map(([key, value]) => ({
     key,
@@ -52,45 +52,30 @@ export const InscriptionTable = (props: Props) => {
         <InputCustom
           name="query"
           value={query}
-          placeholder="Buscar inscripción..."
+          placeholder="Buscar reserva..."
           onChange={(e) => setQuery(e.target.value)}
         />
       </div>
 
       <div className="overflow-x-auto rounded-lg pb-3">
         <table className="min-w-max text-sm text-left w-full">
-          <thead className="bg-gray-100 text-gray-700 uppercase text-xs">
+          <thead className="bg-gray-100 text-gray-700 text-xs">
             <tr>
-              <th className="px-6 py-3">Cod Estudiante</th>
+              <th className="px-6 py-3">Núm. Doc</th>
               <th className="px-6 py-3">Nombre</th>
-              <th className="px-6 py-3">Precios</th>
+              <th className="px-6 py-3">Cant. días</th>
+              <th className="px-6 py-3">Monto</th>
               <th className="px-6 py-3">Asignaciones</th>
               <th className="px-6 py-3 sticky right-0 bg-gray-100 z-10">Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {dataInscription.data.map((item) => (
+            {dataBooking.data.map((item) => (
               <tr key={item.id} className="border-b hover:bg-gray-50 group">
-                <td className="px-6 py-3">{`${item.student?.code}`}</td>
-                <td className="px-6 py-3">{`${item.student?.user.name} ${item.student?.user.lastName}`}</td>
-                <td className="px-6 py-3">
-                  
-                    {item.prices.map((price) => (
-                      <div
-                        key={price.id}
-                      >
-                        <p className="text-sm text-gray-700">
-                          <span className="font-medium">Costo de la inscripción:</span>{' '}
-                          {price.inscriptionPrice} Bs
-                        </p>
-                        <p className="text-sm text-gray-700">
-                          <span className="font-medium">Costo de la mensualidad:</span>{' '}
-                          {price.monthPrice} Bs
-                        </p>
-                      </div>
-                    ))}
-                </td>
-
+                <td className="px-6 py-3">{item.booking?.dni}</td>
+                <td className="px-6 py-3">{item.booking?.name}</td>
+                <td className="px-6 py-3">{item.booking?.days}</td>
+                <td className="px-6 py-3">{item.booking?.amount}</td>
                 <td className="px-6 py-3">
                   <div className="flex flex-col space-y-4">
                     {item.assignmentRooms.map((assignmentRoom) => (
@@ -116,14 +101,11 @@ export const InscriptionTable = (props: Props) => {
                     ))}
                   </div>
                 </td>
-
-
                 <td className="px-6 py-3 sticky right-0 bg-white z-10 group-hover:bg-gray-50">
                   <ActionButtons
                     item={item}
                     onEdit={handleEdit}
-                    onDelete={deleteInscription}
-                    onDownload={getPdf}
+                    onDelete={deleteBooking}
                   />
                 </td>
               </tr>
@@ -134,7 +116,7 @@ export const InscriptionTable = (props: Props) => {
 
       {/* Controles de paginación */}
       <PaginationControls
-        total={dataInscription.total}
+        total={dataBooking.total}
         page={page}
         limit={rowsPerPage}
         onPageChange={(newPage) => setPage(newPage)}

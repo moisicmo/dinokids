@@ -7,6 +7,8 @@ export interface ScheduleRequest {
 }
 
 export interface FormScheduleModel {
+  id?: string;
+  active?: boolean;
   days: DayOfWeek[],
   start: Date | null,
   end: Date | null,
