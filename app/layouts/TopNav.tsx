@@ -1,13 +1,18 @@
-import { Menu } from 'lucide-react';
+import { Menu, ShoppingCart } from 'lucide-react';
 import { usePopover } from '@/hooks';
 import noimage from '@/assets/images/profile.png';
 import { AccountPopover } from './account.popover';
 
-interface TopNavProps {
+interface Props {
   onNavOpen: () => void;
+  onTapCart: () => void;
 }
 
-export const TopNav = ({ onNavOpen }: TopNavProps) => {
+export const TopNav = (props: Props) => {
+  const {
+    onNavOpen,
+    onTapCart,
+  } = props;
   const accountPopover = usePopover();
 
   return (
@@ -27,8 +32,26 @@ export const TopNav = ({ onNavOpen }: TopNavProps) => {
         {/* Este div ocupa el espacio izquierdo cuando el botón está oculto */}
         <div className="hidden lg:block w-6 h-6"></div>
 
-        {/* Avatar */}
+
         <div className="relative flex items-center gap-4">
+
+          {/* Botón del carrito */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={onTapCart}
+              className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition relative text-gray-700"
+              aria-label="Abrir carrito"
+            >
+              <ShoppingCart size={24} />
+              {/* Badge de cantidad */}
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
+                3
+              </span>
+            </button>
+          </div>
+
+          {/* Avatar */}
           <div
             ref={accountPopover.anchorRef}
             onClick={accountPopover.handleOpen}
@@ -41,6 +64,7 @@ export const TopNav = ({ onNavOpen }: TopNavProps) => {
             />
           </div>
         </div>
+
       </div>
 
 

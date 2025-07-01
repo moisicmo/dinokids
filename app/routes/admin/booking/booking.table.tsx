@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { DayOfWeek, type BookingModel, type InscriptionModel } from '@/models';
-import { useBookingStore, useDebounce } from '@/hooks';
+import { useBookingStore, useDebounce, useEnums } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
 import { CalendarClock } from 'lucide-react';
@@ -21,7 +21,7 @@ export const BookingTable = (props: Props) => {
   } = props;
 
   const { dataBooking, getBookings, deleteBooking } = useBookingStore();
-
+  const { getDayLabel } = useEnums();
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(limitInit);
   const [query, setQuery] = useState('');
@@ -37,14 +37,6 @@ export const BookingTable = (props: Props) => {
     getBookings(page, rowsPerPage, debouncedQuery);
   }, [page, rowsPerPage, debouncedQuery]);
 
-  const dayOptions = Object.entries(DayOfWeek).map(([key, value]) => ({
-    key,
-    label: value,
-  }));
-  const getDayLabel = (day: string) => {
-    const found = dayOptions.find(d => d.key === day);
-    return found?.label ?? day;
-  };
 
   return (
     <div className="space-y-4">

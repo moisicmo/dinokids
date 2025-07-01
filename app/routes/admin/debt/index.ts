@@ -1,4 +1,4 @@
 
 
-export * from './inscription-debt.table';
+export * from './debt.table';
 // export * from './inscription-debt.create';

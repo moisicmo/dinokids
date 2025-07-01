@@ -11,7 +11,7 @@ const initialData: DashboardModel = {
   totalInscriptions: 0,
   totalBookings: 0,
   totalRooms: 0,
-  totalInscriptionDebts: 0,
+  totalDebts: 0,
 }
 export const reportSlice = createSlice({
   name: 'report',

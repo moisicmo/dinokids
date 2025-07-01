@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { DayOfWeek, type InscriptionModel } from '@/models';
-import { useInscriptionStore, useDebounce } from '@/hooks';
+import { type InscriptionModel } from '@/models';
+import { useInscriptionStore, useDebounce, useEnums } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
 import { format } from 'date-fns';
@@ -20,7 +20,7 @@ export const InscriptionTable = (props: Props) => {
   } = props;
 
   const { dataInscription, getInscriptions, deleteInscription, getPdf } = useInscriptionStore();
-
+  const { getDayLabel } = useEnums();
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(limitInit);
   const [query, setQuery] = useState('');
@@ -36,15 +36,6 @@ export const InscriptionTable = (props: Props) => {
     getInscriptions(page, rowsPerPage, debouncedQuery);
   }, [page, rowsPerPage, debouncedQuery]);
 
-
-  const dayOptions = Object.entries(DayOfWeek).map(([key, value]) => ({
-    key,
-    label: value,
-  }));
-  const getDayLabel = (day: string) => {
-    const found = dayOptions.find(d => d.key === day);
-    return found?.label ?? day;
-  };
 
   return (
     <div className="space-y-4">

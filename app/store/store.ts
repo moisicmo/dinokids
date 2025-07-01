@@ -14,7 +14,7 @@ import {
   bookingSlice,
   cartSlice,
   reportSlice,
-  inscriptiondebtSlice,
+  debtSlice,
 } from '.';
 
 export const store = configureStore({
@@ -26,7 +26,7 @@ export const store = configureStore({
     tutors: tutorSlice.reducer,
     students: studentSlice.reducer,
     inscriptions: inscriptionSlice.reducer,
-    inscriptionDebts: inscriptiondebtSlice.reducer,
+    Debts: debtSlice.reducer,
     bookings: bookingSlice.reducer,
     permissions: permissionSlice.reducer,
     roles: roleSlice.reducer,

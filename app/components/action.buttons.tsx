@@ -1,4 +1,4 @@
-import { CircleDollarSign, Download, Pencil, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronUp, CircleDollarSign, Download, Pencil, Trash2 } from 'lucide-react';
 
 interface ActionButtonsProps<T extends { id?: string; userId?: string }> {
   item: T;
@@ -6,6 +6,8 @@ interface ActionButtonsProps<T extends { id?: string; userId?: string }> {
   onDelete?: (id: string) => void;
   onDownload?: (id: string) => void;
   onPayment?: (id: string) => void;
+  onSelect?: (id: string) => void;
+  isSelected?: boolean;
 }
 
 export const ActionButtons = <T extends { id?: string; userId?: string }>({
@@ -14,11 +16,28 @@ export const ActionButtons = <T extends { id?: string; userId?: string }>({
   onDelete,
   onDownload,
   onPayment,
+  onSelect,
+  isSelected,
 }: ActionButtonsProps<T>) => {
   const identifier = item.userId ?? item.id ?? '';
 
   return (
     <div className="flex justify-center items-center gap-3">
+      {onSelect && identifier && (
+        <button
+          onClick={() => onSelect(identifier)}
+          title="Desplegar"
+          className="cursor-pointer"
+        >
+          {isSelected ? (
+            <ChevronUp color="var(--color-black)" className="w-5 h-5" />
+          ) : (
+            <ChevronDown color="var(--color-black)" className="w-5 h-5" />
+          )}
+
+        </button>
+      )}
+
       {onPayment && identifier && (
         <button onClick={() => onPayment(identifier)} title="Pagar" className="cursor-pointer">
           <CircleDollarSign color="var(--color-secondary)" className="w-5 h-5" />

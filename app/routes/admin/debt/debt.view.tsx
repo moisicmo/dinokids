@@ -1,10 +1,10 @@
 import { useCallback, useState } from 'react';
-import type { InscriptionDebtModel } from '@/models';
-import { InscriptionDebtTable } from '.';
+import type { DebtModel } from '@/models';
+import { DebtTable } from '.';
 
-const inscriptionDebtView = () => {
+const DebtView = () => {
   const [openDialog, setOpenDialog] = useState(false);
-  const [itemEdit, setItemEdit] = useState<InscriptionDebtModel | null>(null);
+  const [itemEdit, setItemEdit] = useState<DebtModel | null>(null);
 
   const handleDialog = useCallback((value: boolean) => {
     if (!value) setItemEdit(null);
@@ -22,13 +22,12 @@ const inscriptionDebtView = () => {
         /> */}
       </div>
 
-      {/* Tabla de inscriptiondebt */}
-      <InscriptionDebtTable
+      <DebtTable
       />
 
       {/* Dialogo para crear o editar */}
       {/* {openDialog && (
-        <InscriptionDebtCreate
+        <DebtCreate
           open={openDialog}
           handleClose={() => handleDialog(false)}
           item={itemEdit == null ? null : itemEdit}
@@ -38,4 +37,4 @@ const inscriptionDebtView = () => {
   );
 };
 
-export default inscriptionDebtView;
+export default DebtView;

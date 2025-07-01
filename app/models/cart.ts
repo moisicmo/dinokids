@@ -1,8 +1,13 @@
-import type { FormPaymentModel, InscriptionDebtModel, StudentModel } from ".";
+import type { DebtModel, StudentModel } from ".";
 
+
+export interface FormPaymentModel {
+  amount: number;
+  dueDate: Date|null;
+}
 export interface CartModel {
   student:StudentModel;
-  inscriptionDebtModel: InscriptionDebtModel,
+  DebtModel: DebtModel,
   paymentModel: FormPaymentModel,
 }
 
@@ -11,6 +16,12 @@ export interface FormCartModel {
   buyerNit: string;
   buyerName: string;
 }
+
+export const formCartInit: FormCartModel = {
+  buyerNit: '',
+  buyerName: '',
+};
+
 
 /*FORM CART VALIDATIONS */
 export interface FormCartValidations {

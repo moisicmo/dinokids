@@ -1,41 +1,41 @@
-import type { CartModel } from '@/models';
-import { createSlice } from '@reduxjs/toolkit';
+import type { FormPaymentModel } from '@/models';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 export const cartSlice = createSlice({
   name: 'cart',
   initialState: {
-    cart: [] as CartModel[],
+    cart: [] as FormPaymentModel[],
   },
   reducers: {
-    setClearCart: (state, /*{payload}*/) => {
+    setClearCart: (state,) => {
       state.cart = [];
     },
 
-    setAddCart: (state, { payload }) => {
-      const itemCart:CartModel = payload.itemCart;
-      const item = state.cart.find((item)=> item.inscriptionDebtModel.id == itemCart.inscriptionDebtModel.id);
-      if(!item){
-        state.cart = [...state.cart,itemCart]
-      }
+    setAddCart: (state, action: PayloadAction<FormPaymentModel>) => {
+      // const itemCart:CartModel = payload.itemCart;
+      // const item = state.cart.find((item)=> item.DebtModel.id == itemCart.DebtModel.id);
+      // if(!item){
+      state.cart = [...state.cart, action.payload]
+      // }
     },
 
-    setUpdateItemCart: (state, { payload })=>{
-      const itemCart:CartModel = payload.itemCart;
-      state.cart = state.cart.map((item)=>{
-        if (item.inscriptionDebtModel.id == itemCart.inscriptionDebtModel.id){
-          return itemCart;
-        }
-        return item;
-      })
+    setUpdateItemCart: (state, { payload }) => {
+      // const itemCart: CartModel = payload.itemCart;
+      // state.cart = state.cart.map((item) => {
+      //   if (item.DebtModel.id == itemCart.DebtModel.id) {
+      //     return itemCart;
+      //   }
+      //   return item;
+      // })
     },
 
     setRemoveCart: (state, { payload }) => {
-      const itemCart: CartModel = payload.itemCart;
-      state.cart = state.cart.filter(
-        (e) => e.inscriptionDebtModel.id !== itemCart.inscriptionDebtModel.id
-      );
+      // const itemCart: CartModel = payload.itemCart;
+      // state.cart = state.cart.filter(
+      //   (e) => e.DebtModel.id !== itemCart.DebtModel.id
+      // );
     },
-    
+
 
   }
 });

@@ -1,33 +1,33 @@
 // import { useEffect, useState, type FormEvent } from 'react';
-// import { useInscriptionDebtStore, useForm } from '@/hooks';
+// import { useDebtStore, useForm } from '@/hooks';
 // import { ButtonCustom, InputCustom } from '@/components';
-// import type { InscriptionDebtModel, FormInscriptionDebtModel, FormInscriptionDebtValidations } from '@/models';
+// import type { DebtModel, FormDebtModel, FormDebtValidations } from '@/models';
 
 // interface Props {
 //   open: boolean;
 //   handleClose: () => void;
-//   item: InscriptionDebtModel | null;
+//   item: DebtModel | null;
 // }
 
-// const formFields: FormInscriptionDebtModel = {
+// const formFields: FormDebtModel = {
 //   name: '',
 //   address: '',
 //   phone: '',
 // };
 
-// const formValidations: FormInscriptionDebtValidations = {
+// const formValidations: FormDebtValidations = {
 //   name: [(value) => value.length >= 1, 'Debe ingresar el nombre'],
 //   address: [(value) => value.length >= 1, 'Debe ingresar la dirección'],
 //   phone: [(value) => value.length >= 6, 'Debe ingresar el teléfono'],
 // };
 
-// export const InscriptionDebtCreate = (props: Props) => {
+// export const DebtCreate = (props: Props) => {
 //   const {
 //     open,
 //     handleClose,
 //     item,
 //   } = props;
-//   const { createInscriptionDebt, updateInscriptionDebt } = useInscriptionDebtStore();
+//   const { createDebt, updateDebt } = useDebtStore();
 
 //   const {
 //     name,
@@ -49,9 +49,9 @@
 //     if (!isFormValid) return;
 
 //     if (item == null) {
-//       await createInscriptionDebt({ name, address, phone });
+//       await createDebt({ name, address, phone });
 //     } else {
-//       await updateInscriptionDebt(item.id, { name, address, phone });
+//       await updateDebt(item.id, { name, address, phone });
 //     }
 
 //     handleClose();

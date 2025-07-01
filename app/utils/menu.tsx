@@ -27,7 +27,7 @@ export const menu = () => {
       permission: 'show-rent',
       group: [
         {
-          path: '/admin/inscription/debt',
+          path: '/admin/debt',
           title: 'Pagos',
           icon: <Debt size={18} />,
         },

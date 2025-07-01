@@ -49,9 +49,16 @@ export enum TypeSubject {
   specialty = "especialidades",
   schedule = "horarios",
   inscription = "incripciones",
-  inscriptionDebt = "deudas de inscripción",
+  Debt = "deudas de inscripción",
   payment = "pagos",
   invoice = "facturas",
   refund = "devoluciones",
   price = "precios",
+}
+
+export enum TypeDebt {
+  BOOKING = "RESERVA",
+  INSCRIPTION = "INSCRIPCIÓN",
+  MONTH = "MENSUALIDAD",
+  PER_SESSION = "POR SESIÓN",
 }

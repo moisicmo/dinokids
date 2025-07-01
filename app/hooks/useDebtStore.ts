@@ -1,61 +1,72 @@
 import { useDispatch } from 'react-redux';
 import { coffeApi } from '@/services';
-import { setInscriptiondebts } from '@/store';
+import { setDebts } from '@/store';
 import { useAlertStore, useAppSelector, useErrorStore } from '.';
-import type { InscriptionDebtRequest, InscriptionDebtResponse } from '@/models';
+import type { DebtModel, DebtRequest, DebtResponse } from '@/models';
 
-export const useInscriptionDebtStore = () => {
-  const { dataInscriptionDebt } = useAppSelector(state => state.inscriptionDebts);
+export const useDebtStore = () => {
+  const { dataDebt } = useAppSelector(state => state.Debts);
   const dispatch = useDispatch();
   const { handleError } = useErrorStore();
   const { showSuccess, showWarning, showError } = useAlertStore();
-  const baseUrl = 'inscription-debt';
+  const baseUrl = 'debt';
 
-  const getInscriptionDebts = async (page: number = 1, limit: number = 10, keys: string = '') => {
-
+  const getDebts = async (page: number = 1, limit: number = 10, keys: string = '') => {
     try {
       const res = await coffeApi.get(`/${baseUrl}?page=${page}&limit=${limit}&keys=${keys}`);
       const { data, meta } = res.data;
       console.log(res.data);
-      const payload: InscriptionDebtResponse = {
+      const payload: DebtResponse = {
         ...meta,
         data,
       };
-      dispatch(setInscriptiondebts(payload));
+      dispatch(setDebts(payload));
     } catch (error) {
       throw handleError(error);
     }
-
   }
 
-  const createInscriptionDebt = async (body: InscriptionDebtRequest) => {
+  const getDebtsByStudent = async (studentId: string): Promise<DebtModel[]> => {
+    try {
+      const res = await coffeApi.get(`/${baseUrl}/student/${studentId}`);
+      const { data } = res;
+      const payload: DebtModel[] = data;
+      console.log(payload);
+      return payload;
+    } catch (error) {
+      throw handleError(error);
+    }
+  };
+
+
+  const createDebt = async (body: DebtRequest) => {
     try {
       const { data } = await coffeApi.post(`/${baseUrl}/`, body);
       console.log(data)
-      getInscriptionDebts();
+      getDebts();
       showSuccess('Sucursal creado correctamente');
     } catch (error: any) {
       throw handleError(error);
     }
   }
 
-  const updateInscriptionDebt = async (id: string, body: InscriptionDebtRequest) => {
+  const updateDebt = async (id: string, body: DebtRequest) => {
     try {
       const { data } = await coffeApi.patch(`/${baseUrl}/${id}`, body);
       console.log(data)
-      getInscriptionDebts();
+      getDebts();
       showSuccess('Sucursal editado correctamente');
     } catch (error: any) {
       throw handleError(error);
     }
   }
 
-  const deleteInscriptionDebt = async (id: string) => {
+  const deleteDebt = async (id: string) => {
     try {
       const result = await showWarning();
       if (result.isConfirmed) {
         await coffeApi.delete(`/${baseUrl}/${id}`);
-        getInscriptionDebts();
+        getDebts();
         showSuccess('Sucursal eliminado correctamente');
       } else {
         showError('Cancelado', 'La sucursal esta a salvo :)');
@@ -66,11 +77,12 @@ export const useInscriptionDebtStore = () => {
   }
   return {
     //* Propiedades
-    dataInscriptionDebt,
+    dataDebt,
     //* Métodos
-    getInscriptionDebts,
-    createInscriptionDebt,
-    updateInscriptionDebt,
-    deleteInscriptionDebt,
+    getDebts,
+    getDebtsByStudent,
+    createDebt,
+    updateDebt,
+    deleteDebt,
   }
 }

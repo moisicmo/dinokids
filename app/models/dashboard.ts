@@ -6,5 +6,5 @@ export interface DashboardModel {
   totalInscriptions: number;
   totalBookings: number;
   totalRooms: number;
-  totalInscriptionDebts: number;
+  totalDebts: number;
 }

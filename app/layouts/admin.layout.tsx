@@ -3,10 +3,13 @@ import { Outlet, useLocation } from 'react-router';
 import { ProtectedRoute } from './protected.layout';
 import { SideNav } from './SideNav';
 import { TopNav } from './TopNav';
+import { CartDrawer } from './cart/cart.nav';
+import CartView from './cart/cart.view';
 
 const AdminLayout = () => {
   const { pathname } = useLocation();
   const [openNav, setOpenNav] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
 
   const SIDENAV_WIDTH = 190;
   const [isLargeScreen, setIsLargeScreen] = useState(false);
@@ -21,6 +24,7 @@ const AdminLayout = () => {
 
   useEffect(() => {
     if (openNav) setOpenNav(false);
+    if (cartOpen) setCartOpen(false);
   }, [pathname]);
 
   return (
@@ -38,7 +42,10 @@ const AdminLayout = () => {
         <div className="flex flex-col flex-1 min-w-0">
 
           {/* Top Navbar */}
-          <TopNav onNavOpen={() => setOpenNav(true)} />
+          <TopNav
+            onNavOpen={() => setOpenNav(true)}
+            onTapCart={() => setCartOpen(true)}
+          />
 
           {/* Contenido principal */}
           <main
@@ -48,6 +55,11 @@ const AdminLayout = () => {
             <Outlet />
           </main>
 
+
+          {/* Drawer del carrito */}
+          <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)}>
+            <CartView onClose={() => setCartOpen(false)} />
+          </CartDrawer>
 
 
         </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useInscriptionDebtStore, useDebounce } from '@/hooks';
+import { useDebtStore, useDebounce, useEnums } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
 
@@ -7,26 +7,26 @@ interface Props {
   limitInit?: number;
 }
 
-export const InscriptionDebtTable = (props: Props) => {
+export const DebtTable = (props: Props) => {
   const {
     limitInit = 10,
   } = props;
 
-  const { dataInscriptionDebt, getInscriptionDebts } = useInscriptionDebtStore();
-
+  const { dataDebt, getDebts } = useDebtStore();
+  const { getTypeDebt, getTypeDebtClass } = useEnums();
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(limitInit);
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 1500);
   useEffect(() => {
-    const maxPage = Math.max(1, Math.ceil(dataInscriptionDebt.total / rowsPerPage));
+    const maxPage = Math.max(1, Math.ceil(dataDebt.total / rowsPerPage));
     if (page > maxPage) {
       setPage(maxPage);
     }
-  }, [dataInscriptionDebt.total, rowsPerPage]);
+  }, [dataDebt.total, rowsPerPage]);
 
   useEffect(() => {
-    getInscriptionDebts(page, rowsPerPage, debouncedQuery);
+    getDebts(page, rowsPerPage, debouncedQuery);
   }, [page, rowsPerPage, debouncedQuery]);
 
   return (
@@ -53,7 +53,7 @@ export const InscriptionDebtTable = (props: Props) => {
             </tr>
           </thead>
           <tbody>
-            {dataInscriptionDebt.data.map((item) => (
+            {dataDebt.data.map((item) => (
               <tr key={item.id} className="border-b hover:bg-gray-50 group">
                 <td className="px-6 py-3">{item.inscription.student?.code}</td>
                 <td className="px-6 py-3">
@@ -65,7 +65,11 @@ export const InscriptionDebtTable = (props: Props) => {
                 </td>
                 <td className="px-6 py-3">{`${item.totalAmount} Bs.`}</td>
                 <td className="px-6 py-3">{`${item.remainingBalance} Bs`}</td>
-                <td className="px-6 py-3">{item.type}</td>
+                <td className="px-4 py-2">
+                  <span className={`text-xs font-medium px-2 py-1 rounded-full ${getTypeDebtClass(item.type)}`}>
+                    {getTypeDebt(item.type)}
+                  </span>
+                </td>
                 <td className="px-6 py-3 sticky right-0 bg-white z-10 group-hover:bg-gray-50">
                   <ActionButtons
                     item={item}
@@ -79,7 +83,7 @@ export const InscriptionDebtTable = (props: Props) => {
 
       {/* Controles de paginación */}
       <PaginationControls
-        total={dataInscriptionDebt.total}
+        total={dataDebt.total}
         page={page}
         limit={rowsPerPage}
         onPageChange={(newPage) => setPage(newPage)}
