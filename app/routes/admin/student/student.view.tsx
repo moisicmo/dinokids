@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import type { StudentModel, UserModel } from '@/models';
-import { StudentCreate, StudentTable } from '.';
 import { ButtonCustom } from '@/components';
+import { StudentCreate, StudentTable } from '.';
 
 const studentView = () => {
   const [openDialog, setOpenDialog] = useState(false);

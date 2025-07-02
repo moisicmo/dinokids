@@ -1,10 +1,14 @@
 import type { FormPaymentModel } from '@/models';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
+
+
+const dataInit: FormPaymentModel[] = [];
+
 export const cartSlice = createSlice({
   name: 'cart',
   initialState: {
-    cart: [] as FormPaymentModel[],
+    cart: dataInit,
   },
   reducers: {
     setClearCart: (state,) => {
@@ -12,11 +16,10 @@ export const cartSlice = createSlice({
     },
 
     setAddCart: (state, action: PayloadAction<FormPaymentModel>) => {
-      // const itemCart:CartModel = payload.itemCart;
-      // const item = state.cart.find((item)=> item.DebtModel.id == itemCart.DebtModel.id);
-      // if(!item){
-      state.cart = [...state.cart, action.payload]
-      // }
+      const item = state.cart.find((item) => item.debt.id == action.payload.debt.id);
+      if (!item) {
+        state.cart = [...state.cart, action.payload]
+      }
     },
 
     setUpdateItemCart: (state, { payload }) => {
@@ -29,18 +32,15 @@ export const cartSlice = createSlice({
       // })
     },
 
-    setRemoveCart: (state, { payload }) => {
-      // const itemCart: CartModel = payload.itemCart;
-      // state.cart = state.cart.filter(
-      //   (e) => e.DebtModel.id !== itemCart.DebtModel.id
-      // );
+    setRemoveCart: (state, action: PayloadAction<FormPaymentModel>) => {
+      state.cart = state.cart.filter(
+        (e) => e.debt.id !== action.payload.debt.id
+      );
     },
-
-
   }
 });
 
-// Action creators are generated for each case reducer function
+
 export const {
   setClearCart,
   setAddCart,

@@ -17,6 +17,7 @@ export * from './request/role.request';
 export * from './request/price.request';
 export * from './request/assignment-schedule.request';
 export * from './request/assignment-room.request';
+export * from './request/cart.request';
 
 // RESPONSE
 export * from './response/auth.response';
@@ -38,7 +39,6 @@ export * from './response/price.response';
 export * from './response/assignment-room.response';
 export * from './response/assignment-schedule.response';
 
-export * from './cart';
 export * from './pagination';
 export * from './dashboard';
 

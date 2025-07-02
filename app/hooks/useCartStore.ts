@@ -1,10 +1,10 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { setAddCart, setUpdateItemCart, setClearCart, setRemoveCart } from '@/store';
-import type { CartModel, FormPaymentModel } from '@/models';
-import { useAlertStore } from '.';
+import { useDispatch } from 'react-redux';
+import { setAddCart, setUpdateItemCart, setRemoveCart } from '@/store';
+import type { FormPaymentModel } from '@/models';
+import { useAlertStore, useAppSelector } from '.';
 
 export const useCartStore = () => {
-  const { cart } = useSelector((state: any) => state.carts);
+  const { cart } = useAppSelector(state => state.carts);
   const dispatch = useDispatch();
   const { showDesition } = useAlertStore();
 
@@ -25,12 +25,12 @@ export const useCartStore = () => {
     //   }
     // }
   };
-  const updateItemCart = async (itemCart: CartModel) => {
+  const updateItemCart = async (itemCart: FormPaymentModel) => {
     dispatch(setUpdateItemCart({ itemCart }));
   }
 
-  const removeItem = async (itemCart: CartModel) => {
-    dispatch(setRemoveCart({ itemCart }));
+  const removeItemCart = async (itemCart: FormPaymentModel) => {
+    dispatch(setRemoveCart(itemCart));
   }
 
 
@@ -40,6 +40,6 @@ export const useCartStore = () => {
     //* Métodos
     addCard,
     updateItemCart,
-    removeItem,
+    removeItemCart,
   }
 }

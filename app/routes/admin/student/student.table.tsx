@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { type DebtModel, type FormPaymentModel, type StudentModel } from '@/models';
-import { useDebounce, useEnums, useDebtStore, useStudentStore } from '@/hooks';
+import { useDebounce, useEnums, useDebtStore, useStudentStore, usePopover, useCartStore } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
 import { format } from 'date-fns';
@@ -23,13 +23,14 @@ export const StudentTable = (props: Props) => {
   } = props;
 
   const { dataStudent, getStudents, deleteStudent } = useStudentStore();
+  const { cart } = useCartStore();
   const { getDebtsByStudent } = useDebtStore();
   const { getTypeDebt, getTypeDebtClass } = useEnums();
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(limitInit);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [Debt, setDebt] = useState<FormPaymentModel | null>(null);
-  const [openDrawer, setOpenDrawer] = useState(false);
+  
 
   const [Debts, setDebts] = useState<DebtModel[]>([]);
   const [query, setQuery] = useState('');
@@ -58,6 +59,8 @@ export const StudentTable = (props: Props) => {
     setExpandedId(id);
   };
 
+
+  const accountPopover = usePopover();
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -147,19 +150,21 @@ export const StudentTable = (props: Props) => {
                                     {format(new Date(debt.createdAt), 'dd-MMMM-yyyy', { locale: es })}
                                   </td>
                                   <td className="px-4 py-2">{debt.dueDate ? format(new Date(debt.dueDate), 'dd-MM-yyyy') : '—'}</td>
-                                  <td className="px-6 py-3 sticky right-0">
+                                  <td className="px-6 py-3 sticky right-0 bg-gray-50 z-10">
                                     <ActionButtons
                                       item={debt}
-                                      onPayment={(_) => {
+                                      onPayment={(id, event) => {
                                         const request: FormPaymentModel = {
                                           debt,
-                                          amount: 0.0,
+                                          amount: debt.remainingBalance,
                                           dueDate: null
-                                        }
-                                        setDebt(request)
-                                        setOpenDrawer(true);
+                                        };
+                                        setDebt(request);
+                                        accountPopover.anchorRef.current = event.currentTarget;
+                                        accountPopover.handleOpen();
                                       }}
                                     />
+
                                   </td>
                                 </tr>
                               ))}
@@ -190,13 +195,17 @@ export const StudentTable = (props: Props) => {
         }}
       />
 
-      {(openDrawer && Debt) && (
+      {/* Popover */}
+      {
+        Debt &&
         <PaymentCreate
-          open={openDrawer}
-          handleClose={() => setOpenDrawer(false)}
+          anchorEl={accountPopover.anchorRef.current}
+          open={accountPopover.open}
+          onClose={accountPopover.handleClose}
           item={Debt}
         />
-      )}
+
+      }
     </div>
   );
 };

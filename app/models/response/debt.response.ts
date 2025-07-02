@@ -8,8 +8,8 @@ export interface DebtModel {
   id: string;
   inscription: InscriptionModel;
   type: TypeDebt;
-  totalAmount: string;
-  remainingBalance: string;
+  totalAmount: number;
+  remainingBalance: number;
   createdAt: Date;
   dueDate?: Date;
   // payments:

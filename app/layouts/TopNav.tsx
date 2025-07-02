@@ -1,5 +1,5 @@
 import { Menu, ShoppingCart } from 'lucide-react';
-import { usePopover } from '@/hooks';
+import { useCartStore, usePopover } from '@/hooks';
 import noimage from '@/assets/images/profile.png';
 import { AccountPopover } from './account.popover';
 
@@ -14,6 +14,8 @@ export const TopNav = (props: Props) => {
     onTapCart,
   } = props;
   const accountPopover = usePopover();
+
+  const { cart } = useCartStore();
 
   return (
     <header className="sticky top-0 w-full bg-white z-30 shadow-sm">
@@ -45,15 +47,18 @@ export const TopNav = (props: Props) => {
             >
               <ShoppingCart size={24} />
               {/* Badge de cantidad */}
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
-                3
-              </span>
+              {
+                cart.length != 0 &&
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
+                  {cart.length}
+                </span>
+              }
             </button>
           </div>
 
           {/* Avatar */}
           <div
-            ref={accountPopover.anchorRef}
+            ref={accountPopover.anchorRef as React.RefObject<HTMLDivElement>}
             onClick={accountPopover.handleOpen}
             className="cursor-pointer w-11 h-11 rounded-full overflow-hidden border border-gray-300"
           >

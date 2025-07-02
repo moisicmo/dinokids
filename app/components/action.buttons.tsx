@@ -1,14 +1,15 @@
-import { ChevronDown, ChevronUp, CircleDollarSign, Download, Pencil, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronUp, Download, Pencil, ShoppingCart, Trash2 } from 'lucide-react';
 
 interface ActionButtonsProps<T extends { id?: string; userId?: string }> {
   item: T;
   onEdit?: (item: T) => void;
   onDelete?: (id: string) => void;
   onDownload?: (id: string) => void;
-  onPayment?: (id: string) => void;
+  onPayment?: (id: string, event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   onSelect?: (id: string) => void;
   isSelected?: boolean;
 }
+
 
 export const ActionButtons = <T extends { id?: string; userId?: string }>({
   item,
@@ -20,6 +21,7 @@ export const ActionButtons = <T extends { id?: string; userId?: string }>({
   isSelected,
 }: ActionButtonsProps<T>) => {
   const identifier = item.userId ?? item.id ?? '';
+
 
   return (
     <div className="flex justify-center items-center gap-3">
@@ -39,10 +41,16 @@ export const ActionButtons = <T extends { id?: string; userId?: string }>({
       )}
 
       {onPayment && identifier && (
-        <button onClick={() => onPayment(identifier)} title="Pagar" className="cursor-pointer">
-          <CircleDollarSign color="var(--color-secondary)" className="w-5 h-5" />
+        <button
+          onClick={(e) => onPayment?.(identifier, e)}
+          className="flex items-center gap-1 text-secondary hover:opacity-80 cursor-pointer"
+          title="Agregar al carrito de pagos"
+        >
+          <ShoppingCart className="w-5 h-5" />
+          <span className="text-sm hidden md:inline">Agregar</span>
         </button>
       )}
+
       {onDownload && identifier && (
         <button onClick={() => onDownload(identifier)} title="Descargar" className="cursor-pointer">
           <Download color="var(--color-info)" className="w-5 h-5" />

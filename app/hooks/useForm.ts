@@ -88,7 +88,7 @@ export const useForm = (initialForm: any = {}, formValidations: any = {}) => {
           result[`${key}Valid`] = buildValidation(state[key] ?? {}, validations[key]);
         } else {
           const [fn, message] = validations[key];
-          result[`${key}Valid`] = fn(state[key]) ? null : message;
+          result[`${key}Valid`] = fn(state[key], state) ? null : message;
         }
       }
       return result;

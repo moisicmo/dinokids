@@ -1,17 +1,21 @@
 
 import { Pencil, Trash2 } from "lucide-react";
-// import { CartModel } from "@/models";
-import { format } from "date-fns";
-import type { CartModel } from "@/models";
-// import esES from "date-fns/locale/es";
+import type { FormPaymentModel } from "@/models";
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+import { useEnums } from "@/hooks";
 
 interface Props {
-  item: CartModel;
+  item: FormPaymentModel;
   updateItem: () => void;
   removeItem: () => void;
 }
 
 export const CartItem = ({ item, updateItem, removeItem }: Props) => {
+
+  const { getTypeDebt, getTypeDebtClass } = useEnums();
+
+
   return (
     <div className="flex flex-col pb-2">
       <div className="flex justify-between items-start gap-2">
@@ -19,14 +23,16 @@ export const CartItem = ({ item, updateItem, removeItem }: Props) => {
         {/* Información principal */}
         <div className="flex flex-col flex-1">
           <div className="flex justify-between">
-            <span className="text-gray-800 font-medium">{item.DebtModel.type}</span>
-            <span className="text-gray-900 font-semibold">{item.paymentModel.amount} Bs.</span>
+            <span className={`text-xs font-medium px-2 py-1 rounded-full ${getTypeDebtClass(item.debt.type)}`}>
+              {getTypeDebt(item.debt.type)}
+            </span>
+            <span className="text-gray-900 font-semibold">{item.amount} Bs.</span>
           </div>
 
-          {item.paymentModel.dueDate && (
+          {item.dueDate && (
             <div className="flex justify-between text-sm text-gray-500 mt-1">
               <span>Venc:</span>
-              {/* <span>{format(new Date(item.paymentModel.dueDate), "dd-MM-yyyy", { locale: esES })}</span> */}
+              <span>{format(new Date(item.dueDate), "dd-MM-yyyy", { locale: es })}</span>
             </div>
           )}
         </div>
