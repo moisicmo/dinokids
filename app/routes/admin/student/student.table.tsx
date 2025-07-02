@@ -23,7 +23,6 @@ export const StudentTable = (props: Props) => {
   } = props;
 
   const { dataStudent, getStudents, deleteStudent } = useStudentStore();
-  const { cart } = useCartStore();
   const { getDebtsByStudent } = useDebtStore();
   const { getTypeDebt, getTypeDebtClass } = useEnums();
   const [page, setPage] = useState(1);

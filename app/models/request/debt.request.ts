@@ -1,10 +1,12 @@
 import type { DebtModel } from "..";
 
-export interface DebtRequest {
-  name: string;
-  address: string;
-  phone: string;
+
+export interface PaymentRequest {
+  debtId: string;
+  amount: number;
+  dueDate: Date|null;
 }
+
 
 export interface FormPaymentModel {
   debt: DebtModel,

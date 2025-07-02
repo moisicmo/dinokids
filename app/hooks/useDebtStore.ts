@@ -1,14 +1,13 @@
 import { useDispatch } from 'react-redux';
 import { coffeApi } from '@/services';
 import { setDebts } from '@/store';
-import { useAlertStore, useAppSelector, useErrorStore } from '.';
-import type { DebtModel, DebtRequest, DebtResponse } from '@/models';
+import { useAppSelector, useErrorStore } from '.';
+import type { DebtModel, DebtResponse } from '@/models';
 
 export const useDebtStore = () => {
   const { dataDebt } = useAppSelector(state => state.Debts);
   const dispatch = useDispatch();
   const { handleError } = useErrorStore();
-  const { showSuccess, showWarning, showError } = useAlertStore();
   const baseUrl = 'debt';
 
   const getDebts = async (page: number = 1, limit: number = 10, keys: string = '') => {
@@ -37,52 +36,11 @@ export const useDebtStore = () => {
       throw handleError(error);
     }
   };
-
-
-  const createDebt = async (body: DebtRequest) => {
-    try {
-      const { data } = await coffeApi.post(`/${baseUrl}/`, body);
-      console.log(data)
-      getDebts();
-      showSuccess('Sucursal creado correctamente');
-    } catch (error: any) {
-      throw handleError(error);
-    }
-  }
-
-  const updateDebt = async (id: string, body: DebtRequest) => {
-    try {
-      const { data } = await coffeApi.patch(`/${baseUrl}/${id}`, body);
-      console.log(data)
-      getDebts();
-      showSuccess('Sucursal editado correctamente');
-    } catch (error: any) {
-      throw handleError(error);
-    }
-  }
-
-  const deleteDebt = async (id: string) => {
-    try {
-      const result = await showWarning();
-      if (result.isConfirmed) {
-        await coffeApi.delete(`/${baseUrl}/${id}`);
-        getDebts();
-        showSuccess('Sucursal eliminado correctamente');
-      } else {
-        showError('Cancelado', 'La sucursal esta a salvo :)');
-      }
-    } catch (error) {
-      throw handleError(error);
-    }
-  }
   return {
     //* Propiedades
     dataDebt,
     //* Métodos
     getDebts,
     getDebtsByStudent,
-    createDebt,
-    updateDebt,
-    deleteDebt,
   }
 }

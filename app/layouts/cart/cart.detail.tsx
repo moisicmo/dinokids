@@ -1,6 +1,6 @@
 import { ButtonCustom, InputCustom } from "@/components"
-import { useCartStore, useForm } from "@/hooks";
-import { formCartInit, formCartValidations } from "@/models";
+import { useCartStore, useForm, usePaymentStore } from "@/hooks";
+import { formCartInit, formCartValidations, type CartRequest } from "@/models";
 import { useState, type FormEvent } from "react";
 
 export const CartDetail = () => {
@@ -8,6 +8,7 @@ export const CartDetail = () => {
 
   const [formSubmitted, setFormSubmitted] = useState(false);
   const { cart } = useCartStore();
+  const { sentPayments } = usePaymentStore();
 
   const {
     buyerNit,
@@ -24,16 +25,16 @@ export const CartDetail = () => {
     setFormSubmitted(true);
     if (!isFormValid) return;
     console.log('pagando');
-    // payInscriptionDebt({
-    //   cart: [...cart.map((item) => {
-    //     return {
-    //       inscriptionDebtId: item.inscriptionDebtModel.id,
-    //       ...item.paymentModel
-    //     };
-    //   })],
-    //   buyerNit,
-    //   buyerName,
-    // });
+    const request: CartRequest = {
+      buyerNit: buyerNit.trim(),
+      buyerName: buyerName.trim(),
+      payments: cart.map(cart => ({
+        debtId: cart.debt.id,
+        amount: cart.amount,
+        dueDate: cart.dueDate
+      }))
+    }
+    sentPayments(request);
 
     onResetForm();
   }
@@ -44,7 +45,7 @@ export const CartDetail = () => {
     <div>
       <div className="flex justify-between pb-2.5">
         <p>Estudiante:</p>
-        <p>{cart[0].debt.inscription.student?.user.name??cart[0].debt.inscription.booking?.name}</p>
+        <p>{cart[0].debt.inscription.student?.user.name ?? cart[0].debt.inscription.booking?.name}</p>
       </div>
 
       <form onSubmit={sendSubmit}>
@@ -65,9 +66,9 @@ export const CartDetail = () => {
           helperText={formSubmitted ? buyerNameValid : ""}
         />
         <ButtonCustom
-            type="submit"
-            text="Pagar"
-            className='w-full'/>
+          type="submit"
+          text="Pagar"
+          className='w-full' />
 
       </form>
 

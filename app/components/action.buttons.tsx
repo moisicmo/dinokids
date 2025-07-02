@@ -1,3 +1,4 @@
+import { useCartStore } from '@/hooks';
 import { ChevronDown, ChevronUp, Download, Pencil, ShoppingCart, Trash2 } from 'lucide-react';
 
 interface ActionButtonsProps<T extends { id?: string; userId?: string }> {
@@ -22,6 +23,8 @@ export const ActionButtons = <T extends { id?: string; userId?: string }>({
 }: ActionButtonsProps<T>) => {
   const identifier = item.userId ?? item.id ?? '';
 
+  const { cart } = useCartStore();
+  const isInCart = cart.some((e) => e.debt.id === item.id);
 
   return (
     <div className="flex justify-center items-center gap-3">
@@ -40,16 +43,31 @@ export const ActionButtons = <T extends { id?: string; userId?: string }>({
         </button>
       )}
 
-      {onPayment && identifier && (
-        <button
-          onClick={(e) => onPayment?.(identifier, e)}
-          className="flex items-center gap-1 text-secondary hover:opacity-80 cursor-pointer"
-          title="Agregar al carrito de pagos"
-        >
-          <ShoppingCart className="w-5 h-5" />
-          <span className="text-sm hidden md:inline">Agregar</span>
-        </button>
-      )}
+{onPayment && identifier && (
+  (item as any).remainingBalance === 0 ? (
+    <span className="text-success text-secondary flex items-center gap-1 text-sm">
+      Sin deudas
+    </span>
+  ) : (
+    <button
+      onClick={(e) => {
+        if (!isInCart) {
+          onPayment?.(identifier, e);
+        }
+      }}
+      className={`flex items-center gap-1 ${isInCart ? 'text-error cursor-not-allowed' : 'text-primary hover:opacity-80 cursor-pointer'}`}
+      title={isInCart ? "Ya agregado al carrito" : "Agregar al carrito de pagos"}
+      disabled={isInCart}
+    >
+      <ShoppingCart className="w-5 h-5" />
+      <span className="text-sm hidden md:inline">
+        {isInCart ? 'Agregado' : 'Agregar'}
+      </span>
+    </button>
+  )
+)}
+
+
 
       {onDownload && identifier && (
         <button onClick={() => onDownload(identifier)} title="Descargar" className="cursor-pointer">

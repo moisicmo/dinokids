@@ -1,4 +1,10 @@
 
+import type { PaymentRequest } from "..";
+export interface CartRequest {
+  buyerNit: string;
+  buyerName: string;
+  payments: PaymentRequest[];
+}
 
 export interface FormCartModel {
   buyerNit: string;
