@@ -1,9 +1,4 @@
-import type { BranchModel, MetaPagination, ScheduleModel, SpecialtyModel, TeacherModel } from "..";
-
-
-export interface RoomResponse extends MetaPagination {
-  data: RoomModel[];
-}
+import type { BranchModel, ScheduleModel, SpecialtyModel, TeacherModel } from "..";
 
 export interface RoomModel {
   id: string;

@@ -1,12 +1,14 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { useStaffStore, useForm, useRoleStore, useBranchStore } from '@/hooks';
+import { useForm, useRoleStore, useBranchStore } from '@/hooks';
 import { ButtonCustom, InputCustom, SelectCustom } from '@/components';
-import { type BranchModel, formStaffInit, formStaffValidations, type StaffModel } from '@/models';
+import { type BranchModel, formStaffInit, formStaffValidations, type StaffModel, type StaffRequest } from '@/models';
 
 interface Props {
   open: boolean;
   handleClose: () => void;
   item: StaffModel | null;
+  onCreate: (body: StaffRequest) => void;
+  onUpdate: (id: string, body: StaffRequest) => void;
 }
 
 export const StaffCreate = (props: Props) => {
@@ -14,8 +16,9 @@ export const StaffCreate = (props: Props) => {
     open,
     handleClose,
     item,
+    onCreate,
+    onUpdate,
   } = props;
-  const { createStaff, updateStaff } = useStaffStore();
   const { dataRole, getRoles } = useRoleStore();
   const { dataBranch, getBranches } = useBranchStore();
 
@@ -40,8 +43,8 @@ export const StaffCreate = (props: Props) => {
     if (!isFormValid) return;
 
     if (item == null) {
-      await createStaff({
-        numberDocument:user.numberDocument,
+      await onCreate({
+        numberDocument: user.numberDocument,
         typeDocument: 'DNI',
         name: user.name.trim(),
         lastName: user.lastName.trim(),
@@ -51,8 +54,8 @@ export const StaffCreate = (props: Props) => {
         brancheIds: branches.map((branch: BranchModel) => branch.id),
       });
     } else {
-      await updateStaff(item.userId, {
-        numberDocument:user.numberDocument,
+      await onUpdate(item.userId, {
+        numberDocument: user.numberDocument,
         typeDocument: 'DNI',
         name: user.name.trim(),
         lastName: user.lastName.trim(),

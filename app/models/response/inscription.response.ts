@@ -1,8 +1,5 @@
-import type { AssignmentRoomModel, BookingModel, MetaPagination, PriceModel, StudentModel } from "..";
+import type { AssignmentRoomModel, BookingModel, PriceModel, StudentModel } from "..";
 
-export interface InscriptionResponse extends MetaPagination {
-  data: InscriptionModel[];
-}
 export interface InscriptionModel {
   id: string;
   inscriptionPrice: number,
@@ -12,5 +9,6 @@ export interface InscriptionModel {
   url: string | null;
   prices: PriceModel[];
   assignmentRooms: AssignmentRoomModel[];
+  createdAt: Date;
 }
 

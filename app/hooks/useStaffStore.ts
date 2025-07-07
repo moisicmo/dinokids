@@ -1,12 +1,10 @@
-import { useDispatch } from 'react-redux';
 import { coffeApi } from '@/services';
-import { setStaffs } from '@/store';
-import { useAlertStore, useAppSelector, useErrorStore } from '.';
-import type { StaffRequest, StaffResponse } from '@/models';
+import { useAlertStore, useErrorStore } from '.';
+import { InitBaseResponse, type BaseResponse, type StaffModel, type StaffRequest } from '@/models';
+import { useState } from 'react';
 
 export const useStaffStore = () => {
-  const { dataStaff } = useAppSelector(state => state.staffs);
-  const dispatch = useDispatch();
+  const [dataStaff, setDataStaff] = useState<BaseResponse<StaffModel>>(InitBaseResponse);
   const { handleError } = useErrorStore();
   const { showSuccess, showWarning, showError } = useAlertStore();
   const baseUrl = 'staff';
@@ -16,11 +14,11 @@ export const useStaffStore = () => {
       const res = await coffeApi.get(`/${baseUrl}?page=${page}&limit=${limit}&keys=${keys}`);
       const { data, meta } = res.data;
       console.log(res.data);
-      const payload: StaffResponse = {
+      const payload: BaseResponse<StaffModel> = {
         ...meta,
         data,
       };
-      dispatch(setStaffs(payload));
+      setDataStaff(payload);
     } catch (error) {
       throw handleError(error);
     }

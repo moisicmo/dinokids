@@ -1,12 +1,14 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { useStudentStore, useForm, useTutorStore } from '@/hooks';
+import { useForm, useTutorStore } from '@/hooks';
 import { ButtonCustom, DateTimePickerCustom, InputCustom, SelectCustom, type ValueSelect } from '@/components';
-import { type TutorModel, Gender, EducationLevel, formStudentValidations, formStudentInit, type StudentModel } from '@/models';
+import { type TutorModel, Gender, EducationLevel, formStudentValidations, formStudentInit, type StudentModel, type StudentRequest } from '@/models';
 
 interface Props {
   open: boolean;
   handleClose: () => void;
   item: StudentModel | null;
+  onCreate: (body: StudentRequest) => void;
+  onUpdate: (id: string, body: StudentRequest) => void;
 }
 
 
@@ -15,8 +17,9 @@ export const StudentCreate = (props: Props) => {
     open,
     handleClose,
     item,
+    onCreate,
+    onUpdate,
   } = props;
-  const { createStudent, updateStudent } = useStudentStore();
   const { dataTutor, getTutors } = useTutorStore();
 
 
@@ -49,8 +52,8 @@ export const StudentCreate = (props: Props) => {
     if (!isFormValid) return;
 
     if (item == null) {
-      await createStudent({
-        numberDocument:user.numberDocument,
+      await onCreate({
+        numberDocument: user.numberDocument,
         typeDocument: 'DNI',
         name: user.name.trim(),
         lastName: user.lastName.trim(),
@@ -63,8 +66,8 @@ export const StudentCreate = (props: Props) => {
         tutorIds: tutors.map((tutor: TutorModel) => tutor.userId),
       });
     } else {
-      await updateStudent(item.userId, {
-        numberDocument:user.numberDocument,
+      await onUpdate(item.userId, {
+        numberDocument: user.numberDocument,
         typeDocument: 'DNI',
         name: user.name.trim(),
         lastName: user.lastName.trim(),

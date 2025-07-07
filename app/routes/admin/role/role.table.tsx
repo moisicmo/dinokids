@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
-import { TypeAction, TypeSubject, type RoleModel } from '@/models';
-import { useRoleStore, useDebounce } from '@/hooks';
+import { TypeAction, TypeSubject, type BaseResponse, type RoleModel } from '@/models';
+import { useDebounce } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 interface Props {
   handleEdit: (role: RoleModel) => void;
   limitInit?: number;
   itemSelect?: (role: RoleModel) => void;
+  dataRole: BaseResponse<RoleModel>;
+  onRefresh: (page?: number, limit?: number, keys?: string) => void;
+  onDelete: (id: string) => void;
 }
 
 export const RoleTable = (props: Props) => {
@@ -15,9 +19,11 @@ export const RoleTable = (props: Props) => {
     handleEdit,
     itemSelect,
     limitInit = 10,
+    dataRole,
+    onRefresh,
+    onDelete,
   } = props;
 
-  const { dataRole, getRoles, deleteRole } = useRoleStore();
 
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(limitInit);
@@ -31,7 +37,7 @@ export const RoleTable = (props: Props) => {
   }, [dataRole.total, rowsPerPage]);
 
   useEffect(() => {
-    getRoles(page, rowsPerPage, debouncedQuery);
+    onRefresh(page, rowsPerPage, debouncedQuery);
   }, [page, rowsPerPage, debouncedQuery]);
 
   return (
@@ -44,42 +50,39 @@ export const RoleTable = (props: Props) => {
           onChange={(e) => setQuery(e.target.value)}
         />
       </div>
-
-      <div className="overflow-x-auto rounded-lg pb-3">
-        <table className="min-w-max text-sm text-left w-full">
-          <thead className="bg-gray-100 text-gray-700 uppercase text-xs">
-            <tr>
-              <th className="px-6 py-3">Nombre</th>
-              <th className="px-6 py-3">Permisos</th>
-              <th className="px-6 py-3 sticky right-0 bg-gray-100 z-10">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dataRole.data.map((item) => (
-              <tr key={item.id} className="border-b hover:bg-gray-50 group">
-                <td className="px-6 py-3">{item.name}</td>
-                <td className="px-6 py-3">
-                  <ul className="list-disc list-inside space-y-1">
-                    {
-                      item.permissions.map((perm) => (
-                        <li key={perm.id}>
-                          {`${TypeAction[perm.action as unknown as keyof typeof TypeAction]} ${TypeSubject[perm.subject as unknown as keyof typeof TypeSubject]}`}
-                        </li>))
-                    }
-                  </ul>
-                </td>
-                <td className="px-6 py-3 sticky right-0 bg-white z-10 group-hover:bg-gray-50">
-                  <ActionButtons
-                    item={item}
-                    onEdit={handleEdit}
-                    onDelete={deleteRole}
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Table className='mb-3'>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Nombre</TableHead>
+            <TableHead>Permisos</TableHead>
+            <TableHead className="sticky right-0 z-10 bg-white">Acciones</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {dataRole.data.map(item => (
+            <TableRow key={item.id}>
+              <TableCell>{item.name}</TableCell>
+              <TableCell>
+                <ul className="list-disc list-inside space-y-1">
+                  {
+                    item.permissions.map((perm) => (
+                      <li key={perm.id}>
+                        {`${TypeAction[perm.action as unknown as keyof typeof TypeAction]} ${TypeSubject[perm.subject as unknown as keyof typeof TypeSubject]}`}
+                      </li>))
+                  }
+                </ul>
+              </TableCell>
+              <TableCell className="sticky right-0 z-10 bg-white">
+                <ActionButtons
+                  item={item}
+                  onEdit={handleEdit}
+                  onDelete={onDelete}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
       {/* Controles de paginación */}
       <PaginationControls
         total={dataRole.total}

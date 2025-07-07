@@ -1,11 +1,12 @@
 import { useDispatch } from 'react-redux';
 import { coffeApi } from '@/services';
-import { setbranches } from '@/store';
-import { useAlertStore, useAppSelector, useErrorStore } from '.';
-import type { BranchRequest, BranchResponse } from '@/models';
+import { useAlertStore, useErrorStore } from '.';
+import { InitBaseResponse, type BaseResponse, type BranchModel, type BranchRequest } from '@/models';
+import { useState } from 'react';
 
 export const useBranchStore = () => {
-  const { dataBranch } = useAppSelector(state => state.branches);
+  const [dataBranch, setDataBranch] = useState<BaseResponse<BranchModel>>(InitBaseResponse);
+
   const dispatch = useDispatch();
   const { handleError } = useErrorStore();
   const { showSuccess, showWarning, showError } = useAlertStore();
@@ -17,11 +18,11 @@ export const useBranchStore = () => {
       const res = await coffeApi.get(`/${baseUrl}?page=${page}&limit=${limit}&keys=${keys}`);
       const { data, meta } = res.data;
       console.log(res.data);
-      const payload: BranchResponse = {
+      const payload: BaseResponse<BranchModel> = {
         ...meta,
         data,
       };
-      dispatch(setbranches(payload));
+      setDataBranch(payload);
     } catch (error) {
       throw handleError(error);
     }

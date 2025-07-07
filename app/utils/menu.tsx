@@ -27,7 +27,7 @@ export const menu = () => {
       permission: 'show-rent',
       group: [
         {
-          path: '/admin/debt',
+          path: '/admin/payment',
           title: 'Pagos',
           icon: <Debt size={18} />,
         },
@@ -110,8 +110,14 @@ export const menu = () => {
       permission: 'show-rent',
       group: [
         {
-          path: '/ReportView',
-          title: 'Reportes',
+          path: '/admin/report/inscription',
+          title: 'Inscripciones',
+          icon: <Report size={18} />,
+          permission: 'show-halls',
+        },
+        {
+          path: '/admin/report/debt',
+          title: 'Deudas',
           icon: <Report size={18} />,
           permission: 'show-halls',
         },

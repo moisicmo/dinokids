@@ -1,12 +1,10 @@
-import { useDispatch } from 'react-redux';
 import { coffeApi } from '@/services';
-import { setInscriptions } from '@/store';
-import { useAlertStore, useAppSelector, useErrorStore, usePrintStore } from '.';
-import type { InscriptionRequest, InscriptionResponse } from '@/models';
+import { useAlertStore, useErrorStore, usePrintStore } from '.';
+import { InitBaseResponse, type BaseResponse, type InscriptionModel, type InscriptionRequest } from '@/models';
+import { useState } from 'react';
 
 export const useInscriptionStore = () => {
-  const { dataInscription } = useAppSelector(state => state.inscriptions);
-  const dispatch = useDispatch();
+  const [dataInscription, setDataInscription] = useState<BaseResponse<InscriptionModel>>(InitBaseResponse);
   const { handleError } = useErrorStore();
   const { showLoading,showSuccess, showWarning, showError, swalClose } = useAlertStore();
   const { handlePdf } = usePrintStore();
@@ -17,11 +15,11 @@ export const useInscriptionStore = () => {
       const res = await coffeApi.get(`/${baseUrl}?page=${page}&limit=${limit}&keys=${keys}`);
       const { data, meta } = res.data;
       console.log(res.data);
-      const payload: InscriptionResponse = {
+      const payload: BaseResponse<InscriptionModel> = {
         ...meta,
         data,
       };
-      dispatch(setInscriptions(payload));
+      setDataInscription(payload);
     } catch (error) {
       throw handleError(error);
     }
@@ -45,7 +43,7 @@ export const useInscriptionStore = () => {
       showLoading('Creando inscripción..');
       const res = await coffeApi.post(`/${baseUrl}/`, body);
       const { pdfBase64 } = res.data;
-      getInscriptions();
+      await getInscriptions();
       showSuccess('Incripción creado correctamente');
       await handlePdf(pdfBase64);
     } catch (error) {

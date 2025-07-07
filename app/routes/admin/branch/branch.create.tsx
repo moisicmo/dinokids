@@ -1,33 +1,24 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { useBranchStore, useForm } from '@/hooks';
+import { useForm } from '@/hooks';
 import { ButtonCustom, InputCustom } from '@/components';
-import type { BranchModel, FormBranchModel, FormBranchValidations } from '@/models';
+import { formBranchFields, formBranchValidations, type BranchModel, type BranchRequest } from '@/models';
 
 interface Props {
   open: boolean;
   handleClose: () => void;
   item: BranchModel | null;
+  onCreate: (body: BranchRequest) => void;
+  onUpdate: (id: string, body: BranchRequest) => void;
 }
-
-const formFields: FormBranchModel = {
-  name: '',
-  address: '',
-  phone: '',
-};
-
-const formValidations: FormBranchValidations = {
-  name: [(value) => value.length >= 1, 'Debe ingresar el nombre'],
-  address: [(value) => value.length >= 1, 'Debe ingresar la dirección'],
-  phone: [(value) => value.length >= 6, 'Debe ingresar el teléfono'],
-};
 
 export const BranchCreate = (props: Props) => {
   const {
     open,
     handleClose,
     item,
+    onCreate,
+    onUpdate,
   } = props;
-  const { createBranch, updateBranch } = useBranchStore();
 
   const {
     name,
@@ -39,7 +30,7 @@ export const BranchCreate = (props: Props) => {
     nameValid,
     addressValid,
     phoneValid,
-  } = useForm(item ?? formFields, formValidations);
+  } = useForm(item ?? formBranchFields, formBranchValidations);
 
   const [formSubmitted, setFormSubmitted] = useState(false);
 
@@ -49,9 +40,17 @@ export const BranchCreate = (props: Props) => {
     if (!isFormValid) return;
 
     if (item == null) {
-      await createBranch({ name, address, phone });
+      await onCreate({
+        name: name.trim(),
+        address: address.trim(),
+        phone: address.trim(),
+      });
     } else {
-      await updateBranch(item.id, { name, address, phone });
+      await onUpdate(item.id, {
+        name: name.trim(),
+        address: address.trim(),
+        phone: address.trim(),
+      });
     }
 
     handleClose();

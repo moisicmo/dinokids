@@ -1,12 +1,10 @@
-import { useDispatch } from 'react-redux';
 import { coffeApi } from '@/services';
-import { setBookings } from '@/store';
-import { useAlertStore, useAppSelector, useErrorStore } from '.';
-import type { BookingRequest, BookingResponse } from '@/models';
+import { useAlertStore, useErrorStore } from '.';
+import { InitBaseResponse, type BaseResponse, type BookingRequest, type InscriptionModel } from '@/models';
+import { useState } from 'react';
 
 export const useBookingStore = () => {
-  const { dataBooking } = useAppSelector(state => state.bookings);
-  const dispatch = useDispatch();
+  const [dataBooking, setDataBooking] = useState<BaseResponse<InscriptionModel>>(InitBaseResponse);
   const { handleError } = useErrorStore();
   const { showSuccess, showWarning, showError } = useAlertStore();
   const baseUrl = 'booking';
@@ -16,11 +14,11 @@ export const useBookingStore = () => {
       const res = await coffeApi.get(`/${baseUrl}?page=${page}&limit=${limit}&keys=${keys}`);
       const { data, meta } = res.data;
       console.log(res.data);
-      const payload: BookingResponse = {
+      const payload: BaseResponse<InscriptionModel> = {
         ...meta,
         data,
       };
-      dispatch(setBookings(payload));
+      setDataBooking(payload);
     } catch (error) {
       throw handleError(error);
     }

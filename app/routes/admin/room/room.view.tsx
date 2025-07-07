@@ -2,8 +2,11 @@ import { useCallback, useState } from 'react';
 import type { RoomModel } from '@/models';
 import { RoomCreate, RoomTable } from '.';
 import { ButtonCustom } from '@/components';
+import { useRoomStore } from '@/hooks';
 
 const roomView = () => {
+  const { dataRoom, getRooms, createRoom, updateRoom, deleteRoom } = useRoomStore();
+
   const [openDialog, setOpenDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<RoomModel | null>(null);
 
@@ -29,6 +32,9 @@ const roomView = () => {
           setItemEdit(v);
           handleDialog(true);
         }}
+        dataRoom={dataRoom}
+        onRefresh={getRooms}
+        onDelete={deleteRoom}
       />
 
       {/* Dialogo para crear o editar */}
@@ -39,7 +45,7 @@ const roomView = () => {
           item={itemEdit == null ? null : {
             ...itemEdit,
             schedules: [
-              ...itemEdit.schedules.map(schedule=>{
+              ...itemEdit.schedules.map(schedule => {
                 return {
                   ...schedule,
                   start: new Date(schedule.start),
@@ -48,6 +54,8 @@ const roomView = () => {
               })
             ]
           }}
+          onCreate={createRoom}
+          onUpdate={updateRoom}
         />
       )}
     </>

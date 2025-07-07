@@ -2,8 +2,11 @@ import { useCallback, useState } from 'react';
 import type { TeacherModel } from '@/models';
 import { TeacherCreate, TeacherTable } from '.';
 import { ButtonCustom } from '@/components';
+import { useTeacherStore } from '@/hooks';
 
 const teacherView = () => {
+  const { dataTeacher, getTeachers, createTeacher, updateTeacher, deleteTeacher } = useTeacherStore();
+
   const [openDialog, setOpenDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<TeacherModel | null>(null);
 
@@ -29,6 +32,9 @@ const teacherView = () => {
           setItemEdit(v);
           handleDialog(true);
         }}
+        dataTeacher={dataTeacher}
+        onRefresh={getTeachers}
+        onDelete={deleteTeacher}
       />
 
       {/* Dialogo para crear o editar */}
@@ -38,8 +44,10 @@ const teacherView = () => {
           handleClose={() => handleDialog(false)}
           item={itemEdit == null ? null : {
             ...itemEdit,
-            startJob:  new Date(itemEdit.startJob),
-           }}
+            startJob: new Date(itemEdit.startJob),
+          }}
+          onCreate={createTeacher}
+          onUpdate={updateTeacher}
         />
       )}
     </>

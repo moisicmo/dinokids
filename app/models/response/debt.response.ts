@@ -1,9 +1,4 @@
-import type { InscriptionModel, MetaPagination, TypeDebt } from "..";
-
-export interface DebtResponse extends MetaPagination {
-  data: DebtModel[];
-}
-
+import type { InscriptionModel, PaymentModel, TypeDebt } from "..";
 export interface DebtModel {
   id: string;
   inscription: InscriptionModel;
@@ -12,5 +7,5 @@ export interface DebtModel {
   remainingBalance: number;
   createdAt: Date;
   dueDate?: Date;
-  // payments:
+  payments: PaymentModel[];
 }

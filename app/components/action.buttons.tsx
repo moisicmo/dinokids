@@ -1,16 +1,20 @@
 import { useCartStore } from '@/hooks';
 import { ChevronDown, ChevronUp, Download, Pencil, ShoppingCart, Trash2 } from 'lucide-react';
+import { Button } from './ui/button';
+import { Popover, PopoverTrigger } from './ui/popover';
+import { useEffect, useState } from 'react';
 
 interface ActionButtonsProps<T extends { id?: string; userId?: string }> {
   item: T;
   onEdit?: (item: T) => void;
   onDelete?: (id: string) => void;
   onDownload?: (id: string) => void;
-  onPayment?: (id: string, event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onPayment?: (id: string) => void;
   onSelect?: (id: string) => void;
   isSelected?: boolean;
+  children?: React.ReactNode;
+   isPopoverOpen?: boolean;
 }
-
 
 export const ActionButtons = <T extends { id?: string; userId?: string }>({
   item,
@@ -20,12 +24,12 @@ export const ActionButtons = <T extends { id?: string; userId?: string }>({
   onPayment,
   onSelect,
   isSelected,
+  children,
+  isPopoverOpen,
 }: ActionButtonsProps<T>) => {
   const identifier = item.userId ?? item.id ?? '';
-
   const { cart } = useCartStore();
   const isInCart = cart.some((e) => e.debt.id === item.id);
-
   return (
     <div className="flex justify-center items-center gap-3">
       {onSelect && identifier && (
@@ -42,32 +46,35 @@ export const ActionButtons = <T extends { id?: string; userId?: string }>({
 
         </button>
       )}
-
-{onPayment && identifier && (
-  (item as any).remainingBalance === 0 ? (
-    <span className="text-success text-secondary flex items-center gap-1 text-sm">
-      Sin deudas
-    </span>
-  ) : (
-    <button
-      onClick={(e) => {
-        if (!isInCart) {
-          onPayment?.(identifier, e);
-        }
-      }}
-      className={`flex items-center gap-1 ${isInCart ? 'text-error cursor-not-allowed' : 'text-primary hover:opacity-80 cursor-pointer'}`}
-      title={isInCart ? "Ya agregado al carrito" : "Agregar al carrito de pagos"}
-      disabled={isInCart}
-    >
-      <ShoppingCart className="w-5 h-5" />
-      <span className="text-sm hidden md:inline">
-        {isInCart ? 'Agregado' : 'Agregar'}
-      </span>
-    </button>
-  )
-)}
-
-
+      {onPayment && identifier && (
+        (item as any).remainingBalance === 0 ? (
+          <span className="text-success text-secondary flex items-center gap-1 text-sm">
+            Sin deudas
+          </span>
+        ) : (
+          <Popover open={isPopoverOpen} >
+            <PopoverTrigger asChild>
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!isInCart) {
+                    onPayment?.(identifier);
+                  }
+                }}
+                size="sm"
+                variant="outline"
+                className="flex items-center gap-1"
+                title="Agregar al carrito de pagos"
+                disabled={isInCart}
+              >
+                <ShoppingCart className="w-5 h-5" />
+                {isInCart ? "Agregado" : "Agregar"}
+              </Button>
+            </PopoverTrigger>
+            {children}
+          </Popover>
+        )
+      )}
 
       {onDownload && identifier && (
         <button onClick={() => onDownload(identifier)} title="Descargar" className="cursor-pointer">

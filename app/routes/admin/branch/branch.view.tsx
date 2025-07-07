@@ -2,8 +2,11 @@ import { useCallback, useState } from 'react';
 import type { BranchModel } from '@/models';
 import { BranchCreate, BranchTable } from '.';
 import { ButtonCustom } from '@/components';
+import { useBranchStore } from '@/hooks';
 
 const branchView = () => {
+  const { dataBranch, getBranches, createBranch, updateBranch, deleteBranch } = useBranchStore();
+
   const [openDialog, setOpenDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<BranchModel | null>(null);
 
@@ -29,6 +32,9 @@ const branchView = () => {
           setItemEdit(v);
           handleDialog(true);
         }}
+        dataBranch={dataBranch}
+        onRefresh={getBranches}
+        onDelete={deleteBranch}
       />
 
       {/* Dialogo para crear o editar */}
@@ -37,6 +43,8 @@ const branchView = () => {
           open={openDialog}
           handleClose={() => handleDialog(false)}
           item={itemEdit == null ? null : itemEdit}
+          onCreate={createBranch}
+          onUpdate={updateBranch}
         />
       )}
     </>

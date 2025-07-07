@@ -1,12 +1,11 @@
-import { useDispatch } from 'react-redux';
 import { coffeApi } from '@/services';
-import { setTeachers } from '@/store';
-import { useAlertStore, useAppSelector, useErrorStore } from '.';
-import type { TeacherRequest, TeacherResponse } from '@/models';
+import { useAlertStore, useErrorStore } from '.';
+import { InitBaseResponse, type BaseResponse, type TeacherModel, type TeacherRequest } from '@/models';
+import { useState } from 'react';
 
 export const useTeacherStore = () => {
-  const { dataTeacher } = useAppSelector(state => state.teachers);
-  const dispatch = useDispatch();
+  const [dataTeacher, setDataTeacher] = useState<BaseResponse<TeacherModel>>(InitBaseResponse);
+  
   const { handleError } = useErrorStore();
   const { showSuccess, showWarning, showError } = useAlertStore();
   const baseUrl = 'teacher';
@@ -16,11 +15,11 @@ export const useTeacherStore = () => {
       const res = await coffeApi.get(`/${baseUrl}?page=${page}&limit=${limit}&keys=${keys}`);
       const { data, meta } = res.data;
       console.log(res.data);
-      const payload: TeacherResponse = {
+      const payload: BaseResponse<TeacherModel> = {
         ...meta,
         data,
       };
-      dispatch(setTeachers(payload));
+      setDataTeacher(payload);
     } catch (error) {
       throw handleError(error);
     }

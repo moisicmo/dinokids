@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
-import type { StaffModel, UserModel } from '@/models';
-import { useDebounce, useStaffStore } from '@/hooks';
+import type { BaseResponse, StaffModel } from '@/models';
+import { useDebounce } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 interface Props {
   handleEdit: (staff: StaffModel) => void;
   limitInit?: number;
   itemSelect?: (staff: StaffModel) => void;
+  dataStaff: BaseResponse<StaffModel>;
+  onRefresh: (page?: number, limit?: number, keys?: string) => void;
+  onDelete: (id: string) => void;
 }
 
 export const StaffTable = (props: Props) => {
@@ -15,9 +19,11 @@ export const StaffTable = (props: Props) => {
     handleEdit,
     itemSelect,
     limitInit = 10,
+    dataStaff,
+    onRefresh,
+    onDelete,
   } = props;
 
-  const { dataStaff, getStaffs, deleteStaff } = useStaffStore();
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(limitInit);
   const [query, setQuery] = useState('');
@@ -30,7 +36,7 @@ export const StaffTable = (props: Props) => {
   }, [dataStaff.total, rowsPerPage]);
 
   useEffect(() => {
-    getStaffs(page, rowsPerPage, debouncedQuery);
+    onRefresh(page, rowsPerPage, debouncedQuery);
   }, [page, rowsPerPage, debouncedQuery]);
 
   return (
@@ -43,36 +49,38 @@ export const StaffTable = (props: Props) => {
           onChange={(e) => setQuery(e.target.value)}
         />
       </div>
-      <div className="overflow-x-auto rounded-lg pb-3">
-        <table className="min-w-max text-sm text-left w-full">
-          <thead className="bg-gray-100 text-gray-700 uppercase text-xs">
-            <tr>
-              <th className="px-6 py-3">Número de documento</th>
-              <th className="px-6 py-3">Nombre</th>
-              <th className="px-6 py-3">Apellido</th>
-              <th className="px-6 py-3">Correo</th>
-              <th className="px-6 py-3">Teléfono</th>
-              <th className="px-6 py-3">Rol</th>
-              <th className="px-6 py-3 sticky right-0 bg-gray-100 z-10">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dataStaff.data.map((item) => (
-              <tr key={item.userId} className="border-b hover:bg-gray-50 group">
-                <td className="px-6 py-3">{item.user.numberDocument}</td>
-                <td className="px-6 py-3">{item.user.name}</td>
-                <td className="px-6 py-3">{item.user.lastName}</td>
-                <td className="px-6 py-3">{item.user.email}</td>
-                <td className="px-6 py-3">{item.user.phone}</td>
-                <td className="px-6 py-3">{item.role.name}</td>
-                <td className="px-6 py-3 sticky right-0 bg-white z-10 group-hover:bg-gray-50">
-                  <ActionButtons item={item} onEdit={handleEdit} onDelete={deleteStaff} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Table className='mb-3'>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Número de documento</TableHead>
+            <TableHead>Nombre</TableHead>
+            <TableHead>Apellido</TableHead>
+            <TableHead>Correo</TableHead>
+            <TableHead>Teléfono</TableHead>
+            <TableHead>Rol</TableHead>
+            <TableHead className="sticky right-0 z-10 bg-white">Acciones</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {dataStaff.data.map(item => (
+            <TableRow key={item.userId}>
+              <TableCell>{item.user.numberDocument}</TableCell>
+              <TableCell>{item.user.name}</TableCell>
+              <TableCell>{item.user.lastName}</TableCell>
+              <TableCell>{item.user.email}</TableCell>
+              <TableCell>{item.user.phone}</TableCell>
+              <TableCell>{item.role.name}</TableCell>
+              <TableCell className="sticky right-0 z-10 bg-white">
+                <ActionButtons
+                  item={item}
+                  onEdit={handleEdit}
+                  onDelete={onDelete}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
       {/* Controles de paginación */}
       <PaginationControls
         total={dataStaff.total}

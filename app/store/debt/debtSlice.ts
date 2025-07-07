@@ -1,24 +1,30 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { DebtResponse } from '@/models';
+import { InitBaseResponse, type BaseResponse, type DebtModel } from '@/models';
 
-const initialData: DebtResponse = {
-  page: 1,
-  total: 0,
-  lastPage: 0,
-  data: [],
-};
+
+
+const dataByStudent: BaseResponse<DebtModel> = InitBaseResponse<DebtModel>();
 
 export const debtSlice = createSlice({
   name: 'debt',
   initialState: {
-    dataDebt: initialData,
+    dataDebtByStudent: dataByStudent,
   },
   reducers: {
-    setDebts: (state, action: PayloadAction<DebtResponse>) => {
-      state.dataDebt = action.payload;
+    setDebtsByStudent: (state, action: PayloadAction<BaseResponse<DebtModel>>) => {
+      state.dataDebtByStudent = action.payload;
+    },
+    updateDebtByStudent: (state, action: PayloadAction<DebtModel>) => {
+      // Encuentra el índice del elemento que necesitas actualizar
+      const index = state.dataDebtByStudent.data.findIndex(debt => debt.id === action.payload.id);
+
+      // Si el elemento existe, actualiza ese elemento específico
+      if (index !== -1) {
+        state.dataDebtByStudent.data[index] = action.payload;
+      }
     },
   }
 });
 
 // Action creators are generated for each case reducer function
-export const { setDebts } = debtSlice.actions;
+export const { setDebtsByStudent, updateDebtByStudent } = debtSlice.actions;

@@ -1,7 +1,7 @@
 import { Trash2 } from 'lucide-react';
 import { ButtonCustom, DateTimePickerCustom, ScheduleCustom, SelectCustom } from '@/components';
 import { DayOfWeek, type FormAssignmentRoomModel } from '@/models';
-import { useRoomStore } from '@/hooks';
+import { useEnums, useRoomStore } from '@/hooks';
 import { useEffect, useState } from 'react';
 
 interface Props {
@@ -20,6 +20,7 @@ export const AssignmentRoomForm = (props: Props) => {
   } = props;
 
   const { dataRoom, getRooms } = useRoomStore();
+  const { getDay } = useEnums();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const handleAdd = () => {
@@ -50,15 +51,6 @@ export const AssignmentRoomForm = (props: Props) => {
     };
     console.log(updated)
     onChange(updated);
-  };
-
-  const dayOptions = Object.entries(DayOfWeek).map(([key, value]) => ({
-    key,
-    label: value,
-  }));
-  const getDayLabel = (day: string) => {
-    const found = dayOptions.find(d => d.key === day);
-    return found?.label ?? day;
   };
 
   useEffect(() => {
@@ -177,7 +169,7 @@ export const AssignmentRoomForm = (props: Props) => {
 
                           return (
                             <li key={`${as.schedule.id}-${as.day}`}>
-                              {getDayLabel(as.day)} – {start} a {end}
+                              {getDay(as.day)} – {start} a {end}
                             </li>
                           );
                         })}

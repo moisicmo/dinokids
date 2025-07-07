@@ -1,9 +1,4 @@
-import { EducationLevel, Gender, type MetaPagination, type TutorModel, type UserModel } from "..";
-
-
-export interface StudentResponse extends MetaPagination {
-  data: StudentModel[];
-}
+import { EducationLevel, Gender, type TutorModel, type UserModel } from "..";
 
 export interface StudentModel {
   userId: string;

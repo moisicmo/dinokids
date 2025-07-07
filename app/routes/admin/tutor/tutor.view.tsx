@@ -2,10 +2,12 @@ import { useCallback, useState } from 'react';
 import type { TutorModel } from '@/models';
 import { TutorCreate, TutorTable } from '.';
 import { ButtonCustom } from '@/components';
+import { useTutorStore } from '@/hooks';
 
 const teacherView = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<TutorModel | null>(null);
+  const { dataTutor, getTutors, createTutor, updateTutor, deleteTutor } = useTutorStore();
 
   const handleDialog = useCallback((value: boolean) => {
     if (!value) setItemEdit(null);
@@ -29,6 +31,9 @@ const teacherView = () => {
           setItemEdit(v);
           handleDialog(true);
         }}
+        dataTutor={dataTutor}
+        onRefresh={getTutors}
+        onDelete={deleteTutor}
       />
 
       {/* Dialogo para crear o editar */}
@@ -37,6 +42,8 @@ const teacherView = () => {
           open={openDialog}
           handleClose={() => handleDialog(false)}
           item={itemEdit == null ? null : itemEdit}
+          onCreate={createTutor}
+          onUpdate={updateTutor}
         />
       )}
     </>

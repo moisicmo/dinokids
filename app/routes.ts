@@ -7,7 +7,7 @@ export default [
   ]),
   ...prefix("admin", [
     layout("./layouts/admin.layout.tsx", [
-      route("dashboard", "routes/admin/dashboard.tsx"),
+      route("dashboard", "routes/admin/dashboard.view.tsx"),
       route("branch", "routes/admin/branch/branch.view.tsx"),
       route("inscription", "routes/admin/inscription/inscription.view.tsx"),
       route("booking", "routes/admin/booking/booking.view.tsx"),
@@ -18,7 +18,11 @@ export default [
       route("student", "routes/admin/student/student.view.tsx"),
       route("teacher", "routes/admin/teacher/teacher.view.tsx"),
       route("tutor", "routes/admin/tutor/tutor.view.tsx"),
-      route("debt", "routes/admin/debt/debt.view.tsx"),
+      route("payment", "routes/admin/payment/payment.view.tsx"),
+      ...prefix("report",[
+        route("inscription", "routes/admin/report/report-inscription.view.tsx"),
+        route("debt", "routes/admin/report/report-debt.view.tsx"),
+      ]),
       
     ]),
   ]),

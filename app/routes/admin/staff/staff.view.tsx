@@ -2,8 +2,11 @@ import { useCallback, useState } from 'react';
 import type { StaffModel } from '@/models';
 import { StaffCreate, StaffTable } from '.';
 import { ButtonCustom } from '@/components';
+import { useStaffStore } from '@/hooks';
 
 const staffView = () => {
+  const { dataStaff, getStaffs, createStaff, updateStaff, deleteStaff } = useStaffStore();
+
   const [openDialog, setOpenDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<StaffModel | null>(null);
 
@@ -29,6 +32,9 @@ const staffView = () => {
           setItemEdit(v);
           handleDialog(true);
         }}
+        dataStaff={dataStaff}
+        onRefresh={getStaffs}
+        onDelete={deleteStaff}
       />
 
       {/* Dialogo para crear o editar */}
@@ -37,6 +43,8 @@ const staffView = () => {
           open={openDialog}
           handleClose={() => handleDialog(false)}
           item={itemEdit == null ? null : itemEdit}
+          onCreate={createStaff}
+          onUpdate={updateStaff}
         />
       )}
     </>

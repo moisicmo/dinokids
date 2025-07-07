@@ -1,13 +1,12 @@
-import { useDispatch } from 'react-redux';
 import { coffeApi } from '@/services';
-import { setRoles } from '@/store';
-import { useAlertStore, useAppSelector, useErrorStore } from '.';
-import type { RoleResponse } from '@/models';
+import { useAlertStore, useErrorStore } from '.';
+import { InitBaseResponse, type BaseResponse, type RoleModel } from '@/models';
 import type { RoleRequest } from '@/models/request/role.request';
+import { useState } from 'react';
 
 export const useRoleStore = () => {
-  const { dataRole } = useAppSelector(state => state.roles);
-  const dispatch = useDispatch();
+  const [dataRole, setDataRole] = useState<BaseResponse<RoleModel>>(InitBaseResponse);
+
   const { handleError } = useErrorStore();
   const { showSuccess, showWarning, showError } = useAlertStore();
   const baseUrl = 'role';
@@ -19,11 +18,11 @@ export const useRoleStore = () => {
       const res = await coffeApi.get(`/${baseUrl}?page=${page}&limit=${limit}&keys=${keys}`);
       const { data, meta } = res.data;
       console.log(res.data);
-      const payload: RoleResponse = {
+      const payload: BaseResponse<RoleModel> = {
         ...meta,
         data,
       };
-      dispatch(setRoles(payload));
+      setDataRole(payload);
     } catch (error) {
       throw handleError(error);
     }

@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { setAddCart, setUpdateItemCart, setRemoveCart } from '@/store';
+import { setAddCart, setUpdateItemCart, setRemoveCart, setClearCart } from '@/store';
 import type { FormPaymentModel } from '@/models';
 import { useAlertStore, useAppSelector } from '.';
 
@@ -8,22 +8,23 @@ export const useCartStore = () => {
   const dispatch = useDispatch();
   const { showDesition } = useAlertStore();
 
-  const addCard = async (itemCart: FormPaymentModel) => {
-    // const isSameStudent = cart.every((e: CartModel) => e.student.userId === itemCart.student.userId);
+  const addCard = async (formPaymentModel: FormPaymentModel) => {
+    
+    const isSameStudent = cart.every((e) => e.debt.inscription.student?.userId === formPaymentModel.debt.inscription.student?.userId);
 
-    // if (isSameStudent || cart.length === 0) {
-      dispatch(setAddCart(itemCart));
-    // } else {
-    //   const result = await showDesition(
-    //     'Estás agregando un pago de otro estudiante',
-    //     '¿Deseas limpiar el carrito para agregar los pagos del nuevo estudiante?',
-    //     '¡Sí, limpiar!'
-    //   );
-    //   if (result.isConfirmed) {
-    //     dispatch(setClearCart());
-    //     dispatch(setAddCart({ itemCart }));
-    //   }
-    // }
+    if (isSameStudent || cart.length === 0) {
+      dispatch(setAddCart(formPaymentModel));
+    } else {
+      const result = await showDesition(
+        'Estás agregando un pago de otro estudiante',
+        '¿Deseas limpiar el carrito para agregar los pagos del nuevo estudiante?',
+        '¡Sí, limpiar!'
+      );
+      if (result.isConfirmed) {
+        dispatch(setClearCart());
+        dispatch(setAddCart(formPaymentModel));
+      }
+    }
   };
   const updateItemCart = async (itemCart: FormPaymentModel) => {
     dispatch(setUpdateItemCart({ itemCart }));

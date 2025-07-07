@@ -2,8 +2,11 @@ import { useCallback, useState } from 'react';
 import type { RoleModel } from '@/models';
 import { RoleCreate, RoleTable } from '.';
 import { ButtonCustom } from '@/components';
+import { useRoleStore } from '@/hooks';
 
 const roleView = () => {
+    const { dataRole, getRoles,createRole, updateRole, deleteRole } = useRoleStore();
+
   const [openDialog, setOpenDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<RoleModel | null>(null);
 
@@ -29,6 +32,9 @@ const roleView = () => {
           setItemEdit(v);
           handleDialog(true);
         }}
+        dataRole={dataRole}
+        onRefresh={getRoles}
+        onDelete={deleteRole}
       />
 
       {/* Dialogo para crear o editar */}
@@ -37,6 +43,8 @@ const roleView = () => {
           open={openDialog}
           handleClose={() => handleDialog(false)}
           item={itemEdit == null ? null : { ...itemEdit }}
+          onCreate={createRole}
+          onUpdate={updateRole}
         />
       )}
     </>

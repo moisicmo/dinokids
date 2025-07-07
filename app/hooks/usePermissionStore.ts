@@ -1,12 +1,12 @@
 import { useDispatch } from 'react-redux';
 import { coffeApi } from '@/services';
-import { setPermissions } from '@/store';
-import { useAppSelector, useErrorStore } from '.';
-import type { PermissionResponse } from '@/models';
-
+import { useErrorStore } from '.';
+import { useState } from 'react';
+import { InitBaseResponse, type BaseResponse, type PermissionModel } from '@/models';
 
 export const usePermissionStore = () => {
-  const { dataPermission } = useAppSelector(state => state.permissions);
+  const [dataPermission, setDataPermission] = useState<BaseResponse<PermissionModel>>(InitBaseResponse);
+
   const dispatch = useDispatch();
   const { handleError } = useErrorStore();
   const baseUrl = 'permission';
@@ -16,11 +16,11 @@ export const usePermissionStore = () => {
       const res = await coffeApi.get(`/${baseUrl}?page=${page}&limit=${limit}&keys=${keys}`);
       const { data, meta } = res.data;
       console.log(res.data);
-      const payload: PermissionResponse = {
+      const payload: BaseResponse<PermissionModel> = {
         ...meta,
         data,
       };
-      dispatch(setPermissions(payload));
+      setDataPermission(payload);
     } catch (error) {
       throw handleError(error);
     }

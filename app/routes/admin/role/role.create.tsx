@@ -1,13 +1,15 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { useRoleStore, useForm } from '@/hooks';
+import { useForm } from '@/hooks';
 import { ButtonCustom, InputCustom } from '@/components';
-import { formRoleInit, formRoleValidations, type RoleModel } from '@/models';
+import { formRoleInit, formRoleValidations, type RoleModel, type RoleRequest } from '@/models';
 import { PermissionForm } from './permission.create';
 
 interface Props {
   open: boolean;
   handleClose: () => void;
   item: RoleModel | null;
+  onCreate: (body: RoleRequest) => void;
+  onUpdate: (id: string, body: RoleRequest) => void;
 }
 
 export const RoleCreate = (props: Props) => {
@@ -15,8 +17,9 @@ export const RoleCreate = (props: Props) => {
     open,
     handleClose,
     item,
+    onCreate,
+    onUpdate
   } = props;
-  const { createRole, updateRole } = useRoleStore();
 
   const {
     name,
@@ -37,12 +40,12 @@ export const RoleCreate = (props: Props) => {
     if (!isFormValid) return;
 
     if (item == null) {
-      await createRole({
+      await onCreate({
         name: name.trim(),
         permissions: permissions
       });
     } else {
-      await updateRole(item.id, {
+      await onUpdate(item.id, {
         name: name.trim(),
         permissions: permissions
       });

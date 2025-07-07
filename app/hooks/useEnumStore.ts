@@ -1,28 +1,35 @@
-import { DayOfWeek, TypeDebt } from '@/models';
+import { DayOfWeek, PayMethod, TypeDebt } from '@/models';
 
 export const useEnums = () => {
 
-  const dayOptions = Object.entries(DayOfWeek).map(([key, value]) => ({
-    key,
-    label: value,
-  }));
-  const getDayLabel = (day: string) => {
-    const found = dayOptions.find(d => d.key === day);
-    return found?.label ?? day;
+  // Genérica: convierte enum en lista de opciones
+  const getOptions = <T extends Record<string, string>>(enumObj: T) => {
+    return Object.entries(enumObj).map(([key, value]) => ({
+      key,
+      label: value,
+    }));
   };
 
-  const TypeDebtOptions = Object.entries(TypeDebt).map(([key, value]) => ({
-    key,
-    label: value,
-  }));
-  const getTypeDebt = (day: TypeDebt):string => {
-    const found = TypeDebtOptions.find(d => d.key === day);
-    return found?.label ?? day;
+  // Genérica: busca el label por clave
+  const getLabelFromOptions = (options: { key: string; label: string }[], key: string): string => {
+    return options.find(option => option.key === key)?.label ?? key;
   };
 
-  const getTypeDebtClass = (type: TypeDebt):string => {
-    const value = getTypeDebt(type);
-    switch (value) {
+  // === Opciones generadas UNA vez ===
+  const dayOptions = getOptions(DayOfWeek);
+  const typeDebtOptions = getOptions(TypeDebt);
+  const payMethodOptions = getOptions(PayMethod);
+
+  // === Métodos específicos ===
+  const getDay = (day: string): string => getLabelFromOptions(dayOptions, day);
+
+  const getTypeDebt = (type: string): string => getLabelFromOptions(typeDebtOptions, type);
+
+  const getPayMethod = (method: string): string => getLabelFromOptions(payMethodOptions, method);
+
+  const getTypeDebtClass = (type: string): string => {
+    const label = getTypeDebt(type);
+    switch (label) {
       case TypeDebt.INSCRIPTION:
         return 'bg-blue-100 text-blue-800';
       case TypeDebt.MONTH:
@@ -37,10 +44,15 @@ export const useEnums = () => {
   };
 
   return {
-    getDayLabel,
-
+    // Métodos
+    getDay,
     getTypeDebt,
     getTypeDebtClass,
-  };
+    getPayMethod,
 
-}
+    // Opciones (por si las necesitas en selects)
+    dayOptions,
+    typeDebtOptions,
+    payMethodOptions,
+  };
+};

@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
-import type { BranchModel } from '@/models';
-import { useBranchStore, useDebounce } from '@/hooks';
+import type { BaseResponse, BranchModel } from '@/models';
+import { useDebounce } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 interface Props {
   handleEdit: (branch: BranchModel) => void;
   limitInit?: number;
   itemSelect?: (branch: BranchModel) => void;
+  dataBranch: BaseResponse<BranchModel>;
+  onRefresh: (page?: number, limit?: number, keys?: string) => void;
+  onDelete: (id: string) => void;
 }
 
 export const BranchTable = (props: Props) => {
@@ -15,9 +19,11 @@ export const BranchTable = (props: Props) => {
     handleEdit,
     itemSelect,
     limitInit = 10,
+    dataBranch,
+    onRefresh,
+    onDelete,
   } = props;
 
-  const { dataBranch, getBranches, deleteBranch } = useBranchStore();
 
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(limitInit);
@@ -31,7 +37,7 @@ export const BranchTable = (props: Props) => {
   }, [dataBranch.total, rowsPerPage]);
 
   useEffect(() => {
-    getBranches(page, rowsPerPage, debouncedQuery);
+    onRefresh(page, rowsPerPage, debouncedQuery);
   }, [page, rowsPerPage, debouncedQuery]);
 
   return (
@@ -44,36 +50,32 @@ export const BranchTable = (props: Props) => {
           onChange={(e) => setQuery(e.target.value)}
         />
       </div>
-
-      <div className="overflow-x-auto rounded-lg pb-3">
-        <table className="min-w-max text-sm text-left w-full">
-          <thead className="bg-gray-100 text-gray-700 uppercase text-xs">
-            <tr>
-              <th className="px-6 py-3">Nombre</th>
-              <th className="px-6 py-3">Dirección</th>
-              <th className="px-6 py-3">Teléfono</th>
-              <th className="px-6 py-3 sticky right-0 bg-gray-100 z-10">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dataBranch.data.map((item) => (
-              <tr key={item.id} className="border-b hover:bg-gray-50 group">
-                <td className="px-6 py-3">{item.name}</td>
-                <td className="px-6 py-3">{item.address}</td>
-                <td className="px-6 py-3">{item.phone}</td>
-                <td className="px-6 py-3 sticky right-0 bg-white z-10 group-hover:bg-gray-50">
-                  <ActionButtons
-                    item={item}
-                    onEdit={handleEdit}
-                    onDelete={deleteBranch}
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
+      <Table className='mb-3'>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Nombre</TableHead>
+            <TableHead>Dirección</TableHead>
+            <TableHead>Teléfono</TableHead>
+            <TableHead className="sticky right-0 z-10 bg-white">Acciones</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {dataBranch.data.map(item => (
+            <TableRow key={item.id}>
+              <TableCell>{item.name}</TableCell>
+              <TableCell>{item.address}</TableCell>
+              <TableCell>{item.phone}</TableCell>
+              <TableCell className="sticky right-0 z-10 bg-white">
+                <ActionButtons
+                  item={item}
+                  onEdit={handleEdit}
+                  onDelete={onDelete}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
       {/* Controles de paginación */}
       <PaginationControls
         total={dataBranch.total}

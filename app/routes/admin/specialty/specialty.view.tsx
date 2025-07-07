@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import type { SpecialtyModel } from '@/models';
 import { SpecialtyCreate, SpecialtyTable } from '.';
 import { ButtonCustom } from '@/components';
-import { useBranchStore } from '@/hooks';
+import { useSpecialtyStore } from '@/hooks';
 
 const specialtyView = () => {
+    const { dataSpecialty, getSpecialties, createSpecialty, updateSpecialty, deleteSpecialty } = useSpecialtyStore();
+
   const [openDialog, setOpenDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<SpecialtyModel | null>(null);
 
@@ -31,6 +33,9 @@ const specialtyView = () => {
           setItemEdit(v);
           handleDialog(true);
         }}
+        dataSpecialty={dataSpecialty}
+        onRefresh={getSpecialties}
+        onDelete={deleteSpecialty}
       />
 
 
@@ -40,6 +45,8 @@ const specialtyView = () => {
           open={openDialog}
           handleClose={() => handleDialog(false)}
           item={itemEdit == null ? null : { ...itemEdit }}
+          onCreate={createSpecialty}
+          onUpdate={updateSpecialty}
         />
       )}
     </>

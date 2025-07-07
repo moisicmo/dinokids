@@ -1,8 +1,6 @@
 import type { FormPaymentModel } from '@/models';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-
-
 const dataInit: FormPaymentModel[] = [];
 
 export const cartSlice = createSlice({

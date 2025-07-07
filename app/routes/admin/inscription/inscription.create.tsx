@@ -1,13 +1,15 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { useInscriptionStore, useForm, useStudentStore } from '@/hooks';
+import { useForm, useStudentStore } from '@/hooks';
 import { ButtonCustom, InputCustom, SelectCustom } from '@/components';
-import { type FormAssignmentRoomModel, type InscriptionModel, formInscriptionInit, formInscriptionValidations } from '@/models';
+import { type FormAssignmentRoomModel, type InscriptionModel, type InscriptionRequest, formInscriptionInit, formInscriptionValidations } from '@/models';
 import { AssignmentRoomForm } from '.';
 
 interface Props {
   open: boolean;
   handleClose: () => void;
   item: InscriptionModel | null;
+  onCreate: (body: InscriptionRequest) => void;
+  onUpdate: (id: string, body: InscriptionRequest) => void;
 }
 
 export const InscriptionCreate = (props: Props) => {
@@ -15,8 +17,9 @@ export const InscriptionCreate = (props: Props) => {
     open,
     handleClose,
     item,
+    onCreate,
+    onUpdate,
   } = props;
-  const { createInscription, updateInscription } = useInscriptionStore();
   const { dataStudent, getStudents } = useStudentStore();
 
   const {
@@ -48,7 +51,7 @@ export const InscriptionCreate = (props: Props) => {
     if (!isFormValid) return;
 
     if (item == null) {
-      await createInscription({
+      await onCreate({
         studentId: student.userId,
         inscriptionPrice: parseFloat(inscriptionPrice),
         monthPrice: parseFloat(monthPrice),
@@ -61,7 +64,7 @@ export const InscriptionCreate = (props: Props) => {
         ],
       });
     } else {
-      await updateInscription(item.id, {
+      await onUpdate(item.id, {
         studentId: student.userId,
         inscriptionPrice: parseFloat(inscriptionPrice),
         monthPrice: parseFloat(monthPrice),

@@ -1,9 +1,4 @@
-import { AcademicStatus, type BranchModel, type MetaPagination, type UserModel } from "..";
-
-
-export interface TeacherResponse extends MetaPagination {
-  data: TeacherModel[];
-}
+import { AcademicStatus, type BranchModel, type UserModel } from "..";
 
 export interface TeacherModel  {
   userId: string;

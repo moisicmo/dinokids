@@ -1,12 +1,12 @@
-import { useDispatch } from 'react-redux';
+import { useState } from 'react';
 import { coffeApi } from '@/services';
-import { setTutors } from '@/store';
-import { useAlertStore, useAppSelector, useErrorStore } from '.';
-import type { TutorRequest, TutorResponse } from '@/models';
+import { useAlertStore, useErrorStore } from '.';
+import { InitBaseResponse, type BaseResponse, type TutorModel, type TutorRequest } from '@/models';
+
 
 export const useTutorStore = () => {
-  const { dataTutor } = useAppSelector(state => state.tutors);
-  const dispatch = useDispatch();
+  const [dataTutor, setDataTutor] = useState<BaseResponse<TutorModel>>(InitBaseResponse);
+
   const { handleError } = useErrorStore();
   const { showSuccess, showWarning, showError } = useAlertStore();
   const baseUrl = 'tutor';
@@ -15,43 +15,45 @@ export const useTutorStore = () => {
     try {
       const res = await coffeApi.get(`/${baseUrl}?page=${page}&limit=${limit}&keys=${keys}`);
       const { data, meta } = res.data;
-      console.log(res.data);
-      const payload: TutorResponse = {
+      const payload: BaseResponse<TutorModel> = {
         ...meta,
         data,
       };
-      dispatch(setTutors(payload));
+      setDataTutor(payload);
     } catch (error) {
       throw handleError(error);
     }
   };
+
   const createTutor = async (body: TutorRequest) => {
     try {
       await coffeApi.post(`/${baseUrl}/`, body);
-      getTutors();
+      await getTutors();
       showSuccess('Tutor creado correctamente');
     } catch (error) {
       throw handleError(error);
     }
   };
+
   const updateTutor = async (id: string, body: TutorRequest) => {
     try {
       await coffeApi.patch(`/${baseUrl}/${id}`, body);
-      getTutors();
+      await getTutors();
       showSuccess('Tutor editado correctamente');
     } catch (error) {
       throw handleError(error);
     }
   };
+
   const deleteTutor = async (id: string) => {
     try {
       const result = await showWarning();
       if (result.isConfirmed) {
         await coffeApi.delete(`/${baseUrl}/${id}`);
-        getTutors();
-        showSuccess('tutor eliminado correctamente');
+        await getTutors();
+        showSuccess('Tutor eliminado correctamente');
       } else {
-        showError('Cancelado', 'El Tutor esta a salvo :)');
+        showError('Cancelado', 'El Tutor está a salvo :)');
       }
     } catch (error) {
       throw handleError(error);

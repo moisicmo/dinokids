@@ -1,14 +1,10 @@
-import { useDispatch } from 'react-redux';
 import { coffeApi } from '@/services';
-import {
-  setRooms,
-} from '@/store';
-import { useAlertStore, useAppSelector, useErrorStore } from '.';
-import type { RoomRequest, RoomResponse } from '@/models';
+import { useAlertStore, useErrorStore } from '.';
+import { InitBaseResponse, type BaseResponse, type RoomModel, type RoomRequest } from '@/models';
+import { useState } from 'react';
 
 export const useRoomStore = () => {
-  const { dataRoom } = useAppSelector(state => state.rooms);
-  const dispatch = useDispatch();
+  const [dataRoom, setDataRoom] = useState<BaseResponse<RoomModel>>(InitBaseResponse);
   const { handleError } = useErrorStore();
   const { showSuccess, showWarning, showError } = useAlertStore();
   const baseUrl = 'room';
@@ -18,11 +14,11 @@ export const useRoomStore = () => {
       const res = await coffeApi.get(`/${baseUrl}?page=${page}&limit=${limit}&keys=${keys}`);
       const { data, meta } = res.data;
       console.log(res.data);
-      const payload: RoomResponse = {
+      const payload: BaseResponse<RoomModel> = {
         ...meta,
         data,
       };
-      dispatch(setRooms(payload));
+      setDataRoom(payload);
     } catch (error) {
       throw handleError(error);
     }

@@ -1,8 +1,4 @@
-import type { MetaPagination, RoleModel, UserModel } from "..";
-
-export interface StaffResponse extends MetaPagination {
-  data: StaffModel[];
-}
+import type { RoleModel, UserModel } from "..";
 
 export interface StaffModel{
   userId: string;

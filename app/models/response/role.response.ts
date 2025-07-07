@@ -1,9 +1,4 @@
-import type { MetaPagination, PermissionModel } from "..";
-
-
-export interface RoleResponse extends MetaPagination {
-  data: RoleModel[];
-}
+import type { PermissionModel } from "..";
 
 export interface RoleModel {
   id: string;

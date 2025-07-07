@@ -1,13 +1,15 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useBookingStore, useForm } from '@/hooks';
 import { ButtonCustom, InputCustom } from '@/components';
-import { formBookingInscriptionInit, formBookingValidations, type FormAssignmentRoomModel, type InscriptionModel } from '@/models';
+import { formBookingInscriptionInit, formBookingValidations, type BookingRequest, type FormAssignmentRoomModel, type InscriptionModel } from '@/models';
 import { AssignmentRoomForm } from '../inscription';
 
 interface Props {
   open: boolean;
   handleClose: () => void;
   item: InscriptionModel | null;
+  onCreate: (body: BookingRequest) => void;
+  onUpdate: (id: string, body: BookingRequest) => void;
 }
 
 export const BookingCreate = (props: Props) => {
@@ -15,8 +17,9 @@ export const BookingCreate = (props: Props) => {
     open,
     handleClose,
     item,
+    onCreate,
+    onUpdate,
   } = props;
-  const { createBooking, updateBooking } = useBookingStore();
 
   const {
     booking,
@@ -35,7 +38,7 @@ export const BookingCreate = (props: Props) => {
   const sendSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormSubmitted(true);
-    
+
     const hasInvalid = assignmentRooms.some((room: FormAssignmentRoomModel) =>
       !room.room || !room.start || room.assignmentSchedules.length === 0
     );
@@ -44,7 +47,7 @@ export const BookingCreate = (props: Props) => {
     if (!isFormValid) return;
 
     if (item == null) {
-      await createBooking({
+      await onCreate({
         days: parseInt(booking.days),
         dni: booking.dni.trim(),
         name: booking.name.trim(),
@@ -59,7 +62,7 @@ export const BookingCreate = (props: Props) => {
         ],
       });
     } else {
-      await updateBooking(item.id, {
+      await onUpdate(item.id, {
         days: parseInt(booking.days),
         dni: booking.dni.trim(),
         name: booking.name.trim(),

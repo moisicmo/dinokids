@@ -1,35 +1,24 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { useSpecialtyStore, useForm, useBranchStore } from '@/hooks';
+import { useForm, useBranchStore } from '@/hooks';
 import { ButtonCustom, InputCustom, SelectCustom } from '@/components';
-import type { SpecialtyModel, FormSpecialtyModel, FormSpecialtyValidations } from '@/models';
+import { formSpecialtyFields, formSpecialtyValidations, type SpecialtyModel, type SpecialtyRequest } from '@/models';
 
 interface Props {
   open: boolean;
   handleClose: () => void;
   item: SpecialtyModel | null;
+  onCreate: (body: SpecialtyRequest) => void;
+  onUpdate: (id: string, body: SpecialtyRequest) => void;
 }
-
-const formFields: FormSpecialtyModel = {
-  branch: null,
-  name: '',
-  numberSessions: 0,
-  estimatedSessionCost: 0,
-};
-
-const formValidations: FormSpecialtyValidations = {
-  branch: [(value) => value != null, 'Debe ingresar la sucursal'],
-  name: [(value) => value.length >= 1, 'Debe ingresar el nombre'],
-  numberSessions: [(value) => value.length > 0, 'Debe ingresar el número de sesiones'],
-  estimatedSessionCost: [(value) => value.length > 0, 'Debe ingresar el costo estimado por sesión'],
-};
 
 export const SpecialtyCreate = (props: Props) => {
   const {
     open,
     handleClose,
     item,
+    onCreate,
+    onUpdate,
   } = props;
-  const { createSpecialty, updateSpecialty } = useSpecialtyStore();
   const { dataBranch, getBranches } = useBranchStore();
 
   const {
@@ -45,7 +34,7 @@ export const SpecialtyCreate = (props: Props) => {
     nameValid,
     numberSessionsValid,
     estimatedSessionCostValid,
-  } = useForm(item ?? formFields, formValidations);
+  } = useForm(item ?? formSpecialtyFields, formSpecialtyValidations);
 
   const [formSubmitted, setFormSubmitted] = useState(false);
 
@@ -55,14 +44,14 @@ export const SpecialtyCreate = (props: Props) => {
     if (!isFormValid) return;
 
     if (item == null) {
-      await createSpecialty({
+      await onCreate({
         branchId: branch.id,
         name: name.trim(),
         numberSessions: parseInt(numberSessions),
         estimatedSessionCost: parseInt(estimatedSessionCost),
       });
     } else {
-      await updateSpecialty(item.id, {
+      await onUpdate(item.id, {
         branchId: branch.id,
         name: name.trim(),
         numberSessions: parseInt(numberSessions),

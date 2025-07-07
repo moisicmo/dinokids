@@ -2,8 +2,10 @@ import { useCallback, useState } from 'react';
 import type { InscriptionModel } from '@/models';
 import { BookingCreate, BookingTable } from '.';
 import { ButtonCustom } from '@/components';
+import { useBookingStore } from '@/hooks';
 
 const bookingView = () => {
+  const { dataBooking, getBookings, createBooking, updateBooking, deleteBooking } = useBookingStore();
   const [openDialog, setOpenDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<InscriptionModel | null>(null);
 
@@ -29,6 +31,9 @@ const bookingView = () => {
           setItemEdit(v);
           handleDialog(true);
         }}
+        dataBooking={dataBooking}
+        onRefresh={getBookings}
+        onDelete={deleteBooking}
       />
 
       {/* Dialogo para crear o editar */}
@@ -38,13 +43,15 @@ const bookingView = () => {
           handleClose={() => handleDialog(false)}
           item={itemEdit == null ? null : {
             ...itemEdit,
-            assignmentRooms:itemEdit.assignmentRooms.map(assigmentRoom=>{
+            assignmentRooms: itemEdit.assignmentRooms.map(assigmentRoom => {
               return {
                 ...assigmentRoom,
-                start: new Date(assigmentRoom.start), 
+                start: new Date(assigmentRoom.start),
               }
             })
           }}
+          onCreate={createBooking}
+          onUpdate={updateBooking}
         />
       )}
     </>

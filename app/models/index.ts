@@ -20,6 +20,7 @@ export * from './request/assignment-room.request';
 export * from './request/cart.request';
 
 // RESPONSE
+export * from './response/response';
 export * from './response/auth.response';
 export * from './response/user.response';
 export * from './response/tutor.response';
@@ -38,9 +39,11 @@ export * from './response/booking.response';
 export * from './response/price.response';
 export * from './response/assignment-room.response';
 export * from './response/assignment-schedule.response';
+export * from './response/payment.response';
+export * from './response/invoice.response';
+export * from './response/dashboard.response';
 
 export * from './pagination';
-export * from './dashboard';
 
 
 // ENUMS

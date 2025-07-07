@@ -1,12 +1,14 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { useTutorStore, useForm } from '@/hooks';
+import { useForm } from '@/hooks';
 import { ButtonCustom, InputCustom, type ValueSelect } from '@/components';
-import { AcademicStatus, formTutorInit, formTutorValidations, type TutorModel } from '@/models';
+import { AcademicStatus, formTutorInit, formTutorValidations, type TutorModel, type TutorRequest } from '@/models';
 
 interface Props {
   open: boolean;
   handleClose: () => void;
   item: TutorModel | null;
+  onCreate: (body: TutorRequest) => void;
+  onUpdate: (id: string, body: TutorRequest) => void;
 }
 
 export const TutorCreate = (props: Props) => {
@@ -14,9 +16,9 @@ export const TutorCreate = (props: Props) => {
     open,
     handleClose,
     item,
+    onCreate,
+    onUpdate,
   } = props;
-  const { createTutor, updateTutor } = useTutorStore();
-
 
   const {
     user,
@@ -40,7 +42,7 @@ export const TutorCreate = (props: Props) => {
     if (!isFormValid) return;
 
     if (item == null) {
-      await createTutor({
+      await onCreate({
         numberDocument:user.numberDocument,
         typeDocument: 'DNI',
         name: user.name.trim(),
@@ -52,7 +54,7 @@ export const TutorCreate = (props: Props) => {
         address: address.trim(),
       });
     } else {
-      await updateTutor(item.userId, {
+      await onUpdate(item.userId, {
         numberDocument:user.numberDocument,
         typeDocument: 'DNI',
         name: user.name.trim(),

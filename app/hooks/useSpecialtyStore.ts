@@ -1,13 +1,11 @@
 import { useDispatch } from 'react-redux';
 import { coffeApi } from '@/services';
-import {
-  setSpecialties,
-} from '@/store';
-import { useAlertStore, useAppSelector, useErrorStore } from '.';
-import type { SpecialtyRequest, SpecialtyResponse } from '@/models';
+import { useAlertStore, useErrorStore } from '.';
+import { InitBaseResponse, type BaseResponse, type SpecialtyModel, type SpecialtyRequest } from '@/models';
+import { useState } from 'react';
 
 export const useSpecialtyStore = () => {
-  const { dataSpecialty } = useAppSelector(state => state.specialties);
+  const [dataSpecialty, setDataSpecialty] = useState<BaseResponse<SpecialtyModel>>(InitBaseResponse);
   const dispatch = useDispatch();
   const { handleError } = useErrorStore();
   const { showSuccess, showWarning, showError } = useAlertStore();
@@ -18,11 +16,11 @@ export const useSpecialtyStore = () => {
       const res = await coffeApi.get(`/${baseUrl}?page=${page}&limit=${limit}&keys=${keys}`);
       const { data, meta } = res.data;
       console.log(res.data);
-      const payload: SpecialtyResponse = {
+      const payload: BaseResponse<SpecialtyModel> = {
         ...meta,
         data,
       };
-      dispatch(setSpecialties(payload));
+      setDataSpecialty(payload);
     } catch (error) {
       throw handleError(error);
     }
@@ -33,11 +31,11 @@ export const useSpecialtyStore = () => {
       const res = await coffeApi.get(`/${baseUrl}/branch/${branchId}?page=${page}&limit=${limit}&keys=${keys}`);
       const { data, meta } = res.data;
       console.log(res.data);
-      const payload: SpecialtyResponse = {
+      const payload: BaseResponse<SpecialtyModel> = {
         ...meta,
         data,
       };
-      dispatch(setSpecialties(payload));
+      setDataSpecialty(payload);
     } catch (error) {
       throw handleError(error);
     }

@@ -62,3 +62,9 @@ export enum TypeDebt {
   MONTH = "MENSUALIDAD",
   PER_SESSION = "POR SESIÓN",
 }
+
+export enum PayMethod {
+  CASH = "EFECTIVO",
+  BANK = "TRANSFERENCIA",
+  QR = "PAGO QR",
+} 

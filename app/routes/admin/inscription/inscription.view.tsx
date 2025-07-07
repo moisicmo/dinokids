@@ -2,8 +2,11 @@ import { useCallback, useState } from 'react';
 import type { InscriptionModel } from '@/models';
 import { InscriptionCreate, InscriptionTable } from '.';
 import { ButtonCustom } from '@/components';
+import { useInscriptionStore } from '@/hooks';
 
 const inscriptionView = () => {
+  const { dataInscription, getInscriptions, createInscription, updateInscription, deleteInscription, getPdf } = useInscriptionStore();
+  
   const [openDialog, setOpenDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<InscriptionModel | null>(null);
 
@@ -29,6 +32,9 @@ const inscriptionView = () => {
           setItemEdit(v);
           handleDialog(true);
         }}
+        dataInscription={dataInscription}
+        onRefresh={getInscriptions}
+        onDelete={deleteInscription}
       />
 
       {/* Dialogo para crear o editar */}
@@ -55,6 +61,8 @@ const inscriptionView = () => {
               }
             })
           }}
+          onCreate={createInscription}
+          onUpdate={updateInscription}
         />
       )}
     </>

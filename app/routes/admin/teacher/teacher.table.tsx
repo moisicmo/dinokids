@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react';
-import type { TeacherModel } from '@/models';
-import { useDebounce, useTeacherStore } from '@/hooks';
+import type { BaseResponse, TeacherModel } from '@/models';
+import { useDebounce } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 interface Props {
   handleEdit: (teacher: TeacherModel) => void;
   limitInit?: number;
   itemSelect?: (teacher: TeacherModel) => void;
+  dataTeacher: BaseResponse<TeacherModel>;
+  onRefresh: (page?: number, limit?: number, keys?: string) => void;
+  onDelete: (id: string) => void;
 }
 
 export const TeacherTable = (props: Props) => {
@@ -17,9 +21,11 @@ export const TeacherTable = (props: Props) => {
     handleEdit,
     itemSelect,
     limitInit = 10,
+    dataTeacher,
+    onRefresh,
+    onDelete,
   } = props;
 
-  const { dataTeacher, getTeachers, deleteTeacher } = useTeacherStore();
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(limitInit);
   const [query, setQuery] = useState('');
@@ -32,7 +38,7 @@ export const TeacherTable = (props: Props) => {
   }, [dataTeacher.total, rowsPerPage]);
 
   useEffect(() => {
-    getTeachers(page, rowsPerPage, debouncedQuery);
+    onRefresh(page, rowsPerPage, debouncedQuery);
   }, [page, rowsPerPage, debouncedQuery]);
 
   return (
@@ -45,47 +51,45 @@ export const TeacherTable = (props: Props) => {
           onChange={(e) => setQuery(e.target.value)}
         />
       </div>
+      <Table className='mb-3'>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Número de documento</TableHead>
+            <TableHead>Nombre y Apellido</TableHead>
+            <TableHead>Correo</TableHead>
+            <TableHead>Teléfono</TableHead>
+            <TableHead>Zona</TableHead>
+            <TableHead>Dirección</TableHead>
+            <TableHead>Estado académico</TableHead>
+            <TableHead>Fecha de inicio</TableHead>
+            <TableHead className="sticky right-0 z-10 bg-white">Acciones</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {dataTeacher.data.map(item => (
+            <TableRow key={item.userId}>
+              <TableCell>{item.user.numberDocument}</TableCell>
+              <TableCell>{`${item.major} ${item.user.name} ${item.user.lastName}`}</TableCell>
+              <TableCell>{item.user.email}</TableCell>
+              <TableCell>{item.user.phone}</TableCell>
+              <TableCell>{item.zone}</TableCell>
+              <TableCell>{item.address}</TableCell>
+              <TableCell>{item.academicStatus}</TableCell>
+              <TableCell>
+                {format(new Date(item.startJob), 'dd-MMMM-yyyy', { locale: es })}
 
-      <div className="overflow-x-auto rounded-lg pb-3">
-        <table className="min-w-max text-sm text-left w-full">
-          <thead className="bg-gray-100 text-gray-700 uppercase text-xs">
-            <tr>
-              <th className="px-6 py-3">N de documento</th>
-              <th className="px-6 py-3 ">Nombre</th>
-              <th className="px-6 py-3">Apellido</th>
-              <th className="px-6 py-3">Correo</th>
-              <th className="px-6 py-3">Teléfono</th>
-              <th className="px-6 py-3">Zona</th>
-              <th className="px-6 py-3">Dirección</th>
-              <th className="px-6 py-3">Titulo</th>
-              <th className="px-6 py-3">Estado Académico</th>
-              <th className="px-6 py-3">Fecha de inicio</th>
-              <th className="px-6 py-3 sticky right-0 bg-gray-100 z-10">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dataTeacher.data.map((item) => (
-              <tr key={item.userId} className="border-b hover:bg-gray-50 group">
-                <td className="px-6 py-3">{item.user.numberDocument}</td>
-                <td className="px-6 py-3">{item.user.name}</td>
-                <td className="px-6 py-3">{item.user.lastName}</td>
-                <td className="px-6 py-3">{item.user.email}</td>
-                <td className="px-6 py-3">{item.user.phone}</td>
-                <td className="px-6 py-3">{item.zone}</td>
-                <td className="px-6 py-3">{item.address}</td>
-                <td className="px-6 py-3">{item.major}</td>
-                <td className="px-6 py-3">{item.academicStatus}</td>
-                <td className="px-6 py-3">
-                  {format(new Date(item.startJob), 'dd-MMMM-yyyy', { locale: es })}
-                </td>
-                <td className="px-6 py-3 sticky right-0 bg-white z-10 group-hover:bg-gray-50">
-                  <ActionButtons item={item} onEdit={handleEdit} onDelete={deleteTeacher} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+              </TableCell>
+              <TableCell className="sticky right-0 z-10 bg-white">
+                <ActionButtons
+                  item={item}
+                  onEdit={handleEdit}
+                  onDelete={onDelete}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
       {/* Controles de paginación */}
       <PaginationControls
         total={dataTeacher.total}

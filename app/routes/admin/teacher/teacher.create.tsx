@@ -1,12 +1,14 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { useTeacherStore, useForm, useBranchStore } from '@/hooks';
+import { useForm, useBranchStore } from '@/hooks';
 import { ButtonCustom, DateTimePickerCustom, InputCustom, SelectCustom, type ValueSelect } from '@/components';
-import { type BranchModel, type TeacherModel, formTeacherInit, formTeacherValidations, AcademicStatus } from '@/models';
+import { type BranchModel, type TeacherModel, formTeacherInit, formTeacherValidations, AcademicStatus, type TeacherRequest } from '@/models';
 
 interface Props {
   open: boolean;
   handleClose: () => void;
   item: TeacherModel | null;
+  onCreate: (body: TeacherRequest) => void;
+  onUpdate: (id: string, body: TeacherRequest) => void;
 }
 
 export const TeacherCreate = (props: Props) => {
@@ -14,8 +16,9 @@ export const TeacherCreate = (props: Props) => {
     open,
     handleClose,
     item,
+    onCreate,
+    onUpdate,
   } = props;
-  const { createTeacher, updateTeacher } = useTeacherStore();
   const { dataBranch, getBranches } = useBranchStore();
 
   const {
@@ -47,7 +50,7 @@ export const TeacherCreate = (props: Props) => {
     if (!isFormValid) return;
 
     if (item == null) {
-      await createTeacher({
+      await onCreate({
         numberDocument: user.numberDocument,
         typeDocument: 'DNI',
         name: user.name.trim(),
@@ -62,7 +65,7 @@ export const TeacherCreate = (props: Props) => {
         brancheIds: branches.map((branch: BranchModel) => branch.id),
       });
     } else {
-      await updateTeacher(item.userId, {
+      await onUpdate(item.userId, {
         numberDocument: user.numberDocument,
         typeDocument: 'DNI',
         name: user.name.trim(),

@@ -1,8 +1,4 @@
-import type { BranchModel, MetaPagination, RoomModel } from "..";
-
-export interface SpecialtyResponse extends MetaPagination {
-  data: SpecialtyModel[];
-}
+import type { BranchModel } from "..";
 
 export interface BranchSpecialtiesModel {
   numberSessions: number;

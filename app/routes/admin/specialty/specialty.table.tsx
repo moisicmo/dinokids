@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
-import type { BranchModel, BranchSpecialtiesModel, SpecialtyModel, SpecialtyResponse } from '@/models';
-import { useSpecialtyStore, useDebounce } from '@/hooks';
+import type { BaseResponse, SpecialtyModel } from '@/models';
+import { useDebounce } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 interface Props {
   handleEdit: (specialty: SpecialtyModel) => void;
   limitInit?: number;
   itemSelect?: (specialty: SpecialtyModel) => void;
+  dataSpecialty: BaseResponse<SpecialtyModel>;
+  onRefresh: (page?: number, limit?: number, keys?: string) => void;
+  onDelete: (id: string) => void;
 }
 
 export const SpecialtyTable = (props: Props) => {
@@ -15,9 +19,11 @@ export const SpecialtyTable = (props: Props) => {
     handleEdit,
     itemSelect,
     limitInit = 10,
+    dataSpecialty,
+    onRefresh,
+    onDelete,
   } = props;
 
-  const { dataSpecialty, getSpecialties, deleteSpecialty } = useSpecialtyStore();
 
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(limitInit);
@@ -31,7 +37,7 @@ export const SpecialtyTable = (props: Props) => {
   }, [dataSpecialty.total, rowsPerPage]);
 
   useEffect(() => {
-    getSpecialties(page, rowsPerPage, debouncedQuery)
+    onRefresh(page, rowsPerPage, debouncedQuery)
   }, [page, rowsPerPage, debouncedQuery]);
 
   return (
@@ -44,37 +50,34 @@ export const SpecialtyTable = (props: Props) => {
           onChange={(e) => setQuery(e.target.value)}
         />
       </div>
-
-      <div className="overflow-x-auto rounded-lg pb-3">
-        <table className="min-w-max text-sm text-left w-full">
-          <thead className="bg-gray-100 text-gray-700 uppercase text-xs">
-            <tr>
-              <th className="px-6 py-3">Nombre</th>
-              <th className="px-6 py-3">Sucursal</th>
-              <th className="px-6 py-3">Número de sesiones</th>
-              <th className="px-6 py-3">Costo estimado por sesión</th>
-              <th className="px-6 py-3 sticky right-0 bg-gray-100 z-10">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dataSpecialty.data.map((specialty) => specialty.branchSpecialties.map((branchSpecialty) => (
-              <tr key={branchSpecialty.specialty.id} className="border-b hover:bg-gray-50 group">
-                <td className="px-6 py-3">{branchSpecialty.specialty.name}</td>
-                <td className="px-6 py-3">{branchSpecialty.branch.name}</td>
-                <td className="px-6 py-3">{branchSpecialty.numberSessions}</td>
-                <td className="px-6 py-3">{branchSpecialty.estimatedSessionCost}</td>
-                <td className="px-6 py-3 sticky right-0 bg-white z-10 group-hover:bg-gray-50">
-                  <ActionButtons
-                    item={specialty}
-                    onEdit={handleEdit}
-                    onDelete={deleteSpecialty}
-                  />
-                </td>
-              </tr>
-            )))}
-          </tbody>
-        </table>
-      </div>
+      <Table className='mb-3'>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Nombre</TableHead>
+            <TableHead>Sucursal</TableHead>
+            <TableHead>Número de sesiones</TableHead>
+            <TableHead>Costo estimado por sesión</TableHead>
+            <TableHead className="sticky right-0 z-10 bg-white">Acciones</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {dataSpecialty.data.map((specialty) => specialty.branchSpecialties.map((branchSpecialty) => (
+            <TableRow key={branchSpecialty.specialty.id}>
+              <TableCell>{branchSpecialty.specialty.name}</TableCell>
+              <TableCell>{branchSpecialty.branch.name}</TableCell>
+              <TableCell>{branchSpecialty.numberSessions}</TableCell>
+              <TableCell>{branchSpecialty.estimatedSessionCost}</TableCell>
+              <TableCell className="sticky right-0 z-10 bg-white">
+                <ActionButtons
+                  item={specialty}
+                  onEdit={handleEdit}
+                  onDelete={onDelete}
+                />
+              </TableCell>
+            </TableRow>
+          )))}
+        </TableBody>
+      </Table>
       {/* Controles de paginación */}
       <PaginationControls
         total={dataSpecialty.total}

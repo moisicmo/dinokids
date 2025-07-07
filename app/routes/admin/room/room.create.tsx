@@ -1,13 +1,15 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { useRoomStore, useForm, useBranchStore, useTeacherStore, useSpecialtyStore } from '@/hooks';
+import { useForm, useBranchStore, useTeacherStore, useSpecialtyStore } from '@/hooks';
 import { ButtonCustom, InputCustom, SelectCustom, SliderCustom } from '@/components';
-import { type RoomModel, formRoomValidations, formRoomInit, type FormScheduleModel, type ScheduleRequest } from '@/models';
+import { type RoomModel, formRoomValidations, formRoomInit, type FormScheduleModel, type RoomRequest } from '@/models';
 import { ScheduleForm } from './schedule.create';
 
 interface Props {
   open: boolean;
   handleClose: () => void;
   item: RoomModel | null;
+  onCreate: (body: RoomRequest) => void;
+  onUpdate: (id: string, body: RoomRequest) => void;
 }
 
 export const RoomCreate = (props: Props) => {
@@ -15,8 +17,9 @@ export const RoomCreate = (props: Props) => {
     open,
     handleClose,
     item,
+    onCreate,
+    onUpdate,
   } = props;
-  const { createRoom, updateRoom } = useRoomStore();
   const { dataBranch, getBranches } = useBranchStore();
   const { dataTeacher, getTeachers } = useTeacherStore();
   const { dataSpecialty, getSpecialtiesByBranch } = useSpecialtyStore();
@@ -56,7 +59,7 @@ export const RoomCreate = (props: Props) => {
     if (!isFormValid) return;
 
     if (item == null) {
-      await createRoom({
+      await onCreate({
         name: name.trim(),
         capacity: parseInt(capacity),
         rangeYears,
@@ -67,7 +70,7 @@ export const RoomCreate = (props: Props) => {
       });
     } else {
       console.log('editando')
-      await updateRoom(item.id, {
+      await onUpdate(item.id, {
         name: name.trim(),
         capacity: parseInt(capacity),
         rangeYears,

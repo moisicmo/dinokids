@@ -2,8 +2,11 @@ import { useCallback, useState } from 'react';
 import type { StudentModel, UserModel } from '@/models';
 import { ButtonCustom } from '@/components';
 import { StudentCreate, StudentTable } from '.';
+import { useStudentStore } from '@/hooks';
 
 const studentView = () => {
+  const { dataStudent, getStudents, createStudent, updateStudent, deleteStudent } = useStudentStore();
+
   const [openDialog, setOpenDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<StudentModel | null>(null);
 
@@ -29,6 +32,9 @@ const studentView = () => {
           setItemEdit(v);
           handleDialog(true);
         }}
+        dataStudent={dataStudent}
+        onRefresh={getStudents}
+        onDelete={deleteStudent}
       />
 
       {/* Dialogo para crear o editar */}
@@ -38,8 +44,10 @@ const studentView = () => {
           handleClose={() => handleDialog(false)}
           item={itemEdit == null ? null : {
             ...itemEdit,
-            birthdate:  new Date(itemEdit.birthdate),
-           }}
+            birthdate: new Date(itemEdit.birthdate),
+          }}
+          onCreate={createStudent}
+          onUpdate={updateStudent}
         />
       )}
     </>
