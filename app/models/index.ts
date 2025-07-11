@@ -1,5 +1,6 @@
 // REQUEST
 export * from './request/auth.request';
+export * from './request/address.request';
 export * from './request/booking.request';
 export * from './request/branch.request';
 export * from './request/room.request';
@@ -21,6 +22,8 @@ export * from './request/cart.request';
 
 // RESPONSE
 export * from './response/response';
+export * from './response/address.response';
+export * from './response/city.response';
 export * from './response/auth.response';
 export * from './response/user.response';
 export * from './response/tutor.response';

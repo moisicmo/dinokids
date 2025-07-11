@@ -6,3 +6,5 @@ export * from './date.custom';
 export * from './select.custom';
 export * from './slider.custom';
 export * from './schedule.custom';
+export * from './input.phone.custom';
+export * from './user.form';

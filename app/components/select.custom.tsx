@@ -1,9 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { ChevronDown } from 'lucide-react';
 
-export interface ValueSelect {
-  id: any;
+export class ValueSelect {
+  id: string;
   value: string;
+
+  constructor(id: string, value: string) {
+    this.id = id;
+    this.value = value;
+  }
 }
 
 interface Props {

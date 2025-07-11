@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useForm, useBranchStore } from '@/hooks';
-import { ButtonCustom, DateTimePickerCustom, InputCustom, SelectCustom, type ValueSelect } from '@/components';
+import { ButtonCustom, DateTimePickerCustom, InputCustom, SelectCustom, UserFormFields, type ValueSelect } from '@/components';
 import { type BranchModel, type TeacherModel, formTeacherInit, formTeacherValidations, AcademicStatus, type TeacherRequest } from '@/models';
 
 interface Props {
@@ -23,8 +23,6 @@ export const TeacherCreate = (props: Props) => {
 
   const {
     user,
-    zone,
-    address,
     major,
     academicStatus,
     startJob,
@@ -34,8 +32,6 @@ export const TeacherCreate = (props: Props) => {
     isFormValid,
     onValueChange,
     userValid,
-    zoneValid,
-    addressValid,
     majorValid,
     academicStatusValid,
     startJobValid,
@@ -56,9 +52,10 @@ export const TeacherCreate = (props: Props) => {
         name: user.name.trim(),
         lastName: user.lastName.trim(),
         email: user.email.trim(),
-        phone: user.phone.trim(),
-        zone: zone.trim(),
-        address: address.trim(),
+        phone: user.phone,
+        cityId: user.address.city.id,
+        zone: user.address.zone.trim(),
+        detail: user.address.detail.trim(),
         major: major.trim(),
         academicStatus,
         startJob,
@@ -71,9 +68,10 @@ export const TeacherCreate = (props: Props) => {
         name: user.name.trim(),
         lastName: user.lastName.trim(),
         email: user.email.trim(),
-        phone: user.phone.trim(),
-        zone: zone.trim(),
-        address: address.trim(),
+        phone: user.phone,
+        cityId: user.address.city.id,
+        zone: user.address.zone.trim(),
+        detail: user.address.detail.trim(),
         major: major.trim(),
         academicStatus,
         startJob,
@@ -128,63 +126,12 @@ export const TeacherCreate = (props: Props) => {
             helperText={formSubmitted ? branchesValid : ''}
           />
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-
-            <InputCustom
-              name="user.numberDocument"
-              value={user.numberDocument}
-              label="Numero de documento"
-              onChange={onInputChange}
-              error={!!userValid?.numberDocumentValid && formSubmitted}
-              helperText={formSubmitted ? userValid?.numberDocumentValid : ''}
-            />
-            <InputCustom
-              name="user.name"
-              value={user.name}
-              label="Nombre"
-              onChange={onInputChange}
-              error={!!userValid?.nameValid && formSubmitted}
-              helperText={formSubmitted ? userValid?.nameValid : ''}
-            />
-            <InputCustom
-              name="user.lastName"
-              value={user.lastName}
-              label="Apellido"
-              onChange={onInputChange}
-              error={!!userValid?.lastNameValid && formSubmitted}
-              helperText={formSubmitted ? userValid?.lastNameValid : ''}
-            />
-            <InputCustom
-              name="user.email"
-              value={user.email}
-              label="Correo electrónico"
-              onChange={onInputChange}
-              error={!!userValid?.emailValid && formSubmitted}
-              helperText={formSubmitted ? userValid?.emailValid : ''}
-            />
-            <InputCustom
-              name="user.phone"
-              value={user.phone}
-              type="phone"
-              label="Teléfono"
-              onChange={onInputChange}
-              error={!!userValid?.phoneValid && formSubmitted}
-              helperText={formSubmitted ? userValid?.phoneValid : ''}
-            />
-            <InputCustom
-              name="zone"
-              value={zone}
-              label="Zona"
-              onChange={onInputChange}
-              error={!!zoneValid && formSubmitted}
-              helperText={formSubmitted ? zoneValid : ''}
-            />
-            <InputCustom
-              name="address"
-              value={address}
-              label="Direccion"
-              onChange={onInputChange}
-              error={!!addressValid && formSubmitted}
-              helperText={formSubmitted ? addressValid : ''}
+            <UserFormFields
+              user={user}
+              userValid={userValid}
+              formSubmitted={formSubmitted}
+              onInputChange={onInputChange}
+              onValueChange={onValueChange}
             />
             <InputCustom
               name="major"

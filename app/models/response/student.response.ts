@@ -5,7 +5,10 @@ export interface StudentModel {
   code: string;
   birthdate: Date;
   gender: Gender;
-  school: string;
+  school: {
+    id: string;
+    name: string;
+  };
   grade: number;
   educationLevel: EducationLevel;
   tutors: TutorModel[];

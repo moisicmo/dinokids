@@ -1,5 +1,5 @@
 import { Trash2 } from 'lucide-react';
-import { ButtonCustom, DateTimePickerCustom, ScheduleCustom, SelectCustom, type ValueSelect } from '@/components';
+import { ButtonCustom, DateTimePickerCustom, InputCustom, ScheduleCustom, SelectCustom, type ValueSelect } from '@/components';
 import { DayOfWeek, type FormScheduleModel } from '@/models';
 
 interface Props {
@@ -18,9 +18,10 @@ export const ScheduleForm = ({
 
   const handleAdd = () => {
     const newSchedule: FormScheduleModel = {
-      days: [],
+      day: null,
       start: null,
       end: null,
+      capacity: 0,
     };
     onChange([...schedules, newSchedule]);
   };
@@ -34,7 +35,7 @@ export const ScheduleForm = ({
   const handleFieldChange = (
     index: number,
     field: keyof FormScheduleModel,
-    value: Date | DayOfWeek[] | null,
+    value: Date | DayOfWeek | String | null,
   ) => {
     const updated = [...schedules];
     updated[index] = {
@@ -74,18 +75,25 @@ export const ScheduleForm = ({
               </button>
 
               <SelectCustom
-                multiple
-                label="Días"
+                label="Día"
                 options={dayOptions}
-                selected={dayOptions.filter(opt => schedule.days.includes(opt.id as DayOfWeek))}
-                onSelect={(values) => {
-                  if (Array.isArray(values)) {
-                    const selectedDays = values.map(v => v.id as DayOfWeek);
-                    handleFieldChange(idx, 'days', selectedDays);
+                selected={
+                  schedule.day
+                    ? dayOptions.find((opt) => opt.id === schedule.day) ?? null
+                    : null
+                }
+                // selected={dayOptions.filter(opt => schedule.day.includes(opt.id as DayOfWeek))}
+                onSelect={(value) => {
+                  if (value && !Array.isArray(value)) {
+                    handleFieldChange(idx, 'day', value.id);
                   }
+                  // if (Array.isArray(values)) {
+                  //   const selectedDays = values.map(v => v.id as DayOfWeek);
+                  //   handleFieldChange(idx, 'day', selectedDays);
+                  // }
                 }}
-                error={formSubmitted && schedule.days.length === 0}
-                helperText={formSubmitted && schedule.days.length === 0 ? 'Campo requerido' : ''}
+                error={formSubmitted && schedule.day === null}
+                helperText={formSubmitted && schedule.day === null ? 'Campo requerido' : ''}
               />
 
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -112,6 +120,14 @@ export const ScheduleForm = ({
                   helperText={formSubmitted && schedule.end === null ? 'Campo requerido' : ''}
                 />
               </div>
+              <InputCustom
+                name={`capacity-${idx}`}
+                value={schedule.capacity}
+                label="Capacidad"
+                onChange={(val) => handleFieldChange(idx, 'capacity', val.target.value)}
+                error={formSubmitted && schedule.capacity == 0}
+                helperText={formSubmitted && schedule.capacity === 0 ? 'Campo requerido' : ''}
+              />
             </div>
           ))}
         </div>
@@ -126,9 +142,10 @@ export const ScheduleForm = ({
 
         <ScheduleCustom
           schedules={schedules}
+          selectedSchedules={[]} // ✅ Agregado para cumplir con Props
           onEventClick={(e: any) => alert(`Clic en evento: ${e.day} de ${e.start} a ${e.end}`)}
-
         />
+
       </div>
     </div>
   );

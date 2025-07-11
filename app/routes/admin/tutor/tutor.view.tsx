@@ -39,7 +39,6 @@ const teacherView = () => {
       {/* Dialogo para crear o editar */}
       {openDialog && (
         <TutorCreate
-          open={openDialog}
           handleClose={() => handleDialog(false)}
           item={itemEdit == null ? null : itemEdit}
           onCreate={createTutor}

@@ -2,10 +2,10 @@ import type { BranchModel, FormScheduleModel as FormScheduleModel, FormScheduleV
 
 export interface RoomRequest {
   name: string;
-  capacity: number;
   rangeYears: number[];
   branchId: number;
-  teacherId: number;
+  teacherId: string;
+  assistantId: string;
   specialtyId: number;
   schedules: ScheduleRequest[]
 }
@@ -14,7 +14,6 @@ export interface RoomRequest {
 
 export interface FormRoomModel {
   name: string;
-  capacity: number,
   rangeYears: number[],
   branch: BranchModel | null,
   teacher: TeacherModel | null,
@@ -23,16 +22,16 @@ export interface FormRoomModel {
 }
 export const formRoomInit: FormRoomModel = {
   name: '',
-  capacity: 0,
   rangeYears: [5, 5],
   branch: null,
   teacher: null,
   specialty: null,
   schedules: [
     {
-      days: [],
+      day: null,
       start: null,
       end: null,
+      capacity: 0,
     }
   ],
 };
@@ -41,7 +40,6 @@ export const formRoomInit: FormRoomModel = {
 
 export interface FormRoomValidations {
   name: [(value: string) => boolean, string];
-  capacity: [(value: number) => boolean, string];
   rangeYears: [(value: number[]) => boolean, string];
   branch: [(value: BranchModel) => boolean, string];
   teacher: [(value: TeacherModel) => boolean, string];
@@ -51,7 +49,6 @@ export interface FormRoomValidations {
 
 export const formRoomValidations: FormRoomValidations = {
   name: [(value) => value.length > 0, 'Debe ingresar el nombre'],
-  capacity: [(value) => value > 0, 'Debe ingresar la capacidad'],
   rangeYears: [(value) => value.length > 0, 'Debe ingresar rango de edad'],
   branch: [(value) => value != null, 'Debe ingresar la sucursal'],
   teacher: [(value) => value != null, 'Debe ingresar el profesor'],

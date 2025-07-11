@@ -58,7 +58,6 @@ export const TeacherTable = (props: Props) => {
             <TableHead>Nombre y Apellido</TableHead>
             <TableHead>Correo</TableHead>
             <TableHead>Teléfono</TableHead>
-            <TableHead>Zona</TableHead>
             <TableHead>Dirección</TableHead>
             <TableHead>Estado académico</TableHead>
             <TableHead>Fecha de inicio</TableHead>
@@ -71,9 +70,8 @@ export const TeacherTable = (props: Props) => {
               <TableCell>{item.user.numberDocument}</TableCell>
               <TableCell>{`${item.major} ${item.user.name} ${item.user.lastName}`}</TableCell>
               <TableCell>{item.user.email}</TableCell>
-              <TableCell>{item.user.phone}</TableCell>
-              <TableCell>{item.zone}</TableCell>
-              <TableCell>{item.address}</TableCell>
+              <TableCell>{`${item.user.phone?.map(e=>e)}`}</TableCell>
+              <TableCell>{`${item.user.address?.city.name} ${item.user.address?.zone}/${item.user.address?.detail}`}</TableCell>
               <TableCell>{item.academicStatus}</TableCell>
               <TableCell>
                 {format(new Date(item.startJob), 'dd-MMMM-yyyy', { locale: es })}

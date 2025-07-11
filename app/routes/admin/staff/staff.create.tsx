@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useForm, useRoleStore, useBranchStore } from '@/hooks';
-import { ButtonCustom, InputCustom, SelectCustom } from '@/components';
+import { ButtonCustom, SelectCustom, UserFormFields } from '@/components';
 import { type BranchModel, formStaffInit, formStaffValidations, type StaffModel, type StaffRequest } from '@/models';
 
 interface Props {
@@ -49,7 +49,7 @@ export const StaffCreate = (props: Props) => {
         name: user.name.trim(),
         lastName: user.lastName.trim(),
         email: user.email.trim(),
-        phone: user.phone.trim(),
+        phone: user.phone,
         roleId: role?.id ?? '',
         brancheIds: branches.map((branch: BranchModel) => branch.id),
       });
@@ -60,7 +60,7 @@ export const StaffCreate = (props: Props) => {
         name: user.name.trim(),
         lastName: user.lastName.trim(),
         email: user.email.trim(),
-        phone: user.phone.trim(),
+        phone: user.phone,
         roleId: role?.id ?? '',
         brancheIds: branches.map((branch: BranchModel) => branch.id),
       });
@@ -93,48 +93,12 @@ export const StaffCreate = (props: Props) => {
 
         <form onSubmit={sendSubmit} className="space-y-4">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-
-            <InputCustom
-              name="user.numberDocument"
-              value={user.numberDocument}
-              label="Numero de documento"
-              onChange={onInputChange}
-              error={!!userValid?.numberDocumentValid && formSubmitted}
-              helperText={formSubmitted ? userValid?.numberDocumentValid : ''}
-            />
-            <InputCustom
-              name="user.name"
-              value={user.name}
-              label="Nombre"
-              onChange={onInputChange}
-              error={!!userValid?.nameValid && formSubmitted}
-              helperText={formSubmitted ? userValid?.nameValid : ''}
-            />
-            <InputCustom
-              name="user.lastName"
-              value={user.lastName}
-              label="Apellido"
-              onChange={onInputChange}
-              error={!!userValid?.lastNameValid && formSubmitted}
-              helperText={formSubmitted ? userValid?.lastNameValid : ''}
-            />
-            <InputCustom
-              name="user.email"
-              value={user.email}
-              type="email"
-              label="Correo electrónico"
-              onChange={onInputChange}
-              error={!!userValid?.emailValid && formSubmitted}
-              helperText={formSubmitted ? userValid?.emailValid : ''}
-            />
-            <InputCustom
-              name="user.phone"
-              value={user.phone}
-              type="phone"
-              label="Teléfono"
-              onChange={onInputChange}
-              error={!!userValid?.phoneValid && formSubmitted}
-              helperText={formSubmitted ? userValid?.phoneValid : ''}
+            <UserFormFields
+              user={user}
+              userValid={userValid}
+              formSubmitted={formSubmitted}
+              onInputChange={onInputChange}
+              onValueChange={onValueChange}
             />
             <SelectCustom
               label="Rol"

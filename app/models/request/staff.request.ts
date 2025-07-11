@@ -1,18 +1,24 @@
 import { formUserInit, formUserValidations, type BranchModel, type FormUserModel, type FormUserValidations, type RoleModel, type UserRequest } from "..";
 
 
-export interface StaffRequest extends  UserRequest{
+export interface StaffRequest extends UserRequest {
   roleId: string;
   brancheIds: string[];
 }
 
 export interface FormStaffModel {
   user: FormUserModel,
-  role: RoleModel|null;
+  role: RoleModel | null;
   branches: BranchModel[];
 }
 export const formStaffInit: FormStaffModel = {
-  user: formUserInit,
+  user: {
+    numberDocument: '',
+    name: '',
+    lastName: '',
+    email: '',
+    phone: [''],
+  },
   role: null,
   branches: [],
 };
@@ -24,7 +30,13 @@ export interface FormStaffValidations {
 }
 
 export const formStaffValidations: FormStaffValidations = {
-  user: formUserValidations,
+  user: {
+    numberDocument: [(value) => value.length > 0, 'Debe ingresar el número de documento'],
+    name: [(value) => value.length > 0, 'Debe ingresar el nombre'],
+    lastName: [(value) => value.length > 0, 'Debe ingresar el apellido'],
+    email: [(value) => value.length > 0, 'Debe ingresar el correo electrónico'],
+    phone: [(value) => value.length > 0 && value[0].length > 0, 'Debe ingresar el correo electrónico'],
+  },
   role: [(value) => value != null, 'Debe ingresar un rol'],
   branches: [(value) => value.length > 0, 'Debe ingresar al menos una sucursal'],
 };

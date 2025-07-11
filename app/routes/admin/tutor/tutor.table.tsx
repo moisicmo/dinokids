@@ -58,8 +58,6 @@ export const TutorTable = (props: Props) => {
             <TableHead>Apellido</TableHead>
             <TableHead>Correo</TableHead>
             <TableHead>Teléfono</TableHead>
-            <TableHead>Ciudad</TableHead>
-            <TableHead>Zona</TableHead>
             <TableHead>Dirección</TableHead>
             <TableHead className="sticky right-0 z-10 bg-white">Acciones</TableHead>
           </TableRow>
@@ -71,10 +69,8 @@ export const TutorTable = (props: Props) => {
               <TableCell>{item.user.name}</TableCell>
               <TableCell>{item.user.lastName}</TableCell>
               <TableCell>{item.user.email}</TableCell>
-              <TableCell>{item.user.phone}</TableCell>
-              <TableCell>{item.city}</TableCell>
-              <TableCell>{item.zone}</TableCell>
-              <TableCell>{item.address}</TableCell>
+              <TableCell>{`${item.user.phone?.map(e=>e)}`}</TableCell>
+              <TableCell>{`${item.user.address?.city.name} ${item.user.address?.zone}/${item.user.address?.detail}`}</TableCell>
               <TableCell className="sticky right-0 z-10 bg-white">
                 <ActionButtons
                   item={item}

@@ -11,8 +11,6 @@ export const useAuthStore = () => {
 
   const startLogin = async (body: AuthRequest) => {
     try {
-      console.log('INICIANDO SESION');
-      console.log(body);
       const { data }: { data: AuthModel } = await coffeApi.post('/auth', body);
       console.log(data);
       const user = `${data.name} ${data.lastName}`;

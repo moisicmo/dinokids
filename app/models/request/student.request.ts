@@ -1,4 +1,4 @@
-import { EducationLevel, formUserInit, formUserValidations, Gender, type FormUserModel, type FormUserValidations, type TutorModel, type UserRequest } from "..";
+import { EducationLevel, Gender, type FormUserModel, type FormUserValidations, type TutorModel, type UserRequest } from "..";
 
 export interface StudentRequest extends UserRequest {
   birthdate: Date;
@@ -11,18 +11,27 @@ export interface StudentRequest extends UserRequest {
 
 export interface FormStudentModel {
   user: FormUserModel,
-  birthdate: Date|null;
+  birthdate: Date | null;
   gender: Gender | null;
-  school: string;
+  school: {
+    name: string;
+  };
   grade: 0;
   educationLevel: EducationLevel | null;
   tutors: TutorModel[];
 }
 export const formStudentInit: FormStudentModel = {
-  user: formUserInit,
+  user: {
+    numberDocument: '',
+    name: '',
+    lastName: '',
+    email: '',
+  },
   birthdate: null,
   gender: null,
-  school: '',
+  school: {
+    name: '',
+  },
   grade: 0,
   educationLevel: null,
   tutors: [],
@@ -32,17 +41,26 @@ export interface FormStudentValidations {
   user: FormUserValidations;
   birthdate: [(value: Date) => boolean, string];
   gender: [(value: Gender) => boolean, string];
-  school: [(value: string) => boolean, string];
+  school: {
+    name: [(value: string) => boolean, string];
+  },
   grade: [(value: number) => boolean, string];
   educationLevel: [(value: EducationLevel) => boolean, string];
   tutors: [(value: TutorModel[]) => boolean, string];
 }
 
 export const formStudentValidations: FormStudentValidations = {
-  user: formUserValidations,
+  user: {
+    numberDocument: [(value) => value.length > 0, 'Debe ingresar el número de documento'],
+    name: [(value) => value.length > 0, 'Debe ingresar el nombre'],
+    lastName: [(value) => value.length > 0, 'Debe ingresar el apellido'],
+    email: [(value) => value.length > 0, 'Debe ingresar el correo electrónico'],
+  },
   birthdate: [(value) => value != null, 'Debe ingresar la fecha de nacimiento'],
   gender: [(value) => value != null, 'Debe ingresar el género'],
-  school: [(value) => value.length > 0, 'Debe ingresar el colegio'],
+  school: {
+    name: [(value) => value.length > 0, 'Debe ingresar el colegio'],
+  },
   grade: [(value) => value > 0, 'Debe ingresar el grado'],
   educationLevel: [(value) => value != null, 'Debe ingresar el nivel'],
   tutors: [(value) => value.length > 0, 'Debe ingresar al menos un tutor'],

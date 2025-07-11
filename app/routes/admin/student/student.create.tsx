@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useForm, useTutorStore } from '@/hooks';
-import { ButtonCustom, DateTimePickerCustom, InputCustom, SelectCustom, type ValueSelect } from '@/components';
+import { ButtonCustom, DateTimePickerCustom, InputCustom, SelectCustom, UserFormFields, type ValueSelect } from '@/components';
 import { type TutorModel, Gender, EducationLevel, formStudentValidations, formStudentInit, type StudentModel, type StudentRequest } from '@/models';
 
 interface Props {
@@ -58,9 +58,10 @@ export const StudentCreate = (props: Props) => {
         name: user.name.trim(),
         lastName: user.lastName.trim(),
         email: user.email.trim(),
+        phone: [],
         birthdate,
         gender,
-        school: school.trim(),
+        school: school.name.trim(),
         grade: parseInt(grade),
         educationLevel,
         tutorIds: tutors.map((tutor: TutorModel) => tutor.userId),
@@ -72,9 +73,10 @@ export const StudentCreate = (props: Props) => {
         name: user.name.trim(),
         lastName: user.lastName.trim(),
         email: user.email.trim(),
+        phone: [],
         birthdate,
         gender,
-        school: school.trim(),
+        school: school.name.trim(),
         grade: parseInt(grade),
         educationLevel,
         tutorIds: tutors.map((tutor: TutorModel) => tutor.userId),
@@ -137,38 +139,12 @@ export const StudentCreate = (props: Props) => {
             helperText={formSubmitted ? tutorsValid : ''}
           />
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-
-            <InputCustom
-              name="user.numberDocument"
-              value={user.numberDocument}
-              label="Numero de documento"
-              onChange={onInputChange}
-              error={!!userValid?.numberDocumentValid && formSubmitted}
-              helperText={formSubmitted ? userValid?.numberDocumentValid : ''}
-            />
-            <InputCustom
-              name="user.name"
-              value={user.name}
-              label="Nombre"
-              onChange={onInputChange}
-              error={!!userValid?.nameValid && formSubmitted}
-              helperText={formSubmitted ? userValid?.nameValid : ''}
-            />
-            <InputCustom
-              name="user.lastName"
-              value={user.lastName}
-              label="Apellido"
-              onChange={onInputChange}
-              error={!!userValid?.lastNameValid && formSubmitted}
-              helperText={formSubmitted ? userValid?.lastNameValid : ''}
-            />
-            <InputCustom
-              name="user.email"
-              value={user.email}
-              label="Correo electrónico"
-              onChange={onInputChange}
-              error={!!userValid?.emailValid && formSubmitted}
-              helperText={formSubmitted ? userValid?.emailValid : ''}
+            <UserFormFields
+              user={user}
+              userValid={userValid}
+              formSubmitted={formSubmitted}
+              onInputChange={onInputChange}
+              onValueChange={onValueChange}
             />
             <DateTimePickerCustom
               name="birthdate"
@@ -196,12 +172,12 @@ export const StudentCreate = (props: Props) => {
               helperText={formSubmitted ? genderValid : ''}
             />
             <InputCustom
-              name="school"
-              value={school}
+              name="school.name"
+              value={school.name}
               label="Colegio"
               onChange={onInputChange}
-              error={!!schoolValid && formSubmitted}
-              helperText={formSubmitted ? schoolValid : ''}
+              error={!!schoolValid?.nameValid && formSubmitted}
+              helperText={formSubmitted ? schoolValid?.nameValid : ''}
             />
             <InputCustom
               name="grade"

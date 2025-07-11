@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useForm, useBranchStore, useTeacherStore, useSpecialtyStore } from '@/hooks';
 import { ButtonCustom, InputCustom, SelectCustom, SliderCustom } from '@/components';
-import { type RoomModel, formRoomValidations, formRoomInit, type FormScheduleModel, type RoomRequest } from '@/models';
+import { type RoomModel, formRoomValidations, formRoomInit, type FormScheduleModel, type RoomRequest, type ScheduleRequest } from '@/models';
 import { ScheduleForm } from './schedule.create';
 
 interface Props {
@@ -26,10 +26,10 @@ export const RoomCreate = (props: Props) => {
 
   const {
     name,
-    capacity,
     rangeYears,
     branch,
     teacher,
+    assistant,
     specialty,
     schedules,
     onInputChange,
@@ -38,10 +38,10 @@ export const RoomCreate = (props: Props) => {
     onValueChange,
     onArrayChange,
     nameValid,
-    capacityValid,
     rangeYearsValid,
     branchValid,
     teacherValid,
+    assistantValid,
     specialtyValid,
     schedulesValid,
   } = useForm(item ?? formRoomInit, formRoomValidations);
@@ -53,31 +53,45 @@ export const RoomCreate = (props: Props) => {
     e.preventDefault();
     setFormSubmitted(true);
     const hasInvalid = schedules.some((schedule: FormScheduleModel) =>
-      !schedule.days || !schedule.end || !schedule.start
+      !schedule.day || !schedule.end || !schedule.start
     );
     if (hasInvalid) return;
     if (!isFormValid) return;
 
     if (item == null) {
-      await onCreate({
+      onCreate({
         name: name.trim(),
-        capacity: parseInt(capacity),
         rangeYears,
         branchId: branch.id,
         teacherId: teacher.userId,
+        assistantId: assistant.userId,
         specialtyId: specialty.id,
-        schedules,
+        schedules: [
+          ...schedules.map((e: ScheduleRequest) => {
+            return {
+              ...e,
+              capacity: parseInt(`${e.capacity}`)
+            }
+          })
+        ],
       });
     } else {
       console.log('editando')
-      await onUpdate(item.id, {
+      onUpdate(item.id, {
         name: name.trim(),
-        capacity: parseInt(capacity),
         rangeYears,
         branchId: branch.id,
         teacherId: teacher.userId,
+        assistantId: assistant.userId,
         specialtyId: specialty.id,
-        schedules,
+        schedules: [
+          ...schedules.map((e: ScheduleRequest) => {
+            return {
+              ...e,
+              capacity: parseInt(`${e.capacity}`)
+            }
+          })
+        ],
       });
     }
 
@@ -128,14 +142,6 @@ export const RoomCreate = (props: Props) => {
                     error={!!nameValid && formSubmitted}
                     helperText={formSubmitted ? nameValid : ''}
                   />
-                  <InputCustom
-                    name="capacity"
-                    value={capacity}
-                    label="Capacidad"
-                    onChange={onInputChange}
-                    error={!!capacityValid && formSubmitted}
-                    helperText={formSubmitted ? capacityValid : ''}
-                  />
                 </div>
                 <SliderCustom
                   label="Selecciona el rango de años"
@@ -173,6 +179,19 @@ export const RoomCreate = (props: Props) => {
                   }}
                   error={!!teacherValid && formSubmitted}
                   helperText={formSubmitted ? teacherValid : ''}
+                />
+                <SelectCustom
+                  label="Auxiliar"
+                  options={dataTeacher.data?.map((teacher) => ({ id: teacher.userId, value: `${teacher.user.name} ${teacher.user.lastName}` })) ?? []}
+                  selected={assistant ? { id: assistant.id, value: `${assistant.user.name} ${assistant.user.lastName}` } : null}
+                  onSelect={(value) => {
+                    if (value && !Array.isArray(value)) {
+                      const selected = dataTeacher.data?.find((r) => r.userId === value.id);
+                      onValueChange('assistant', selected);
+                    }
+                  }}
+                  error={!!assistantValid && formSubmitted}
+                  helperText={formSubmitted ? assistantValid : ''}
                 />
                 {
                   branch &&
@@ -225,7 +244,6 @@ export const RoomCreate = (props: Props) => {
                   // Validamos manualmente si hay algún error en los campos del paso 1
                   const hasError =
                     !!nameValid ||
-                    !!capacityValid ||
                     !!rangeYearsValid ||
                     !!branchValid ||
                     !!teacherValid ||

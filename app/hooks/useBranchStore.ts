@@ -1,4 +1,3 @@
-import { useDispatch } from 'react-redux';
 import { coffeApi } from '@/services';
 import { useAlertStore, useErrorStore } from '.';
 import { InitBaseResponse, type BaseResponse, type BranchModel, type BranchRequest } from '@/models';
@@ -6,8 +5,6 @@ import { useState } from 'react';
 
 export const useBranchStore = () => {
   const [dataBranch, setDataBranch] = useState<BaseResponse<BranchModel>>(InitBaseResponse);
-
-  const dispatch = useDispatch();
   const { handleError } = useErrorStore();
   const { showSuccess, showWarning, showError } = useAlertStore();
   const baseUrl = 'branch';

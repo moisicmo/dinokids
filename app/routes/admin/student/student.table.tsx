@@ -81,7 +81,7 @@ export const StudentTable = (props: Props) => {
                 <TableCell>{item.user.numberDocument}</TableCell>
                 <TableCell>{`${item.user.name} ${item.user.lastName}`}</TableCell>
                 <TableCell>{item.user.email}</TableCell>
-                <TableCell>{item.school}</TableCell>
+                <TableCell>{item.school.name}</TableCell>
                 <TableCell>{`${item.grade}º ${item.educationLevel}`}</TableCell>
                 <TableCell className="sticky right-0 z-10 bg-white">
                   <ActionButtons

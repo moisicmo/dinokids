@@ -1,8 +1,6 @@
-import { AcademicStatus, formUserInit, formUserValidations, type BranchModel, type FormUserModel, type FormUserValidations, type UserRequest } from "..";
+import { AcademicStatus, formUserInit, formUserValidations, type AddressRequest, type BranchModel, type FormUserModel, type FormUserValidations, type UserRequest } from "..";
 
-export interface TeacherRequest extends UserRequest {
-  zone: string;
-  address: string;
+export interface TeacherRequest extends UserRequest, AddressRequest {
   major: string;
   academicStatus: AcademicStatus;
   startJob: Date;
@@ -11,8 +9,6 @@ export interface TeacherRequest extends UserRequest {
 
 export interface FormTeacherModel {
   user: FormUserModel;
-  zone: string;
-  address: string;
   major: string;
   academicStatus: AcademicStatus | null;
   startJob: Date | null;
@@ -21,8 +17,6 @@ export interface FormTeacherModel {
 
 export const formTeacherInit: FormTeacherModel = {
   user: formUserInit,
-  zone: '',
-  address: '',
   major: '',
   academicStatus: null,
   startJob: null,
@@ -31,8 +25,6 @@ export const formTeacherInit: FormTeacherModel = {
 
 export interface FormTeacherValidations {
   user: FormUserValidations;
-  zone: [(value: string) => boolean, string];
-  address: [(value: string) => boolean, string];
   major: [(value: string) => boolean, string];
   academicStatus: [(value: AcademicStatus) => boolean, string];
   startJob: [(value: Date) => boolean, string];
@@ -41,8 +33,6 @@ export interface FormTeacherValidations {
 
 export const formTeacherValidations: FormTeacherValidations = {
   user: formUserValidations,
-  zone: [(value) => value.length > 0, 'Debe ingresar la zona'],
-  address: [(value) => value.length > 0, 'Debe ingresar la direccion'],
   major: [(value) => value.length > 0, 'Debe ingresar el grado'],
   academicStatus: [(value) => value != null, 'Debe ingresar estado academico'],
   startJob: [(value) => value != null, 'Debe ingresar cuando empezará'],

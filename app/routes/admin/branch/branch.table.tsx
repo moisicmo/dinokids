@@ -63,7 +63,7 @@ export const BranchTable = (props: Props) => {
           {dataBranch.data.map(item => (
             <TableRow key={item.id}>
               <TableCell>{item.name}</TableCell>
-              <TableCell>{item.address}</TableCell>
+              <TableCell>{`${item.address.city.name} ${item.address.zone}/${item.address.detail}`}</TableCell>
               <TableCell>{item.phone}</TableCell>
               <TableCell className="sticky right-0 z-10 bg-white">
                 <ActionButtons

@@ -25,3 +25,4 @@ export * from './usePrint';
 export * from './useEnumStore';
 export * from './usePaymentStore';
 export * from './useDashboardStore';
+export * from './useCityStore';

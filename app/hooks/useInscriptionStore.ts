@@ -52,17 +52,6 @@ export const useInscriptionStore = () => {
   };
   const updateInscription = async (id: string, inscriptionRequest: InscriptionRequest) => {
     try {
-      // console.log(inscriptionRequest)
-      // const body = {
-      //   studentId: inscriptionRequest.student?.id,
-      //   rooms: inscriptionRequest.rooms?.map((room) => ({ id: room.id, assignmentSchedule: room.assignmentSchedule, start: room.start })),
-      //   inscriptionPrice: inscriptionRequest.inscriptionPrice,
-      //   monthPrice: inscriptionRequest.monthPrice,
-      // }
-      // const { data } = await coffeApi.patch(`/inscription/${id}`, body);
-      // console.log(data);
-      // getInscriptions();
-      // showSuccess('Inscripción editado correctamente');
     } catch (error) {
       throw handleError(error);
     }

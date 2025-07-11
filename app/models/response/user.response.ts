@@ -1,4 +1,4 @@
-import type { StaffModel, StudentModel, TeacherModel, TutorModel } from "..";
+import type { AddressModel, StaffModel, StudentModel, TeacherModel, TutorModel } from "..";
 
 export interface UserModel {
   id: string;
@@ -7,9 +7,10 @@ export interface UserModel {
   name: string;
   lastName: string | null;
   email: string;
-  phone?: string;
+  phone?: string[];
   staff?: StaffModel;
   student?: StudentModel;
   teacher?: TeacherModel;
   tutor?:TutorModel;
+  address?: AddressModel;
 }

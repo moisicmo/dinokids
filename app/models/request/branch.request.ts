@@ -1,26 +1,33 @@
+import { formAddressInit, formAddressValidations, type FormAddressModel, type FormAddressValidations } from "..";
 
 export interface BranchRequest {
   name: string;
-  address: string;
-  phone: string;
+  phone: string[];
+  cityId: string;
+  zone: string;
+  detail: string;
 }
-type FormBranchModel = BranchRequest;
+export interface FormBranchModel {
+  name: string;
+  phone: string[];
+  address: FormAddressModel;
+};
 
 export const formBranchFields: FormBranchModel = {
   name: '',
-  address: '',
-  phone: '',
+  phone: [''],
+  address: formAddressInit,
 };
 
 
 interface FormBranchValidations {
   name: [(value: string) => boolean, string];
-  address: [(value: string) => boolean, string];
-  phone: [(value: string) => boolean, string];
+  phone: [(value: string[]) => boolean, string];
+  address: FormAddressValidations;
 }
 
 export const formBranchValidations: FormBranchValidations = {
   name: [(value) => value.length >= 1, 'Debe ingresar el nombre'],
-  address: [(value) => value.length >= 1, 'Debe ingresar la dirección'],
-  phone: [(value) => value.length >= 6, 'Debe ingresar el teléfono'],
+  phone: [(value) => value.length > 0 && value[0].length > 0, 'Debe ingresar el correo electrónico'],
+  address: formAddressValidations,
 };

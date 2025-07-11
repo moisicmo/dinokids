@@ -77,21 +77,21 @@ const getOverlapStyle = (dateStart: Date, dateEnd: Date, hour: string) => {
   }
 };
 
-export const ScheduleCustom: React.FC<Props> = ({ schedules,selectedSchedules, onEventClick }) => {
+export const ScheduleCustom: React.FC<Props> = ({ schedules, selectedSchedules, onEventClick }) => {
 
 
-  const getEvent = (dayKey: string, hour: string) => {
-    const enumValue = dayEnumMap[dayKey];
-    return schedules.find(schedule =>
-      (schedule.days.includes(dayKey as DayOfWeek) || schedule.days.includes(enumValue)) &&
-      schedule.start && schedule.end &&
-      // Si hay cualquier solapamiento con la hora, devolvemos el evento
-      (() => {
-        const overlapStyle = getOverlapStyle(new Date(schedule.start), new Date(schedule.end), hour);
-        return overlapStyle !== null;
-      })()
-    );
-  };
+const getEvent = (dayKey: string, hour: string) => {
+  return schedules.find(schedule =>
+    schedule.day === dayKey &&
+    schedule.start && schedule.end &&
+    (() => {
+      const overlapStyle = getOverlapStyle(new Date(schedule.start), new Date(schedule.end), hour);
+      return overlapStyle !== null;
+    })()
+  );
+};
+
+
 
   const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
   const primaryColor200 = getComputedStyle(document.documentElement).getPropertyValue('--color-primary-200').trim();
@@ -123,7 +123,7 @@ export const ScheduleCustom: React.FC<Props> = ({ schedules,selectedSchedules, o
             {displayDays.map(([key]) => {
               const event = getEvent(key, hour);
               const overlapStyle = event ? getOverlapStyle(new Date(event.start!), new Date(event.end!), hour) : null;
-                const isSelected = selectedSchedules?.some(sel => sel.schedule.id === event?.id && sel.day === key );
+              const isSelected = selectedSchedules?.some(sel => sel.schedule.id === event?.id && sel.day === key);
 
               return (
                 <div

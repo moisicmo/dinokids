@@ -56,10 +56,10 @@ export const RoomTable = (props: Props) => {
           <TableRow>
             <TableHead>Nombre</TableHead>
             <TableHead>Sucursal</TableHead>
-            <TableHead>Capacidad</TableHead>
             <TableHead>Rango de edad</TableHead>
             <TableHead>Especialidad</TableHead>
             <TableHead>Profesor</TableHead>
+            <TableHead>Auxiliar</TableHead>
             <TableHead className="sticky right-0 z-10 bg-white">Horario</TableHead>
             <TableHead className="sticky right-0 z-10 bg-white">Acciones</TableHead>
           </TableRow>
@@ -69,7 +69,6 @@ export const RoomTable = (props: Props) => {
             <TableRow key={item.id}>
               <TableCell>{item.name}</TableCell>
               <TableCell>{item.branch.name}</TableCell>
-              <TableCell>{item.capacity}</TableCell>
               <TableCell>
                 {item.rangeYears?.length === 2
                   ? item.rangeYears[0] === item.rangeYears[1]
@@ -79,6 +78,7 @@ export const RoomTable = (props: Props) => {
               </TableCell>
               <TableCell>{item.specialty.name}</TableCell>
               <TableCell>{item.teacher.user.name}</TableCell>
+              <TableCell>{item.assistant.user.name}</TableCell>
               <TableCell>
                 <button onClick={() => { }} title="Horario" className="cursor-pointer">
                   <CalendarClock color="var(--color-info)" className="w-5 h-5" />
