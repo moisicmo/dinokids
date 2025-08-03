@@ -1,5 +1,5 @@
 import { Trash2 } from 'lucide-react';
-import { ButtonCustom, InputCustom, SelectCustom, type ValueSelect } from '@/components';
+import { Button, InputCustom, SelectCustom, type ValueSelect } from '@/components';
 import { TypeAction, TypeSubject, type FormPermissionModel } from '@/models';
 
 interface Props {
@@ -63,10 +63,9 @@ export const PermissionForm = (props: Props) => {
     <div className="space-y-2">
       <div className="flex items-center justify-between mb-2">
         <h2 className="text-lg font-semibold">Permisos:</h2>
-        <ButtonCustom
+        <Button
           onClick={handleAdd}
-          text='Agregar Permiso'
-        />
+        >Agregar Permiso</Button>
       </div>
       <div className="max-h-[60vh] overflow-y-auto pr-3 space-y-2">
         {permissions.map((permission, idx) => (

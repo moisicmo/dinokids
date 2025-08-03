@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 
 interface Props {
   id?: string;
@@ -36,8 +36,7 @@ export const DateTimePickerCustom = memo((props: Props) => {
     maxTime,
   } = props;
 
-  const inputType = mode === 'date' ? 'date' : mode === 'time' ? 'time' : 'datetime-local';
-
+  const inputType = mode === 'date' ? 'date' : mode === 'time' ? 'custom-time' : 'datetime-local';
 
   const formatValue = () => {
     if (!value) return '';
@@ -63,7 +62,7 @@ export const DateTimePickerCustom = memo((props: Props) => {
     mode === 'time' ? formatMinMax(maxTime, false) :
       formatMinMax(maxDate ?? maxTime, false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const raw = e.target.value;
     if (!raw) {
       onChange?.(null);
@@ -79,20 +78,35 @@ export const DateTimePickerCustom = memo((props: Props) => {
       const now = new Date('1970-01-01T00:00');
       now.setHours(Number(hours), Number(minutes), 0, 0);
       result = now;
-
-      if (minTime && now < minTime) return;
-      if (maxTime && now > maxTime) return;
-
     } else {
       result = new Date(raw);
-
-      if (minDate && result < minDate) return;
-      if (maxDate && result > maxDate) return;
     }
 
     onChange?.(result);
   };
 
+  // Generar opciones de tiempo en intervalos de 30 minutos
+  const generateTimeOptions = () => {
+    const options: string[] = [];
+    const startHour = minTime ? minTime.getHours() : 0;
+    const endHour = maxTime ? maxTime.getHours() : 23;
+    const startMinute = minTime ? minTime.getMinutes() : 0;
+    const endMinute = maxTime ? maxTime.getMinutes() : 59;
+
+    for (let hour = startHour; hour <= endHour; hour++) {
+      for (let minute = 0; minute < 60; minute += 30) {
+        if ((hour === startHour && minute < startMinute) || (hour === endHour && minute > endMinute)) {
+          continue;
+        }
+        const time = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+        options.push(time);
+      }
+    }
+
+    return options;
+  };
+
+  const timeOptions = generateTimeOptions();
 
   return (
     <div className="mb-4 w-full">
@@ -101,26 +115,53 @@ export const DateTimePickerCustom = memo((props: Props) => {
           {label}
         </label>
       )}
-      <input
-        id={id || name}
-        name={name}
-        type={inputType}
-        value={formatValue()}
-        onChange={handleChange}
-        placeholder={placeholder}
-        autoComplete="off"
-        min={min}
-        max={max}
-        className={`
-          mt-1 block w-full rounded-md border px-3 py-2 text-sm
-          focus:outline-none focus:ring-2
-          focus:ring-[var(--color-primary)]
-          focus:border-[var(--color-primary)]
-          acent:color-[var(--color-primary)]
-          ${error ? 'border-red-500' : 'border-gray-300'}
-          ${className}
-        `}
-      />
+      {mode === 'time' ? (
+        <select
+          id={id || name}
+          name={name}
+          value={value ? formatValue() : ''}
+          onChange={handleChange}
+          className={`
+            mt-1 block w-full rounded-md border px-3 py-2 text-sm
+            focus:outline-none focus:ring-2
+            focus:ring-[var(--color-primary)]
+            focus:border-[var(--color-primary)]
+            accent:color-[var(--color-primary)]
+            ${error ? 'border-red-500' : 'border-gray-300'}
+            ${className}
+          `}
+        >
+          <option value="" disabled={value !== null}>
+            {placeholder || 'Seleccione una hora'}
+          </option>
+          {timeOptions.map((time) => (
+            <option key={time} value={time}>
+              {time}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <input
+          id={id || name}
+          name={name}
+          type={inputType}
+          value={formatValue()}
+          onChange={handleChange}
+          placeholder={placeholder}
+          autoComplete="off"
+          min={min}
+          max={max}
+          className={`
+            mt-1 block w-full rounded-md border px-3 py-2 text-sm
+            focus:outline-none focus:ring-2
+            focus:ring-[var(--color-primary)]
+            focus:border-[var(--color-primary)]
+            accent:color-[var(--color-primary)]
+            ${error ? 'border-red-500' : 'border-gray-300'}
+            ${className}
+          `}
+        />
+      )}
       {helperText && (
         <p className={`text-sm mt-1 ${error ? 'text-error' : 'text-gray-500'}`}>
           {helperText}

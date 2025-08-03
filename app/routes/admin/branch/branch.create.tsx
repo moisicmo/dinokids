@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useCityStore, useForm } from '@/hooks';
-import { ButtonCustom, InputCustom, InputPhonesCustom, SelectCustom, ValueSelect } from '@/components';
+import { Button, InputCustom, InputPhonesCustom, SelectCustom, ValueSelect } from '@/components';
 import { formBranchFields, formBranchValidations, type BranchModel, type BranchRequest } from '@/models';
 
 interface Props {
@@ -135,18 +135,16 @@ export const BranchCreate = (props: Props) => {
             helperText={formSubmitted ? addressValid?.detailValid : ''}
           />
           <div className="flex justify-end gap-2 pt-2">
-            <ButtonCustom
+            <Button
               onClick={() => {
                 onResetForm();
                 handleClose();
               }}
-              text='Cancelar'
-              color='bg-gray-400'
-            />
-            <ButtonCustom
+            >Cancelar</Button>
+            <Button
               type='submit'
-              text={item ? 'Editar' : 'Crear'}
-            />
+              color='bg-gray-400'
+            >{item ? 'Editar' : 'Crear'}</Button>
           </div>
         </form>
       </div>

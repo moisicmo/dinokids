@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import type { InscriptionModel } from '@/models';
 import { BookingCreate, BookingTable } from '.';
-import { ButtonCustom } from '@/components';
+import { Button } from '@/components';
 import { useBookingStore } from '@/hooks';
 
 const bookingView = () => {
@@ -19,10 +19,9 @@ const bookingView = () => {
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">Reservas</h2>
-        <ButtonCustom
+        <Button
           onClick={() => handleDialog(true)}
-          text='Nueva Reserva'
-        />
+        >Nueva Reserva</Button>
       </div>
 
       {/* Tabla de booking */}

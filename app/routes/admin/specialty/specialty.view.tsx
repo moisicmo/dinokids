@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import type { SpecialtyModel } from '@/models';
 import { SpecialtyCreate, SpecialtyTable } from '.';
-import { ButtonCustom } from '@/components';
+import { Button } from '@/components';
 import { useSpecialtyStore } from '@/hooks';
 
 const specialtyView = () => {
@@ -21,10 +21,11 @@ const specialtyView = () => {
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">Especialidades</h2>
-        <ButtonCustom
+        <Button
           onClick={() => handleDialog(true)}
-          text='Nueva Especialidad'
-        />
+        >
+          Nueva Especialidad
+        </Button>
       </div>
 
       {/* Tabla de specialty */}

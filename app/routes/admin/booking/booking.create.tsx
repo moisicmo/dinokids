@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { useBookingStore, useForm } from '@/hooks';
-import { ButtonCustom, InputCustom } from '@/components';
+import { useForm } from '@/hooks';
+import { Button, InputCustom } from '@/components';
 import { formBookingInscriptionInit, formBookingValidations, type BookingRequest, type FormAssignmentRoomModel, type InscriptionModel } from '@/models';
 import { AssignmentRoomForm } from '../inscription';
 
@@ -150,7 +150,7 @@ export const BookingCreate = (props: Props) => {
           </div>
           {/* Botones de acción */}
           <div className="flex justify-end gap-2 pt-4">
-            <ButtonCustom
+            <Button
               onClick={() => {
                 if (step === 1) {
                   onResetForm();
@@ -159,12 +159,11 @@ export const BookingCreate = (props: Props) => {
                   setStep(step - 1);
                 }
               }}
-              text={step === 1 ? 'Cancelar' : 'Atrás'}
               color='bg-gray-400'
-            />
+            >{step === 1 ? 'Cancelar' : 'Atrás'}</Button>
 
             {step === 1 && (
-              <ButtonCustom
+              <Button
                 // onClick={() => setStep(2)}
                 onClick={() => {
                   setFormSubmitted(true);
@@ -180,14 +179,12 @@ export const BookingCreate = (props: Props) => {
                   setStep(2);
 
                 }}
-                text="Siguiente"
-              />
+              >Siguiente</Button>
             )}
             {step === 2 && (
-              <ButtonCustom
+              <Button
                 type="submit"
-                text={item ? 'Editar' : 'Crear'}
-              />
+              >{item ? 'Editar' : 'Crear'}</Button>
             )}
           </div>
         </form>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuthStore, useForm } from '@/hooks';
 import { useNavigate } from 'react-router';
-import { ButtonCustom, InputCustom} from '@/components';
+import { Button, InputCustom} from '@/components';
 import { Eye, EyeOff } from 'lucide-react';
 
 const loginFormFields = {
@@ -71,11 +71,12 @@ const login = () => {
               </button>
             }
           />
-          <ButtonCustom
+          <Button
             type='submit'
-            text='INGRESAR'
             className='w-full'
-          />
+          >
+            INGRESAR
+          </Button>
         </form>
       </div>
     </div>

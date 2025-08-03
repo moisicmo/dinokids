@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import type { TeacherModel } from '@/models';
 import { TeacherCreate, TeacherTable } from '.';
-import { ButtonCustom } from '@/components';
+import { Button } from '@/components';
 import { useTeacherStore } from '@/hooks';
 
 const teacherView = () => {
@@ -20,10 +20,11 @@ const teacherView = () => {
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">Profesores</h2>
-        <ButtonCustom
+        <Button
           onClick={() => handleDialog(true)}
-          text='Nuevo profesor'
-        />
+        >
+          Nuevo profesor
+        </Button>
       </div>
 
       {/* Tabla de teacher */}

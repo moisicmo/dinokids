@@ -1,5 +1,5 @@
 import { Trash2 } from 'lucide-react';
-import { ButtonCustom, DateTimePickerCustom, InputCustom, ScheduleCustom, SelectCustom, type ValueSelect } from '@/components';
+import { Button, DateTimePickerCustom, InputCustom, ScheduleCustom, SelectCustom, type ValueSelect } from '@/components';
 import { DayOfWeek, type FormScheduleModel } from '@/models';
 
 interface Props {
@@ -8,7 +8,6 @@ interface Props {
   formSubmitted: boolean;
   schedulesValid?: string | null;
 }
-
 export const ScheduleForm = ({
   schedules,
   onChange,
@@ -45,6 +44,17 @@ export const ScheduleForm = ({
     onChange(updated);
   };
 
+  // Función auxiliar para actualizar el estado de manera controlada
+  const updateSchedule = (index: number, start: Date | null, end: Date | null) => {
+    const updated = [...schedules];
+    updated[index] = {
+      ...updated[index],
+      start,
+      end,
+    };
+    onChange(updated);
+  };
+
   const dayOptions: ValueSelect[] = Object.entries(DayOfWeek).map(
     ([key, value]) => ({
       id: key,
@@ -58,10 +68,11 @@ export const ScheduleForm = ({
       <div className="flex-1 space-y-2">
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-lg font-semibold">Horarios:</h2>
-          <ButtonCustom
+          <Button
             onClick={handleAdd}
-            text="Agregar Horario"
-          />
+          >
+            Agregar Horario
+          </Button>
         </div>
         <div className="max-h-[60vh] overflow-y-auto pr-3 space-y-2">
           {schedules.map((schedule, idx) => (
@@ -82,15 +93,10 @@ export const ScheduleForm = ({
                     ? dayOptions.find((opt) => opt.id === schedule.day) ?? null
                     : null
                 }
-                // selected={dayOptions.filter(opt => schedule.day.includes(opt.id as DayOfWeek))}
                 onSelect={(value) => {
                   if (value && !Array.isArray(value)) {
                     handleFieldChange(idx, 'day', value.id);
                   }
-                  // if (Array.isArray(values)) {
-                  //   const selectedDays = values.map(v => v.id as DayOfWeek);
-                  //   handleFieldChange(idx, 'day', selectedDays);
-                  // }
                 }}
                 error={formSubmitted && schedule.day === null}
                 helperText={formSubmitted && schedule.day === null ? 'Campo requerido' : ''}
@@ -104,7 +110,15 @@ export const ScheduleForm = ({
                   minTime={new Date('1970-01-01T08:00')}
                   maxTime={new Date('1970-01-01T20:00')}
                   value={schedule.start}
-                  onChange={(val) => handleFieldChange(idx, 'start', val)}
+                  onChange={(val) => {
+                    if (val && schedule.end && val > schedule.end) {
+                      // Si la hora de inicio es mayor que la hora de fin, reiniciar la hora de fin a null
+                      updateSchedule(idx, val, null);
+                    } else {
+                      // Actualizar solo la hora de inicio
+                      updateSchedule(idx, val, schedule.end);
+                    }
+                  }}
                   error={formSubmitted && schedule.start == null}
                   helperText={formSubmitted && schedule.start === null ? 'Campo requerido' : ''}
                 />
@@ -115,7 +129,15 @@ export const ScheduleForm = ({
                   minTime={new Date('1970-01-01T08:00')}
                   maxTime={new Date('1970-01-01T20:00')}
                   value={schedule.end}
-                  onChange={(val) => handleFieldChange(idx, 'end', val)}
+                  onChange={(val) => {
+                    if (val && schedule.start && val < schedule.start) {
+                      // Si la hora de fin es menor que la hora de inicio, reiniciar la hora de inicio a null
+                      updateSchedule(idx, null, val);
+                    } else {
+                      // Actualizar solo la hora de fin
+                      updateSchedule(idx, schedule.start, val);
+                    }
+                  }}
                   error={formSubmitted && schedule.end == null}
                   helperText={formSubmitted && schedule.end === null ? 'Campo requerido' : ''}
                 />
@@ -139,13 +161,12 @@ export const ScheduleForm = ({
 
       {/* Vista del horario */}
       <div className="flex-1">
-
         <ScheduleCustom
           schedules={schedules}
-          selectedSchedules={[]} // ✅ Agregado para cumplir con Props
-          onEventClick={(e: any) => alert(`Clic en evento: ${e.day} de ${e.start} a ${e.end}`)}
-        />
-
+          selectedSchedules={[]}
+          scheduleSelect={(val) => {  }}
+        >
+        </ScheduleCustom>
       </div>
     </div>
   );

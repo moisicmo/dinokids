@@ -1,4 +1,8 @@
-import { memo, type ReactNode } from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
+import { type ReactNode } from "react";
 
 interface Props {
   id?: string;
@@ -15,72 +19,63 @@ interface Props {
   className?: string;
 }
 
+export const InputCustom = ({
+  id,
+  name,
+  value,
+  onChange,
+  type = "text",
+  label,
+  placeholder,
+  endAdornment,
+  multiline = false,
+  error = false,
+  helperText = "",
+  className = "",
+}: Props) => {
+  const inputId = id || name;
 
-export const InputCustom = memo((props: Props) => {
-  const {
-    id,
-    name,
-    value,
-    onChange,
-    type = 'text',
-    label,
-    placeholder,
-    endAdornment = null,
-    multiline = false,
-    error = false,
-    helperText = '',
-    className = '',
-  } = props;
-  const baseInputClass = `
-  mt-1 block w-full rounded-md border text-sm
-  px-3 py-2 pr-10
-  focus:outline-none focus:ring-2 focus:ring-primary-400
-  ${error ? 'border-red-500' : 'border-gray-300'}
-  ${className}
-`;
+  const baseInput = multiline ? (
+    <Textarea
+      id={inputId}
+      name={name}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      className={cn("pr-10", error && "border-red-500", className)}
+      rows={4}
+    />
+  ) : (
+    <Input
+      id={inputId}
+      name={name}
+      type={type}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      className={cn("pr-10", error && "border-red-500", className)}
+      autoComplete="off"
+    />
+  );
 
   return (
-    <div className="mb-2 w-full">
-      {label && (
-        <label htmlFor={id || name} className="block text-sm font-medium text-gray-700">
-          {label}
-        </label>
-      )}
-      <div className="relative">
-        {multiline ? (
-          <textarea
-            id={id || name}
-            name={name}
-            value={value}
-            onChange={onChange}
-            className={baseInputClass}
-            rows={4}
-          />
-        ) : (
-          <input
-            id={id || name}
-            name={name}
-            type={type}
-            value={value}
-            onChange={onChange}
-            placeholder={placeholder}
-            className={baseInputClass}
-            autoComplete="off"
-          />
-        )}
+    <div className="grid w-full gap-1.5">
+      {label && <Label htmlFor={inputId}>{label}</Label>}
 
+      <div className="relative">
+        {baseInput}
         {endAdornment && (
-          <div className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500">
+          <div className="absolute inset-y-0 right-3 flex items-center text-gray-500">
             {endAdornment}
           </div>
         )}
       </div>
 
       {helperText && (
-        <p className={`text-sm mt-1 ${error ? 'text-red-600' : 'text-gray-500'}`}>
+        <p className={cn("text-sm", error ? "text-red-600" : "text-muted-foreground")}>
           {helperText}
         </p>
       )}
     </div>
   );
-});
+};

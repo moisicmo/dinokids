@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import type { BranchModel } from '@/models';
 import { BranchCreate, BranchTable } from '.';
-import { ButtonCustom } from '@/components';
+import { Button } from '@/components';
 import { useBranchStore } from '@/hooks';
 
 const branchView = () => {
@@ -20,10 +20,9 @@ const branchView = () => {
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">Sucursales</h2>
-        <ButtonCustom
+        <Button
           onClick={() => handleDialog(true)}
-          text='Nueva Sucursal'
-        />
+        >Nueva Sucursal</Button>
       </div>
 
       {/* Tabla de branch */}

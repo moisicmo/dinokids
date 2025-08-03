@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useForm, useBranchStore } from '@/hooks';
-import { ButtonCustom, InputCustom, SelectCustom } from '@/components';
+import { Button, InputCustom, SelectCustom } from '@/components';
 import { formSpecialtyFields, formSpecialtyValidations, type SpecialtyModel, type SpecialtyRequest } from '@/models';
 
 interface Props {
@@ -123,18 +123,18 @@ export const SpecialtyCreate = (props: Props) => {
           />
 
           <div className="flex justify-end gap-2 pt-2">
-            <ButtonCustom
+            <Button
               onClick={() => {
                 onResetForm();
                 handleClose();
               }}
-              text='Cancelar'
               color='bg-gray-400'
-            />
-            <ButtonCustom
+            >Cancelar</Button>
+            <Button
               type='submit'
-              text={item ? 'Editar' : 'Crear'}
-            />
+            >
+              {item ? 'Editar' : 'Crear'}
+            </Button>
           </div>
         </form>
       </div>

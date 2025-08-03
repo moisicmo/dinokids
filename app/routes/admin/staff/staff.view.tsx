@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import type { StaffModel } from '@/models';
 import { StaffCreate, StaffTable } from '.';
-import { ButtonCustom } from '@/components';
+import { Button } from '@/components';
 import { useStaffStore } from '@/hooks';
 
 const staffView = () => {
@@ -20,10 +20,11 @@ const staffView = () => {
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">Staffs</h2>
-        <ButtonCustom
+        <Button
           onClick={() => handleDialog(true)}
-          text='Nuevo staff'
-        />
+        >
+          Nuevo staff
+        </Button>
       </div>
 
       {/* Tabla de staff */}

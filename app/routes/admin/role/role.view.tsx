@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import type { RoleModel } from '@/models';
 import { RoleCreate, RoleTable } from '.';
-import { ButtonCustom } from '@/components';
+import { Button } from '@/components';
 import { useRoleStore } from '@/hooks';
 
 const roleView = () => {
@@ -20,10 +20,11 @@ const roleView = () => {
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">Roles</h2>
-        <ButtonCustom
+        <Button
           onClick={() => handleDialog(true)}
-          text='Nuevo Rol'
-        />
+        >
+          Nuevo Rol
+        </Button>
       </div>
 
       {/* Tabla de role */}

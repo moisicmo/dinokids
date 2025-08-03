@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { useCartStore, useForm } from '@/hooks';
-import { ButtonCustom, DateTimePickerCustom, InputCustom } from '@/components';
+import { Button, DateTimePickerCustom, InputCustom } from '@/components';
 import { formPaymentValidations, type FormPaymentModel } from '@/models';
 import { PopoverContent } from '@/components/ui/popover';
 
@@ -65,7 +65,7 @@ export const PaymentCreate = (props: Props) => {
               helperText={formSubmitted ? dueDateValid : ''}
             />
           }
-          <ButtonCustom type="submit" text="Agregar al carrito" />
+          <Button type="submit">Agregar al carrito</Button>
         </form>
     </PopoverContent>
   );

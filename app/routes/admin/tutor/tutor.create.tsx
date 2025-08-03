@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useCityStore, useForm } from '@/hooks';
-import { ButtonCustom, UserFormFields } from '@/components';
+import { Button, UserFormFields } from '@/components';
 import { formTutorInit, formTutorValidations, type TutorModel, type TutorRequest } from '@/models';
 
 interface Props {
@@ -41,7 +41,7 @@ export const TutorCreate = (props: Props) => {
         typeDocument: 'DNI',
         name: user.name.trim(),
         lastName: user.lastName.trim(),
-        email: user.email.trim(),
+        email: user.email.trim() == ''? null: user.email.trim(),
         phone: user.phone,
         cityId: user.address.city.id,
         zone: user.address.zone.trim(),
@@ -53,7 +53,7 @@ export const TutorCreate = (props: Props) => {
         typeDocument: 'DNI',
         name: user.name.trim(),
         lastName: user.lastName.trim(),
-        email: user.email.trim(),
+        email: user.email.trim() == ''? null: user.email.trim(),
         phone: user.phone,
         cityId: user.address.city.id,
         zone: user.address.zone.trim(),
@@ -90,18 +90,19 @@ export const TutorCreate = (props: Props) => {
             />
           </div>
           <div className="flex justify-end gap-2 pt-2">
-            <ButtonCustom
+            <Button
               onClick={() => {
                 onResetForm();
                 handleClose();
               }}
-              text='Cancelar'
-              color='bg-gray-400'
-            />
-            <ButtonCustom
+            >
+              Cancelar
+            </Button>
+            <Button
               type='submit'
-              text={item ? 'Editar' : 'Crear'}
-            />
+            >
+              {item ? 'Editar' : 'Crear'}
+            </Button>
           </div>
         </form>
       </div>

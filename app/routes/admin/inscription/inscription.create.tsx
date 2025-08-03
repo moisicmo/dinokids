@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useForm, useStudentStore } from '@/hooks';
-import { ButtonCustom, InputCustom, SelectCustom } from '@/components';
+import { Button, InputCustom, SelectCustom } from '@/components';
 import { type FormAssignmentRoomModel, type InscriptionModel, type InscriptionRequest, formInscriptionInit, formInscriptionValidations } from '@/models';
 import { AssignmentRoomForm } from '.';
 
@@ -109,8 +109,8 @@ export const InscriptionCreate = (props: Props) => {
               step === 1 &&
               <SelectCustom
                 label="Estudiante"
-                options={dataStudent.data?.map((student) => ({ id: student.userId, value: student.user.name })) ?? []}
-                selected={student ? { id: student.id, value: student.user.name } : null}
+                options={dataStudent.data?.map((student) => ({ id: student.userId, value: `${student.user.name} ${student.user.lastName}` })) ?? []}
+                selected={student ? { id: student.id, value: `${student.user.name} ${student.user.lastName}` } : null}
                 onSelect={(value) => {
                   if (value && !Array.isArray(value)) {
                     const selected = dataStudent.data?.find((r) => r.userId === value.id);
@@ -154,7 +154,7 @@ export const InscriptionCreate = (props: Props) => {
           </div>
           {/* Botones de acción */}
           <div className="flex justify-end gap-2 pt-4">
-            <ButtonCustom
+            <Button
               onClick={() => {
                 if (step === 1) {
                   onResetForm();
@@ -163,12 +163,10 @@ export const InscriptionCreate = (props: Props) => {
                   setStep(step - 1);
                 }
               }}
-              text={step === 1 ? 'Cancelar' : 'Atrás'}
-              color='bg-gray-400'
-            />
+              >{step === 1 ? 'Cancelar' : 'Atrás'}</Button>
 
             {(step === 1 || step === 2) && (
-              <ButtonCustom
+              <Button
                 onClick={() => {
                   setFormSubmitted(true);
 
@@ -186,16 +184,13 @@ export const InscriptionCreate = (props: Props) => {
                     if (hasInvalid) return;
                     setStep(3);
                   }
-
                 }}
-                text="Siguiente"
-              />
+              >Siguiente</Button>
             )}
             {step === 3 && (
-              <ButtonCustom
+              <Button
                 type="submit"
-                text={item ? 'Editar' : 'Crear'}
-              />
+              >{item ? 'Editar' : 'Crear'}</Button>
             )}
           </div>
         </form>

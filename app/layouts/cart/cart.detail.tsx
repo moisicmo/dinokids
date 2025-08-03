@@ -1,4 +1,5 @@
-import { ButtonCustom, InputCustom } from "@/components"
+import { InputCustom } from "@/components"
+import { Button } from "@/components/ui/button";
 import { useCartStore, useForm, usePaymentStore } from "@/hooks";
 import { formCartInit, formCartValidations, type CartRequest } from "@/models";
 import { useState, type FormEvent } from "react";
@@ -65,10 +66,12 @@ export const CartDetail = () => {
           error={!!buyerNameValid && formSubmitted}
           helperText={formSubmitted ? buyerNameValid : ""}
         />
-        <ButtonCustom
+        <Button
           type="submit"
-          text="Pagar"
-          className='w-full' />
+          
+          className='w-full'>
+            Pagar
+          </Button>
 
       </form>
 

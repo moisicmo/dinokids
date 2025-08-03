@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useForm, useTutorStore } from '@/hooks';
-import { ButtonCustom, DateTimePickerCustom, InputCustom, SelectCustom, UserFormFields, type ValueSelect } from '@/components';
+import { Button, DateTimePickerCustom, InputCustom, SelectCustom, UserFormFields, type ValueSelect } from '@/components';
 import { type TutorModel, Gender, EducationLevel, formStudentValidations, formStudentInit, type StudentModel, type StudentRequest } from '@/models';
 
 interface Props {
@@ -53,11 +53,11 @@ export const StudentCreate = (props: Props) => {
 
     if (item == null) {
       await onCreate({
-        numberDocument: user.numberDocument,
+        numberDocument: user.numberDocument.trim() == ''? null :user.numberDocument.trim(),
         typeDocument: 'DNI',
         name: user.name.trim(),
         lastName: user.lastName.trim(),
-        email: user.email.trim(),
+        email: user.email.trim() == ''? null: user.email.trim(),
         phone: [],
         birthdate,
         gender,
@@ -68,11 +68,11 @@ export const StudentCreate = (props: Props) => {
       });
     } else {
       await onUpdate(item.userId, {
-        numberDocument: user.numberDocument,
+        numberDocument: user.numberDocument.trim() == ''? null :user.numberDocument.trim(),
         typeDocument: 'DNI',
         name: user.name.trim(),
         lastName: user.lastName.trim(),
-        email: user.email.trim(),
+        email: user.email.trim() == ''? null: user.email.trim(),
         phone: [],
         birthdate,
         gender,
@@ -125,8 +125,8 @@ export const StudentCreate = (props: Props) => {
           <SelectCustom
             multiple
             label="Tutores"
-            options={dataTutor.data?.map((tutor) => ({ id: tutor.userId, value: tutor.user.name })) ?? []}
-            selected={tutors.map((tutor: TutorModel) => ({ id: tutor.userId, value: tutor.user.name }))}
+            options={dataTutor.data?.map((tutor) => ({ id: tutor.userId, value: `${tutor.user.name} ${tutor.user.lastName}` })) ?? []}
+            selected={tutors.map((tutor: TutorModel) => ({ id: tutor.userId, value: `${tutor.user.name} ${tutor.user.lastName}` }))}
             onSelect={(values) => {
               if (Array.isArray(values)) {
                 const select = dataTutor.data?.filter((r) =>
@@ -206,18 +206,20 @@ export const StudentCreate = (props: Props) => {
           </div>
 
           <div className="flex justify-end gap-2 pt-2">
-            <ButtonCustom
+            <Button
               onClick={() => {
                 onResetForm();
                 handleClose();
               }}
-              text='Cancelar'
               color='bg-gray-400'
-            />
-            <ButtonCustom
+            >
+              Cancelar
+            </Button>
+            <Button
               type='submit'
-              text={item ? 'Editar' : 'Crear'}
-            />
+            >
+              {item ? 'Editar' : 'Crear'}
+            </Button>
           </div>
         </form>
       </div>

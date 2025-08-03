@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import type { RoomModel } from '@/models';
 import { RoomCreate, RoomTable } from '.';
-import { ButtonCustom } from '@/components';
+import { Button } from '@/components';
 import { useRoomStore } from '@/hooks';
 
 const roomView = () => {
@@ -20,10 +20,11 @@ const roomView = () => {
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">Aulas</h2>
-        <ButtonCustom
+        <Button
           onClick={() => handleDialog(true)}
-          text='Nueva Aula'
-        />
+        >
+          Nueva Aula
+        </Button>
       </div>
 
       {/* Tabla de room */}

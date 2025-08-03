@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useForm, useRoleStore, useBranchStore } from '@/hooks';
-import { ButtonCustom, SelectCustom, UserFormFields } from '@/components';
+import { Button, SelectCustom, UserFormFields } from '@/components';
 import { type BranchModel, formStaffInit, formStaffValidations, type StaffModel, type StaffRequest } from '@/models';
 
 interface Props {
@@ -131,18 +131,20 @@ export const StaffCreate = (props: Props) => {
             helperText={formSubmitted ? branchesValid : ''}
           />
           <div className="flex justify-end gap-2 pt-2">
-            <ButtonCustom
+            <Button
               onClick={() => {
                 onResetForm();
                 handleClose();
               }}
-              text='Cancelar'
               color='bg-gray-400'
-            />
-            <ButtonCustom
+            >
+              Cancelar
+            </Button>
+            <Button
               type='submit'
-              text={item ? 'Editar' : 'Crear'}
-            />
+            >
+              {item ? 'Editar' : 'Crear'}
+            </Button>
           </div>
         </form>
       </div>

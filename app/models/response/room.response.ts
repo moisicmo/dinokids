@@ -1,5 +1,4 @@
-import type { BranchModel, ScheduleModel, SpecialtyModel, TeacherModel } from "..";
-
+import type { AssignmentRoomModel, BranchModel, InscriptionModel, ScheduleModel, SpecialtyModel, TeacherModel } from "..";
 export interface RoomModel {
   id: string;
   name: string;
@@ -8,5 +7,6 @@ export interface RoomModel {
   teacher: TeacherModel;
   assistant: TeacherModel;
   specialty: SpecialtyModel;
-  schedules: ScheduleModel[]
+  schedules: ScheduleModel[];
+  assignmentRooms: AssignmentRoomModel[];
 }

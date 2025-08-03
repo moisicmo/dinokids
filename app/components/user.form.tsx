@@ -2,7 +2,6 @@ import { InputCustom, InputPhonesCustom, SelectCustom, ValueSelect } from "@/com
 import { useCityStore } from "@/hooks";
 import type { FormUserModel } from "@/models";
 import { useEffect } from "react";
-
 interface UserFormFieldsProps {
   user: FormUserModel;
   userValid: any;

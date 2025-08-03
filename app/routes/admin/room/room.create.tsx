@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useForm, useBranchStore, useTeacherStore, useSpecialtyStore } from '@/hooks';
-import { ButtonCustom, InputCustom, SelectCustom, SliderCustom } from '@/components';
+import { Button, InputCustom, SelectCustom, SliderCustom } from '@/components';
 import { type RoomModel, formRoomValidations, formRoomInit, type FormScheduleModel, type RoomRequest, type ScheduleRequest } from '@/models';
 import { ScheduleForm } from './schedule.create';
 
@@ -224,7 +224,7 @@ export const RoomCreate = (props: Props) => {
           </div>
           {/* Botones de acción */}
           <div className="flex justify-end gap-2 pt-4">
-            <ButtonCustom
+            <Button
               onClick={() => {
                 if (step === 1) {
                   onResetForm();
@@ -233,12 +233,11 @@ export const RoomCreate = (props: Props) => {
                   setStep(step - 1);
                 }
               }}
-              text={step === 1 ? 'Cancelar' : 'Atrás'}
               color='bg-gray-400'
-            />
+            >{step === 1 ? 'Cancelar' : 'Atrás'}</Button>
 
             {step === 1 && (
-              <ButtonCustom
+              <Button
                 onClick={() => {
                   setFormSubmitted(true);
                   // Validamos manualmente si hay algún error en los campos del paso 1
@@ -252,15 +251,15 @@ export const RoomCreate = (props: Props) => {
                   if (hasError) return; // No avanzamos si hay errores
                   setStep(2); // Avanzamos al paso 2 si todo está bien
                 }}
-                text="Siguiente"
-              />
+              >
+                Siguiente
+              </Button>
             )}
 
             {step === 2 && (
-              <ButtonCustom
+              <Button
                 type="submit"
-                text={item ? 'Editar' : 'Crear'}
-              />
+              >{item ? 'Editar' : 'Crear'}</Button>
             )}
           </div>
         </form>

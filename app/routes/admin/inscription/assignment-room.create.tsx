@@ -1,6 +1,6 @@
 import { Trash2 } from 'lucide-react';
-import { ButtonCustom, DateTimePickerCustom, ScheduleCustom, SelectCustom } from '@/components';
-import { DayOfWeek, type FormAssignmentRoomModel } from '@/models';
+import { Button, DateTimePickerCustom, ScheduleCustom, SelectCustom } from '@/components';
+import { type FormAssignmentRoomModel } from '@/models';
 import { useEnums, useRoomStore } from '@/hooks';
 import { useEffect, useState } from 'react';
 
@@ -58,13 +58,15 @@ export const AssignmentRoomForm = (props: Props) => {
   }, [])
 
 
+  const [scheduleId, setScheduleId] = useState('')
+
   return (
     <div className="flex flex-col lg:flex-row gap-4">
       {/* Formulario de horarios */}
       <div className="flex-1 space-y-2">
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-lg font-semibold">Asignaciones:</h2>
-          <ButtonCustom onClick={handleAdd} text="Agregar asignación" />
+          <Button onClick={handleAdd}>Agregar asignación</Button>
         </div>
         <div className="max-h-[60vh] overflow-y-auto pr-3 space-y-2">
           {assignmentRooms.map((assignmentRoom, idx) => {
@@ -180,27 +182,37 @@ export const AssignmentRoomForm = (props: Props) => {
                       <ScheduleCustom
                         schedules={assignmentRoom.room?.schedules ?? []}
                         selectedSchedules={assignmentRoom.assignmentSchedules ?? []}
-                        onEventClick={(e: any) => {
-                          const { id: scheduleId, day } = e;
-                          if (!scheduleId || !day) return;
+                        scheduleSelect={(val) => setScheduleId(val)}
+                      >
+                        {/* popover interno */}
+                        <div className="p-3 text-center">
+                          <Button
+                            size="sm"
+                            onClick={() => {
+                              if (!scheduleId) return;
 
-                          // Buscar el schedule completo desde room.schedules
-                          const schedule = assignmentRoom.room?.schedules?.find((s) => s.id === scheduleId);
-                          if (!schedule) return;
+                              const schedule = assignmentRoom.room?.schedules?.find((s) => s.id === scheduleId);
+                              if (!schedule) return;
 
-                          const existing = assignmentRoom.assignmentSchedules.find(
-                            (s) => s.schedule.id === scheduleId && s.day === day
-                          );
+                              const existing = assignmentRoom.assignmentSchedules.find(
+                                (s) => s.schedule.id === scheduleId
+                              );
 
-                          const updatedAssignmentSchedules = existing
-                            ? assignmentRoom.assignmentSchedules.filter(
-                              (s) => !(s.schedule.id === scheduleId && s.day === day)
-                            )
-                            : [...assignmentRoom.assignmentSchedules, { schedule, day }];
+                              const updatedAssignmentSchedules = existing
+                                ? assignmentRoom.assignmentSchedules.filter(
+                                  (s) => s.schedule.id !== scheduleId
+                                )
+                                : [...assignmentRoom.assignmentSchedules, { schedule, day: schedule.day }];
 
-                          handleFieldChange(idx, 'assignmentSchedules', updatedAssignmentSchedules);
-                        }}
-                      />
+                              handleFieldChange(idx, 'assignmentSchedules', updatedAssignmentSchedules);
+                            }}
+                          >
+                            {assignmentRoom.assignmentSchedules.some((s) => s.schedule.id === scheduleId)
+                              ? 'Quitar horario'
+                              : 'Agregar horario'}
+                          </Button>
+                        </div>
+                      </ScheduleCustom>
 
                     </div>
                   </div>

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import type { StudentModel, UserModel } from '@/models';
-import { ButtonCustom } from '@/components';
+import { Button } from '@/components';
 import { StudentCreate, StudentTable } from '.';
 import { useStudentStore } from '@/hooks';
 
@@ -20,10 +20,11 @@ const studentView = () => {
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">Estudiantes</h2>
-        <ButtonCustom
+        <Button
           onClick={() => handleDialog(true)}
-          text='Nuevo estudiante'
-        />
+        >
+          Nuevo estudiante
+        </Button>
       </div>
 
       {/* Tabla de student */}

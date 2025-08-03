@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import type { DebtModel, FormPaymentModel } from "@/models";
-import { useDebtStore, useEnums, usePopover } from "@/hooks";
+import { useDebtStore, useEnums } from "@/hooks";
 import { CalendarClock } from "lucide-react";
-import { ActionButtons } from "@/components";
+import { ActionButtons, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components";
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { PaymentCreate, PaymentTable } from "..";
 import React from "react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 interface Props {
   studentId: string;

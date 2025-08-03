@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import type { InscriptionModel } from '@/models';
 import { InscriptionCreate, InscriptionTable } from '.';
-import { ButtonCustom } from '@/components';
+import { Button } from '@/components';
 import { useInscriptionStore } from '@/hooks';
 
 const inscriptionView = () => {
@@ -20,10 +20,9 @@ const inscriptionView = () => {
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">Inscripciones</h2>
-        <ButtonCustom
+        <Button
           onClick={() => handleDialog(true)}
-          text='Nueva inscripción'
-        />
+        >Nueva inscripción</Button>
       </div>
 
       {/* Tabla de inscription */}
