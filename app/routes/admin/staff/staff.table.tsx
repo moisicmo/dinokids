@@ -68,7 +68,7 @@ export const StaffTable = (props: Props) => {
               <TableCell>{item.user.name}</TableCell>
               <TableCell>{item.user.lastName}</TableCell>
               <TableCell>{item.user.email}</TableCell>
-              <TableCell>{item.user.phone}</TableCell>
+              <TableCell>{item.user.phone?.join(", ")}</TableCell>
               <TableCell>{item.role.name}</TableCell>
               <TableCell className="sticky right-0 z-10 bg-white">
                 <ActionButtons

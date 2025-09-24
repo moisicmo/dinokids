@@ -2,10 +2,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { coffeApi } from '@/services';
 import { onLogin, onLogout, setRoleUser } from '@/store';
 import { useErrorStore } from '.';
-import type { AuthModel, AuthRequest } from '@/models';
+import type { AuthModel, AuthRequest, ValidatePinRequest } from '@/models';
+import { useState } from 'react';
+
+export interface validateEmail {
+  idUser: string;
+  key: string;
+  email: string;
+}
+
 
 export const useAuthStore = () => {
   const { status, user } = useSelector((state: any) => state.auth);
+  const [showValidateEmail, setShowValidateEmail] = useState<validateEmail | null>(null);
+
   const dispatch = useDispatch();
   const { handleError } = useErrorStore();
 
@@ -20,11 +30,27 @@ export const useAuthStore = () => {
       localStorage.setItem('role', JSON.stringify(role));
       dispatch(onLogin(user));
       dispatch(setRoleUser({ role }));
-    } catch (error) {
+    } catch (error: any) {
+      console.log(error);
       dispatch(onLogout());
+
+      const data = error?.response?.data;
+
+      if (data?.key === 'validar correo') {
+        console.log("🚀 data que llega del backend:", data);
+        setShowValidateEmail({
+          idUser: data.idUser,
+          key: data.key,
+          email: data.email,
+        });
+        sendPin(data.idUser);
+      }
+
+
       throw handleError(error);
     }
   };
+
   const checkAuthToken = async () => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -38,15 +64,28 @@ export const useAuthStore = () => {
     }
   };
 
+  const sendPin = async (idUser: string) => {
+    const resp = await coffeApi.get(`/auth/sendPin/${idUser}`);
+    console.log(resp.data);
+  }
+
+
+  const validatePin = async (body: ValidatePinRequest) => {
+    const resp = await coffeApi.post(`/auth/validatePin`, body);
+    console.log(resp.data);
+  }
 
   return {
     //* Propiedades
     status,
     user,
-
+    showValidateEmail,
     //* Métodos
     startLogin,
     checkAuthToken,
+    setShowValidateEmail,
+    sendPin,
+    validatePin,
   };
 };
 

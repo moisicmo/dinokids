@@ -19,6 +19,7 @@ export * from './request/price.request';
 export * from './request/assignment-schedule.request';
 export * from './request/assignment-room.request';
 export * from './request/cart.request';
+export * from './request/validate-pin.request';
 
 // RESPONSE
 export * from './response/response';
