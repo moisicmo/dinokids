@@ -13,4 +13,5 @@ export interface UserModel {
   teacher?: TeacherModel;
   tutor?:TutorModel;
   address?: AddressModel;
+  numberCard?: string;
 }

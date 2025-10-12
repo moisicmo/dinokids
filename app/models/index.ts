@@ -20,6 +20,7 @@ export * from './request/assignment-schedule.request';
 export * from './request/assignment-room.request';
 export * from './request/cart.request';
 export * from './request/validate-pin.request';
+export * from './request/attendance.request';
 
 // RESPONSE
 export * from './response/response';
@@ -46,6 +47,7 @@ export * from './response/assignment-schedule.response';
 export * from './response/payment.response';
 export * from './response/invoice.response';
 export * from './response/dashboard.response';
+export * from './response/attendance.response'; 
 
 export * from './pagination';
 

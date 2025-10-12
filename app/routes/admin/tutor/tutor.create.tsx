@@ -46,6 +46,7 @@ export const TutorCreate = (props: Props) => {
         cityId: user.address.city.id,
         zone: user.address.zone.trim(),
         detail: user.address.detail.trim(),
+        numberCard: user.numberCard.trim() == ''? null: user.numberCard.trim(),
       });
     } else {
       await onCreate({
@@ -58,6 +59,7 @@ export const TutorCreate = (props: Props) => {
         cityId: user.address.city.id,
         zone: user.address.zone.trim(),
         detail: user.address.detail.trim(),
+        numberCard: user.numberCard.trim() == ''? null: user.numberCard.trim(),
       });
     }
 

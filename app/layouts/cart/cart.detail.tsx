@@ -48,12 +48,11 @@ export const CartDetail = () => {
         <p>Estudiante:</p>
         <p>{cart[0].debt.inscription.student?.user.name ?? cart[0].debt.inscription.booking?.name}</p>
       </div>
-
-      <form onSubmit={sendSubmit}>
+      <form onSubmit={sendSubmit} className="space-y-4" >
         <InputCustom
           name="buyerNit"
           value={buyerNit}
-          label="Número de facturación"
+          label="Número de comprobante"
           onChange={onInputChange}
           error={!!buyerNitValid && formSubmitted}
           helperText={formSubmitted ? buyerNitValid : ""}
@@ -61,7 +60,7 @@ export const CartDetail = () => {
         <InputCustom
           name="buyerName"
           value={buyerName}
-          label="Nombre de facturación"
+          label="Nombre de comprobante"
           onChange={onInputChange}
           error={!!buyerNameValid && formSubmitted}
           helperText={formSubmitted ? buyerNameValid : ""}
@@ -72,10 +71,7 @@ export const CartDetail = () => {
           className='w-full'>
             Pagar
           </Button>
-
       </form>
-
-
     </div>
   )
 }

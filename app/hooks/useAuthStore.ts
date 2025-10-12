@@ -45,8 +45,6 @@ export const useAuthStore = () => {
         });
         sendPin(data.idUser);
       }
-
-
       throw handleError(error);
     }
   };

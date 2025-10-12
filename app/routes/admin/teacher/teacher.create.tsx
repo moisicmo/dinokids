@@ -60,6 +60,7 @@ export const TeacherCreate = (props: Props) => {
         academicStatus,
         startJob,
         brancheIds: branches.map((branch: BranchModel) => branch.id),
+        numberCard: user.numberCard.trim() == ''? null: user.numberCard.trim(),
       });
     } else {
       await onUpdate(item.userId, {
@@ -76,6 +77,7 @@ export const TeacherCreate = (props: Props) => {
         academicStatus,
         startJob,
         brancheIds: branches.map((branch: BranchModel) => branch.id),
+        numberCard: user.numberCard.trim() == ''? null: user.numberCard.trim(),
       });
     }
 

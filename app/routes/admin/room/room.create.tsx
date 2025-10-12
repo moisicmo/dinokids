@@ -147,7 +147,7 @@ export const RoomCreate = (props: Props) => {
                   label="Selecciona el rango de años"
                   value={rangeYears}
                   onChange={(value) => onValueChange('rangeYears', value)}
-                  min={5}
+                  min={0}
                   max={15}
                   step={1}
                   error={!!rangeYearsValid && formSubmitted}

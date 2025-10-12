@@ -8,6 +8,7 @@ export default [
   ...prefix("admin", [
     layout("./layouts/admin.layout.tsx", [
       route("dashboard", "routes/admin/dashboard.view.tsx"),
+      route("attendance", "routes/admin/attendance/attendance.view.tsx"),
       route("branch", "routes/admin/branch/branch.view.tsx"),
       route("inscription", "routes/admin/inscription/inscription.view.tsx"),
       route("booking", "routes/admin/booking/booking.view.tsx"),

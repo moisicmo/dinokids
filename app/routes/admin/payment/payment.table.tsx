@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { usePaymentStore, useDebounce } from '@/hooks';
+import { usePaymentStore, useDebounce, useEnums } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { InputCustom } from '@/components';
 import { format } from 'date-fns';
@@ -21,6 +21,8 @@ export const PaymentTable = (props: Props) => {
   const [rowsPerPage, setRowsPerPage] = useState(limitInit);
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 1500);
+  const { getTypeDebt, getTypeDebtClass } = useEnums();
+
   useEffect(() => {
     const maxPage = Math.max(1, Math.ceil(dataPayment.total / rowsPerPage));
     if (page > maxPage) {
@@ -58,7 +60,7 @@ export const PaymentTable = (props: Props) => {
               <TableCell>{item.id}</TableCell>
               <TableCell>{item.payMethod}</TableCell>
               <TableCell>{`${item.amount} Bs`}</TableCell>
-              <TableCell>{item.debt.type}</TableCell>
+              <TableCell>{getTypeDebt(item.debt.type)}</TableCell>
               <TableCell>
                 {format(new Date(item.createdAt), 'dd-MMMM-yyyy HH:mm', { locale: es })}
               </TableCell>

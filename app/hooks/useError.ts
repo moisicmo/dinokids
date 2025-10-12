@@ -9,7 +9,7 @@ export const useErrorStore = () => {
     if (error instanceof AxiosError) {
       switch (error.response?.status) {
         case 401:
-          startLogout();
+          showError('Oops', error.response?.data.message);
           break;
         default:
           showError('Oops', error.response?.data.message);

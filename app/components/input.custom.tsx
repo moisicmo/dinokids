@@ -6,6 +6,7 @@ import { type ReactNode } from "react";
 
 interface Props {
   id?: string;
+  ref?: any;
   name: string;
   value: any;
   onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
@@ -21,6 +22,7 @@ interface Props {
 
 export const InputCustom = ({
   id,
+  ref,
   name,
   value,
   onChange,
@@ -48,6 +50,7 @@ export const InputCustom = ({
   ) : (
     <Input
       id={inputId}
+      ref={ref}
       name={name}
       type={type}
       value={value}
@@ -55,7 +58,13 @@ export const InputCustom = ({
       placeholder={placeholder}
       className={cn("pr-10", error && "border-red-500", className)}
       autoComplete="off"
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          e.preventDefault(); // ⛔ evita el envío o comportamiento por defecto
+        }
+      }}
     />
+
   );
 
   return (

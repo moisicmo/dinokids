@@ -23,6 +23,11 @@ export const menu = () => {
       icon: <Home size={18} />,
     },
     {
+      path: '/admin/attendance',
+      title: 'Asistencias',
+      icon: <Home size={18} />,
+    },
+    {
       title: 'Administración',
       permission: 'show-rent',
       group: [

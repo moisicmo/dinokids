@@ -1,13 +1,15 @@
 import { coffeApi } from '@/services';
-import { useAlertStore, useErrorStore } from '.';
+import { useAlertStore, useErrorStore, usePrintStore } from '.';
 import { InitBaseResponse, type BaseResponse, type BookingRequest, type InscriptionModel } from '@/models';
 import { useState } from 'react';
 
 export const useBookingStore = () => {
   const [dataBooking, setDataBooking] = useState<BaseResponse<InscriptionModel>>(InitBaseResponse);
   const { handleError } = useErrorStore();
-  const { showSuccess, showWarning, showError } = useAlertStore();
+  const { showSuccess, showWarning, showError, showLoading, swalClose } = useAlertStore();
   const baseUrl = 'booking';
+
+    const { handlePdf } = usePrintStore();
 
   const getBookings = async (page: number = 1, limit: number = 10, keys: string = '') => {
     try {
@@ -17,7 +19,7 @@ export const useBookingStore = () => {
       const payload: BaseResponse<InscriptionModel> = {
         ...meta,
         data,
-      };
+      };;
       setDataBooking(payload);
     } catch (error) {
       throw handleError(error);
@@ -25,8 +27,11 @@ export const useBookingStore = () => {
   };
   const createBooking = async (body: BookingRequest) => {
     try {
-      const { data } = await coffeApi.post(`/${baseUrl}/`, body);
-      console.log(data);
+      showLoading('Registrando la reserva..');
+      const res = await coffeApi.post(`/${baseUrl}/`, body);
+      const { pdfBase64 } = res.data;
+      swalClose();
+      await handlePdf(pdfBase64)
       getBookings();
       showSuccess('Reserva creado correctamente');
     } catch (error) {

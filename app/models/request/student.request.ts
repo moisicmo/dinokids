@@ -26,6 +26,7 @@ export const formStudentInit: FormStudentModel = {
     name: '',
     lastName: '',
     email: '',
+    numberCard: '',
   },
   birthdate: null,
   gender: null,

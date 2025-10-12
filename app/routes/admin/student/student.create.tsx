@@ -65,6 +65,7 @@ export const StudentCreate = (props: Props) => {
         grade: parseInt(grade),
         educationLevel,
         tutorIds: tutors.map((tutor: TutorModel) => tutor.userId),
+        numberCard: user.numberCard.trim() == ''? null: user.numberCard.trim(),
       });
     } else {
       await onUpdate(item.userId, {
@@ -80,6 +81,7 @@ export const StudentCreate = (props: Props) => {
         grade: parseInt(grade),
         educationLevel,
         tutorIds: tutors.map((tutor: TutorModel) => tutor.userId),
+        numberCard: user.numberCard.trim() == ''? null: user.numberCard.trim(),
       });
     }
 

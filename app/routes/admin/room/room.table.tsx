@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { AssignmentRoomModel, BaseResponse, RoomModel, ScheduleModel } from '@/models';
+import type { BaseResponse, RoomModel } from '@/models';
 import { useDebounce } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';

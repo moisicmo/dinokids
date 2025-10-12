@@ -6,16 +6,89 @@
 /* Fuente personalizada */
 @font-face {
   font-family: 'Poppins';
-  src: url('./assets/fonts/Poppins-Regular.woff2') format('woff2');
-  font-weight: 100 900;
+  src: url('./assets/fonts/Poppins-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Poppins';
+  src: url('./assets/fonts/Poppins-ExtraLight.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('./assets/fonts/Poppins-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('./assets/fonts/Poppins-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('./assets/fonts/Poppins-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('./assets/fonts/Poppins-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('./assets/fonts/Poppins-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('./assets/fonts/Poppins-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('./assets/fonts/Poppins-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
 /* Variables de tema (usamos solo light como predeterminado) */
 @theme {
 
   --font-body: 'Poppins', sans-serif;
-
+  --color-tertiary: #2e7db8;
+  --color-tertiary-100: #d3e4fc;
+  --color-tertiary-200: #a2caf9;
+  --color-tertiary-300: #65b1f5;
+  --color-tertiary-400: #3997dd;
+  --color-tertiary-500: #2e7db8;
+  --color-tertiary-600: #236292;
+  --color-tertiary-700: #184a6f;
+  --color-tertiary-800: #0e334e;
+  --color-tertiary-900: #051d2f;
   /* color primary */
   --color-primary: #ac1380;
   --color-primary-100: #fce9f5;
@@ -155,6 +228,7 @@ body {
   
   --primary: #ac1380;
   --secondary: #6ca636;
+  --tertiary: #2e7db8;
 
   --radius: 0.625rem;
   --background: oklch(1 0 0);

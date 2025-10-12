@@ -81,17 +81,19 @@ const dashboard = () => {
           </TableHeader>
           <TableBody>
             {data.debts.map(debt => (
-              debt.totalAmount !== debt.remainingBalance && (
                 <TableRow key={debt.id}>
-                  <TableCell>{debt.inscription.student?.code}</TableCell>
-                  <TableCell>{`${debt.inscription.student?.user.name} ${debt.inscription.student?.user.lastName}`}</TableCell>
+                  <TableCell>{debt.inscription.student?.code ?? debt.inscription.booking?.dni}</TableCell>
+                  <TableCell>
+                    {`${debt.inscription.student?.user.name ?? ''} ${debt.inscription.student?.user.lastName ?? ''}`.trim()
+                      || debt.inscription.booking?.name
+                      || '-'}
+                  </TableCell>
                   <TableCell>{debt.totalAmount}</TableCell>
                   <TableCell>{debt.remainingBalance}</TableCell>
                   <TableCell>
                     {debt.dueDate ? format(new Date(debt.dueDate), 'dd-MMMM-yyyy', { locale: es }) : '—'}
                   </TableCell>
                 </TableRow>
-              )
             ))}
           </TableBody>
         </Table>

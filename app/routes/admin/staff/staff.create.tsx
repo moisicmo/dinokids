@@ -52,6 +52,7 @@ export const StaffCreate = (props: Props) => {
         phone: user.phone,
         roleId: role?.id ?? '',
         brancheIds: branches.map((branch: BranchModel) => branch.id),
+        numberCard: user.numberCard.trim() == ''? null: user.numberCard.trim(),
       });
     } else {
       await onUpdate(item.userId, {
@@ -63,6 +64,7 @@ export const StaffCreate = (props: Props) => {
         phone: user.phone,
         roleId: role?.id ?? '',
         brancheIds: branches.map((branch: BranchModel) => branch.id),
+        numberCard: user.numberCard.trim() == ''? null: user.numberCard.trim(),
       });
     }
 

@@ -110,6 +110,12 @@ export const UserFormFields = ({
           />
         </>
       }
+      <InputCustom
+        name="user.numberCard"
+        value={user.numberCard}
+        label="Número tarjeta (opcional)"
+        onChange={onInputChange}
+      />
 
     </>
   );

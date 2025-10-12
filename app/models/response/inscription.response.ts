@@ -1,4 +1,4 @@
-import type { AssignmentRoomModel, BookingModel, PriceModel, StudentModel } from "..";
+import type { AssignmentRoomModel, BookingModel, DebtModel, PriceModel, StudentModel } from "..";
 
 export interface InscriptionModel {
   id: string;
@@ -10,5 +10,6 @@ export interface InscriptionModel {
   prices: PriceModel[];
   assignmentRooms: AssignmentRoomModel[];
   createdAt: Date;
+  debts: DebtModel[];
 }
 
