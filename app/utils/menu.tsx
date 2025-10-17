@@ -13,6 +13,8 @@ import {
   HandCoins as Debt,
   FileBarChart2 as Report,
   GraduationCap,
+  ShieldCheck,
+  ClipboardCheck,
 } from 'lucide-react';
 
 export const menu = () => {
@@ -25,7 +27,7 @@ export const menu = () => {
     {
       path: '/admin/attendance',
       title: 'Asistencias',
-      icon: <Home size={18} />,
+      icon: <ClipboardCheck size={18} />,
     },
     {
       title: 'Administración',
@@ -82,6 +84,12 @@ export const menu = () => {
           path: '/admin/role',
           title: 'Roles',
           icon: <Role size={18} />,
+          permission: 'show-halls',
+        },
+        {
+          path: '/admin/permission',
+          title: 'Permisos',
+          icon: <ShieldCheck size={18} />,
           permission: 'show-halls',
         },
       ],

@@ -10,6 +10,7 @@ const env = loadEnv('', process.cwd());
 const { VITE_HOST, VITE_PORT } = env;
 
 export default defineConfig({
+  base: '/', // importante para que .well-known esté en raíz
   plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
     server: {
     host: VITE_HOST || 'localhost', // Usar el valor de la variable de entorno o 'localhost' por defecto

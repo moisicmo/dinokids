@@ -18,7 +18,7 @@ export interface FormUserModel {
   email?: string | null;
   phone?: string[];
   address?: FormAddressModel;
-  numberCard?: string| null;
+  numberCard?: string;
 }
 
 export const formUserInit: FormUserModel = {

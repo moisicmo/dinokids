@@ -13,6 +13,7 @@ export default [
       route("inscription", "routes/admin/inscription/inscription.view.tsx"),
       route("booking", "routes/admin/booking/booking.view.tsx"),
       route("role", "routes/admin/role/role.view.tsx"),
+      route("permission", "routes/admin/permission/permission.view.tsx"),
       route("room", "routes/admin/room/room.view.tsx"),
       route("specialty", "routes/admin/specialty/specialty.view.tsx"),
       route("staff", "routes/admin/staff/staff.view.tsx"),
@@ -20,12 +21,10 @@ export default [
       route("teacher", "routes/admin/teacher/teacher.view.tsx"),
       route("tutor", "routes/admin/tutor/tutor.view.tsx"),
       route("payment", "routes/admin/payment/payment.view.tsx"),
-      ...prefix("report",[
+      ...prefix("report", [
         route("inscription", "routes/admin/report/report-inscription.view.tsx"),
         route("debt", "routes/admin/report/report-debt.view.tsx"),
       ]),
-      
     ]),
   ]),
-
 ] satisfies RouteConfig;

@@ -1,8 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { useForm } from '@/hooks';
-import { Button, InputCustom } from '@/components';
-import { formRoleInit, formRoleValidations, type RoleModel, type RoleRequest } from '@/models';
-import { PermissionForm } from './permission.create';
+import { useForm, usePermissionStore } from '@/hooks';
+import { Button, InputCustom, SelectCustom } from '@/components';
+import { formRoleInit, formRoleValidations, type PermissionModel, type RoleModel, type RoleRequest } from '@/models';
 
 interface Props {
   open: boolean;
@@ -28,11 +27,13 @@ export const RoleCreate = (props: Props) => {
     onResetForm,
     isFormValid,
     onArrayChange,
+    onValueChange,
     nameValid,
     permissionsValid,
   } = useForm(item ?? formRoleInit, formRoleValidations);
 
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const { dataPermission, getPermissions } = usePermissionStore();
 
   const sendSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,12 +43,12 @@ export const RoleCreate = (props: Props) => {
     if (item == null) {
       await onCreate({
         name: name.trim(),
-        permissions: permissions
+        permissionIds: [...permissions.map((permission:PermissionModel)=>permission.id)],
       });
     } else {
       await onUpdate(item.id, {
         name: name.trim(),
-        permissions: permissions
+        permissionIds: [...permissions.map((permission:PermissionModel)=>permission.id)],
       });
     }
 
@@ -62,6 +63,10 @@ export const RoleCreate = (props: Props) => {
   }, [item]);
 
   if (!open) return null;
+
+  useEffect(() => {
+    getPermissions();
+  }, [])
 
 
   return (
@@ -80,11 +85,21 @@ export const RoleCreate = (props: Props) => {
             error={!!nameValid && formSubmitted}
             helperText={formSubmitted ? nameValid : ''}
           />
-          <PermissionForm
-            permissions={permissions}
-            onChange={(newPermissions) => onArrayChange('permissions', newPermissions)}
-            formSubmitted={formSubmitted}
-            permissionsValid={permissionsValid}
+          <SelectCustom
+            multiple
+            label="Permisos"
+            options={dataPermission.data?.map((permission) => ({ id: permission.id, value: `${permission.action} ${permission.subject}` })) ?? []}
+            selected={permissions.map((s: PermissionModel) => ({ id: s.id, value: `${s.action} ${s.subject}` }))}
+            onSelect={(values) => {
+              if (Array.isArray(values)) {
+                const select = dataPermission.data?.filter((r) =>
+                  values.some((v) => v.id === r.id)
+                ) ?? [];
+                onValueChange('permissions', select);
+              }
+            }}
+            error={!!permissionsValid && formSubmitted}
+            helperText={formSubmitted ? permissionsValid : ''}
           />
           <div className="flex justify-end gap-2 pt-2">
             <Button

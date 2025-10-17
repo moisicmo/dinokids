@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react';
-import { TypeAction, TypeSubject, type BaseResponse, type RoleModel } from '@/models';
+import { TypeAction, TypeSubject, type BaseResponse, type PermissionModel } from '@/models';
 import { useDebounce } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 interface Props {
-  handleEdit: (role: RoleModel) => void;
+  handleEdit: (permission: PermissionModel) => void;
   limitInit?: number;
-  itemSelect?: (role: RoleModel) => void;
-  dataRole: BaseResponse<RoleModel>;
+  itemSelect?: (permission: PermissionModel) => void;
+  dataRole: BaseResponse<PermissionModel>;
   onRefresh: (page?: number, limit?: number, keys?: string) => void;
   onDelete: (id: string) => void;
 }
 
-export const RoleTable = (props: Props) => {
+export const PermissionTable = (props: Props) => {
   const {
     handleEdit,
     itemSelect,
@@ -46,28 +46,30 @@ export const RoleTable = (props: Props) => {
         <InputCustom
           name="query"
           value={query}
-          placeholder="Buscar rol..."
+          placeholder="Buscar permiso..."
           onChange={(e) => setQuery(e.target.value)}
         />
       </div>
       <Table className='mb-3'>
         <TableHeader>
           <TableRow>
-            <TableHead>Nombre</TableHead>
-            <TableHead>Permisos</TableHead>
+            <TableHead>Acción</TableHead>
+            <TableHead>Recurso</TableHead>
+            <TableHead>Condiciones</TableHead>
             <TableHead className="sticky right-0 z-10 bg-white">Acciones</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {dataRole.data.map(item => (
             <TableRow key={item.id}>
-              <TableCell>{item.name}</TableCell>
+              <TableCell>{item.action}</TableCell>
+              <TableCell>{item.subject}</TableCell>
               <TableCell>
                 <ul className="list-disc list-inside space-y-1">
                   {
-                    item.permissions.map((perm) => (
-                      <li key={perm.id}>
-                        {`${TypeAction[perm.action as unknown as keyof typeof TypeAction]} ${TypeSubject[perm.subject as unknown as keyof typeof TypeSubject]} ${perm.reason??''}`}
+                    item.conditions.map((condition) => (
+                      <li key={condition.id}>
+                        {`${condition.field} ${condition.operator} ${condition.value}`}
                       </li>))
                   }
                 </ul>

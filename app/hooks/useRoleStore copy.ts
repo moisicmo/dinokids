@@ -1,60 +1,64 @@
 import { coffeApi } from '@/services';
 import { useAlertStore, useErrorStore } from '.';
+import { InitBaseResponse, type BaseResponse, type RoleModel } from '@/models';
+import type { RoleRequest } from '@/models/request/role.request';
 import { useState } from 'react';
-import { InitBaseResponse, type BaseResponse, type PermissionModel, type PermissionRequest } from '@/models';
 
-export const usePermissionStore = () => {
-  const [dataPermission, setDataPermission] = useState<BaseResponse<PermissionModel>>(InitBaseResponse);
+export const useRoleStore = () => {
+  const [dataRole, setDataRole] = useState<BaseResponse<RoleModel>>(InitBaseResponse);
 
   const { handleError } = useErrorStore();
   const { showSuccess, showWarning, showError } = useAlertStore();
+  const baseUrl = 'role';
 
-  const baseUrl = 'permission';
 
-  const getPermissions = async (page: number = 1, limit: number = 10000, keys: string = '') => {
+
+  const getRoles = async (page: number = 1, limit: number = 10, keys: string = '') => {
     try {
       const res = await coffeApi.get(`/${baseUrl}?page=${page}&limit=${limit}&keys=${keys}`);
       const { data, meta } = res.data;
       console.log(res.data);
-      const payload: BaseResponse<PermissionModel> = {
+      const payload: BaseResponse<RoleModel> = {
         ...meta,
         data,
       };
-      setDataPermission(payload);
-    } catch (error) {
-      throw handleError(error);
-    }
-  };
-  const createPermission = async (body: PermissionRequest) => {
-    try {
-      const { data } = await coffeApi.post(`/${baseUrl}`, body);
-      console.log(data);
-      getPermissions();
-      showSuccess('Permiso creado correctamente');
-    } catch (error) {
-      throw handleError(error);
-    }
-  };
-  const updatePermission = async (id: string, body: PermissionRequest) => {
-    try {
-      const { data } = await coffeApi.patch(`/${baseUrl}/${id}`, body);
-      console.log(data);
-      getPermissions();
-      showSuccess('Permiso editado correctamente');
+      setDataRole(payload);
     } catch (error) {
       throw handleError(error);
     }
   };
 
-  const deletePermission = async (id: string) => {
+  const createRole = async (body: RoleRequest) => {
+    try {
+      const { data } = await coffeApi.post(`/${baseUrl}`, body);
+      console.log(data);
+      getRoles();
+      showSuccess('Rol creado correctamente');
+    } catch (error) {
+      throw handleError(error);
+    }
+  };
+
+  const updateRole = async (id: string, body: RoleRequest) => {
+    try {
+      const { data } = await coffeApi.patch(`/${baseUrl}/${id}`, body);
+      console.log(data);
+      getRoles();
+      showSuccess('Rol editado correctamente');
+    } catch (error) {
+      throw handleError(error);
+    }
+  };
+
+  const deleteRole = async (id: string) => {
     try {
       const result = await showWarning();
       if (result.isConfirmed) {
         await coffeApi.delete(`/${baseUrl}/${id}`);
-        getPermissions();
-        showSuccess('Permiso eliminado correctamente');
+        getRoles();
+        showSuccess('Rol eliminado correctamente');
       } else {
-        showError('Cancelado', 'El permiso esta a salvo :)');
+        showError('Cancelado', 'El rol esta a salvo :)');
       }
     } catch (error) {
       throw handleError(error);
@@ -63,11 +67,11 @@ export const usePermissionStore = () => {
 
   return {
     //* Propiedades
-    dataPermission,
+    dataRole,
     //* Métodos
-    getPermissions,
-    createPermission,
-    updatePermission,
-    deletePermission,
+    getRoles,
+    createRole,
+    updateRole,
+    deleteRole,
   };
 };
