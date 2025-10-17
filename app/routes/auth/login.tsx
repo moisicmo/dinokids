@@ -6,8 +6,8 @@ import { Eye, EyeOff } from 'lucide-react';
 import { ValidateEmail } from './validate.email';
 
 const loginFormFields = {
-  email: 'moisic.mo@gmail.com',
-  password: 'Muyseguro123*',
+  email: '',
+  password: '',
 };
 
 const formValidations = {
