@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
-import type { StudentModel, UserModel } from '@/models';
+import type { StudentModel } from '@/models';
 import { Button } from '@/components';
-import { StudentCreate, StudentTable } from '.';
+import { EvaluationPlanningModal, SessionTrackingModal, StudentCreate, StudentTable, WeeklyPlanningModal } from '.';
 import { useStudentStore } from '@/hooks';
 
 const studentView = () => {
@@ -9,6 +9,10 @@ const studentView = () => {
 
   const [openDialog, setOpenDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<StudentModel | null>(null);
+
+  const [sessionTracking, setSessionTracking] = useState<string | null>(null);
+  const [weeklyPlanning, setWeeklyPlanning] = useState<string | null>(null);
+  const [evaluationPlanning, setEvaluationPlanning] = useState<string | null>(null);
 
   const handleDialog = useCallback((value: boolean) => {
     if (!value) setItemEdit(null);
@@ -36,6 +40,9 @@ const studentView = () => {
         dataStudent={dataStudent}
         onRefresh={getStudents}
         onDelete={deleteStudent}
+        onSessionTracking={setSessionTracking}
+        onWeeklyPlanning={setWeeklyPlanning}
+        onEvaluationPlanning={setEvaluationPlanning}
       />
 
       {/* Dialogo para crear o editar */}
@@ -51,6 +58,28 @@ const studentView = () => {
           onUpdate={updateStudent}
         />
       )}
+      {
+        sessionTracking && (
+          <SessionTrackingModal 
+            onClose={() => setSessionTracking(null)}
+          />
+        )
+      }
+      {
+        weeklyPlanning && (
+          <WeeklyPlanningModal 
+            onClose={() => setWeeklyPlanning(null)}
+            item={null}
+          />
+        )
+      }
+      {
+        evaluationPlanning && (
+          <EvaluationPlanningModal 
+            onClose={() => setEvaluationPlanning(null)}
+          />
+        )
+      }
     </>
   );
 };

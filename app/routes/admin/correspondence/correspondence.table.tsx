@@ -1,27 +1,27 @@
 import { useEffect, useState } from 'react';
-import { TypeAction, TypeSubject, type BaseResponse, type PermissionModel } from '@/models';
+import type { BaseResponse, DocumentTransmissionModel } from '@/models';
 import { useDebounce } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Eye } from 'lucide-react';
+import type { Evaluation } from './model';
 
 interface Props {
-  handleEdit: (permission: PermissionModel) => void;
   limitInit?: number;
-  itemSelect?: (permission: PermissionModel) => void;
-  dataRole: BaseResponse<PermissionModel>;
+  itemSelect?: (branch: DocumentTransmissionModel) => void;
+  dataCorrespondence: BaseResponse<DocumentTransmissionModel>;
   onRefresh: (page?: number, limit?: number, keys?: string) => void;
-  onDelete: (id: string) => void;
+  onView: (documentTransmission: DocumentTransmissionModel) => void;
 }
 
-export const PermissionTable = (props: Props) => {
+export const CorrespondenceTable = (props: Props) => {
   const {
-    handleEdit,
     itemSelect,
     limitInit = 10,
-    dataRole,
+    dataCorrespondence,
     onRefresh,
-    onDelete,
+    onView,
   } = props;
 
 
@@ -30,11 +30,11 @@ export const PermissionTable = (props: Props) => {
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 1500);
   useEffect(() => {
-    const maxPage = Math.max(1, Math.ceil(dataRole.total / rowsPerPage));
+    const maxPage = Math.max(1, Math.ceil(dataCorrespondence.total / rowsPerPage));
     if (page > maxPage) {
       setPage(maxPage);
     }
-  }, [dataRole.total, rowsPerPage]);
+  }, [dataCorrespondence.total, rowsPerPage]);
 
   useEffect(() => {
     onRefresh(page, rowsPerPage, debouncedQuery);
@@ -46,32 +46,29 @@ export const PermissionTable = (props: Props) => {
         <InputCustom
           name="query"
           value={query}
-          placeholder="Buscar permiso..."
+          placeholder="Buscar correspondencia..."
           onChange={(e) => setQuery(e.target.value)}
         />
       </div>
       <Table className='mb-3'>
         <TableHeader>
           <TableRow>
-            <TableHead>Acción</TableHead>
-            <TableHead>Recurso</TableHead>
-            <TableHead className="sticky right-0 z-10 bg-white">Acciones</TableHead>
+            <TableHead>Tipo</TableHead>
+            <TableHead>Documento</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {dataRole.data.map(item => (
+          {dataCorrespondence.data.map(item => (
             <TableRow key={item.id}>
+              <TableCell>{item.document.type}</TableCell>
               <TableCell>
-                  {TypeAction[item.action as unknown as keyof typeof TypeAction]}
-              </TableCell>
-              <TableCell>
-                  {TypeSubject[item.subject as unknown as keyof typeof TypeSubject]}
+                <button onClick={() => onView(item)} title="ver" className="cursor-pointer">
+                  <Eye color="var(--color-info)" className="w-5 h-5" />
+                </button>
               </TableCell>
               <TableCell className="sticky right-0 z-10 bg-white">
                 <ActionButtons
                   item={item}
-                  onEdit={handleEdit}
-                  onDelete={onDelete}
                 />
               </TableCell>
             </TableRow>
@@ -80,7 +77,7 @@ export const PermissionTable = (props: Props) => {
       </Table>
       {/* Controles de paginación */}
       <PaginationControls
-        total={dataRole.total}
+        total={dataCorrespondence.total}
         page={page}
         limit={rowsPerPage}
         onPageChange={(newPage) => setPage(newPage)}

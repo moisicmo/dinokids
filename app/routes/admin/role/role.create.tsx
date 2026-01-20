@@ -43,12 +43,12 @@ export const RoleCreate = (props: Props) => {
     if (item == null) {
       await onCreate({
         name: name.trim(),
-        permissionIds: [...permissions.map((permission:PermissionModel)=>permission.id)],
+        permissionIds: [...permissions.map((permission: PermissionModel) => permission.id)],
       });
     } else {
       await onUpdate(item.id, {
         name: name.trim(),
-        permissionIds: [...permissions.map((permission:PermissionModel)=>permission.id)],
+        permissionIds: [...permissions.map((permission: PermissionModel) => permission.id)],
       });
     }
 
@@ -71,7 +71,7 @@ export const RoleCreate = (props: Props) => {
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg w-full max-w-2xl p-6 overflow-y-auto">
         <h2 className="text-xl font-bold mb-4">
           {item ? `Editar ${item.name}` : 'Nuevo rol'}
         </h2>

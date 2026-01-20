@@ -1,5 +1,4 @@
 import { InputCustom, InputPhonesCustom, SelectCustom, ValueSelect } from "@/components";
-import { useCityStore } from "@/hooks";
 import type { FormUserModel } from "@/models";
 import { useEffect } from "react";
 interface UserFormFieldsProps {
@@ -18,10 +17,8 @@ export const UserFormFields = ({
   onValueChange,
 }: UserFormFieldsProps) => {
 
-  const { dataCity, getCityes } = useCityStore();
 
   useEffect(() => {
-    getCityes();
   }, []);
   return (
     <>
@@ -71,7 +68,7 @@ export const UserFormFields = ({
       {
         user.address &&
         <>
-          <SelectCustom
+          {/* <SelectCustom
             label="Ciudad"
             options={
               dataCity.data.map((city) => new ValueSelect(city.id, city.name))
@@ -89,6 +86,14 @@ export const UserFormFields = ({
                 }
               }
             }}
+            error={!!userValid?.addressValid?.cityValid && formSubmitted}
+            helperText={formSubmitted ? userValid?.addressValid?.cityValid : ''}
+          /> */}
+          <InputCustom
+            name="user.address.city"
+            value={user.address.city}
+            label="Ciudad"
+            onChange={onInputChange}
             error={!!userValid?.addressValid?.cityValid && formSubmitted}
             helperText={formSubmitted ? userValid?.addressValid?.cityValid : ''}
           />

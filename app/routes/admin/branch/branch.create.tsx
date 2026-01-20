@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { useCityStore, useForm } from '@/hooks';
+import { useForm } from '@/hooks';
 import { Button, InputCustom, InputPhonesCustom, SelectCustom, ValueSelect } from '@/components';
 import { formBranchFields, formBranchValidations, type BranchModel, type BranchRequest } from '@/models';
 
@@ -35,7 +35,6 @@ export const BranchCreate = (props: Props) => {
 
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const { dataCity, getCityes } = useCityStore();
   const sendSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormSubmitted(true);
@@ -45,7 +44,7 @@ export const BranchCreate = (props: Props) => {
       await onCreate({
         name: name.trim(),
         phone,
-        cityId: address.city.id,
+        city: address.city.trim(),
         zone: address.zone.trim(),
         detail: address.detail.trim(),
       });
@@ -53,7 +52,7 @@ export const BranchCreate = (props: Props) => {
       await onUpdate(item.id, {
         name: name.trim(),
         phone,
-        cityId: address.city.id,
+        city: address.city.trim(),
         zone: address.zone.trim(),
         detail: address.detail.trim(),
       });
@@ -68,10 +67,6 @@ export const BranchCreate = (props: Props) => {
       setFormSubmitted(false);
     }
   }, [item]);
-
-  useEffect(() => {
-    getCityes();
-  }, []);
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
@@ -97,24 +92,11 @@ export const BranchCreate = (props: Props) => {
             error={!!phoneValid && formSubmitted}
             helperText={formSubmitted ? phoneValid : ''}
           />
-          <SelectCustom
+           <InputCustom
+            name="address.city"
+            value={address.city}
             label="Ciudad"
-            options={
-              dataCity.data.map((city) => new ValueSelect(city.id, city.name))
-            }
-            selected={
-              address.city
-                ? new ValueSelect(address.city.id, address.city.name)
-                : null
-            }
-            onSelect={(value) => {
-              if (value && !Array.isArray(value)) {
-                const city = dataCity.data.find((c) => c.id === value.id);
-                if (city) {
-                  onValueChange('address.city', city);
-                }
-              }
-            }}
+            onChange={onInputChange}
             error={!!addressValid?.cityValid && formSubmitted}
             helperText={formSubmitted ? addressValid?.cityValid : ''}
           />

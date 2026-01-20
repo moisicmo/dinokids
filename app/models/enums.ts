@@ -26,34 +26,38 @@ export enum AcademicStatus {
 }
 
 export enum TypeAction {
-  manage = "manejar",
-  create = "crear",
-  read = "leer",
-  update = "editar",
-  delete = "eliminar",
+  manage = "Manejar",
+  create = "Crear",
+  read = "Leer",
+  update = "Editar",
+  delete = "Eliminar",
 }
 
 export enum TypeSubject {
   all = "todo",
+  branch = "sucursales",
   permission = "permisos",
   role = "roles",
+  user = "usuarios",
   staff = "staffs",
-  student = "estudiantes",
   tutor = "tutores",
   teacher = "profesores",
+  student = "estudiantes",
   assignmentRoom = "asignación de aulas",
   assignmentSchedule = "asignación de horarios",
   booking = "reservas",
-  branch = "sucursales",
   room = "aulas",
   specialty = "especialidades",
   schedule = "horarios",
   inscription = "incripciones",
-  Debt = "deudas de inscripción",
   payment = "pagos",
   invoice = "facturas",
   refund = "devoluciones",
   price = "precios",
+  report = "reportes",
+  debt = "deudas",
+  attendance = 'asistencias',
+  correspondence = 'correspondencias',
 }
 
 export enum TypeDebt {

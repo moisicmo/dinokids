@@ -1,0 +1,82 @@
+import type { Evaluation } from "../model";
+
+
+export const evaluation123Primaria: Evaluation[] = [
+  {
+    title: 'Conducta',
+    questions: [
+      { question: '¿Se mantiene en su sitio más de 10 minutos?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Sigue instrucciones e indicaciones?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Pide permiso para realizar alguna actividad?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Se mostró retraído durante la evaluación?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Tiene poca tolerancia a la frustración?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Interactúa con otros niños?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Tiene respuesta verbal ante preguntas de otros niños?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Tiene mayor fluidez verbal?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Habla inesperadamente, cambiando constantemente de tema?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Respeta el espacio personal de sus compañeros?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Realiza movimientos involuntarios y bruscos?', typeAnswer: 'scale_3_comment' },
+    ],
+  },
+  {
+    title: 'Lectoescritura',
+    questions: [
+      { question: '¿Escribe su nombre completo?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Identifica las consonantes del abecedario?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Identifica las sílabas simples en lectura?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Identifica las sílabas inversas en lectura?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Identifica las sílabas trabadas en lectura?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Tiene lectura silábica?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Tiene lectura vacilante?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Tiene lectura fluida?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Identifica y respeta los signos de puntuación?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Retiene información de la lectura?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Tiene comprensión lectora?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Domina el agarre del lápiz en pinza?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Identifica y diferencia entre letra carta e imprenta?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Domina letras mayúsculas y minúsculas?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Escribe palabras con sílabas simples?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Escribe palabras con sílabas inversas?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Escribe palabras con sílabas trabadas?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Tiene noción sobre separación semántica?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Mezcla letra imprenta con carta al escribir?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Mezcla letra mayúscula con minúscula al escribir?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Realiza rotaciones de consonantes y vocales?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Adiciona letras en la escritura?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Omite letras en la escritura?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Tiene letra legible (caligrafía)?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Tiene nociones básicas sobre ortografía?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Sigue reglas gramaticales en la estructura de una oración?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Utiliza correctamente los signos de puntuación básicos?', typeAnswer: 'scale_3_comment' },
+    ],
+  },
+  {
+    title: 'Matemáticas',
+    questions: [
+      { question: '¿Tiene reconocimiento visual de los números?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Tiene conocimiento sobre valor posicional de los números?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Reconoce los signos matemáticos?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Realiza suma y resta horizontal y vertical?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Realiza sumas simples?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Realiza sumas llevando?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Realiza restas simples?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Realiza restas con préstamo?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Reconoce las tablas de multiplicación?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Realiza multiplicación de una cifra?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Realiza multiplicación de dos cifras o más?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Realiza divisiones de una cifra?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Realiza divisiones de dos o más cifras?', typeAnswer: 'scale_3_comment' },
+      { question: '¿Usa auxiliares en el procedimiento de operaciones aritméticas?', typeAnswer: 'scale_3_comment' },
+    ],
+  },
+  {
+    title: 'Comentario Adicional',
+    questions: [
+      {
+        question: 'Comentario adicional del evaluador',
+        typeAnswer: 'longtext',
+      },
+    ],
+  },
+];
+

@@ -15,6 +15,7 @@ interface Props {
   maxDate?: Date;
   minTime?: Date;
   maxTime?: Date;
+  disabled?: boolean;
 }
 
 export const DateTimePickerCustom = memo((props: Props) => {
@@ -29,11 +30,11 @@ export const DateTimePickerCustom = memo((props: Props) => {
     helperText = '',
     className = '',
     mode = 'datetime',
-
     minDate,
     maxDate,
     minTime,
     maxTime,
+    disabled,
   } = props;
 
   const inputType = mode === 'date' ? 'date' : mode === 'time' ? 'custom-time' : 'datetime-local';
@@ -149,6 +150,7 @@ export const DateTimePickerCustom = memo((props: Props) => {
           onChange={handleChange}
           placeholder={placeholder}
           autoComplete="off"
+          disabled={disabled}
           min={min}
           max={max}
           className={`

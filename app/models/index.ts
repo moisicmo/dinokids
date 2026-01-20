@@ -21,11 +21,11 @@ export * from './request/assignment-room.request';
 export * from './request/cart.request';
 export * from './request/validate-pin.request';
 export * from './request/attendance.request';
+export * from './request/correspondence.request';
 
 // RESPONSE
 export * from './response/response';
 export * from './response/address.response';
-export * from './response/city.response';
 export * from './response/auth.response';
 export * from './response/user.response';
 export * from './response/tutor.response';
@@ -47,7 +47,8 @@ export * from './response/assignment-schedule.response';
 export * from './response/payment.response';
 export * from './response/invoice.response';
 export * from './response/dashboard.response';
-export * from './response/attendance.response'; 
+export * from './response/attendance.response';
+export * from './response/correspondence.response';
 
 export * from './pagination';
 

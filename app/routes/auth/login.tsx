@@ -6,8 +6,8 @@ import { Eye, EyeOff } from 'lucide-react';
 import { ValidateEmail } from './validate.email';
 
 const loginFormFields = {
-  email: '',
-  password: '',
+  email: 'moisic.mo@gmail.com',
+  password: 'Muyseguro123*',
 };
 
 const formValidations = {
@@ -15,7 +15,7 @@ const formValidations = {
   password: [(value: any) => value.length >= 4, 'La contraseña debe de tener más de 6 letras.'],
 };
 
-const login = () => {
+const Login = () => {
   const { startLogin, showValidateEmail, setShowValidateEmail } = useAuthStore();
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -54,7 +54,7 @@ const login = () => {
               name="email"
               value={email}
               type="email"
-              label="Contraseña"
+              label="usuario"
               onChange={onInputChange}
               error={!!emailValid && formSubmitted}
               helperText={formSubmitted ? emailValid : ''}
@@ -93,4 +93,4 @@ const login = () => {
 };
 
 
-export default login;
+export default Login;

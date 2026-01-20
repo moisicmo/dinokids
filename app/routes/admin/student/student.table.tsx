@@ -14,6 +14,9 @@ interface Props {
   dataStudent: BaseResponse<StudentModel>;
   onRefresh: (page?: number, limit?: number, keys?: string) => void;
   onDelete: (id: string) => void;
+  onSessionTracking?: (id: string) => void;
+  onWeeklyPlanning?: (id: string) => void;
+  onEvaluationPlanning?: (id: string) => void;
 }
 
 export const StudentTable = (props: Props) => {
@@ -24,6 +27,9 @@ export const StudentTable = (props: Props) => {
     dataStudent,
     onRefresh,
     onDelete,
+    onSessionTracking,
+    onWeeklyPlanning,
+    onEvaluationPlanning,
   } = props;
 
   const [page, setPage] = useState(1);
@@ -90,6 +96,9 @@ export const StudentTable = (props: Props) => {
                     isSelected={expandedId === item.userId}
                     onEdit={handleEdit}
                     onDelete={onDelete}
+                    onSessionTracking={onSessionTracking}
+                    onWeeklyPlanning={onWeeklyPlanning}
+                    onEvaluationPlanning={onEvaluationPlanning}
                   />
                 </TableCell>
               </TableRow>

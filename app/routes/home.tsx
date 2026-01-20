@@ -1,3 +1,4 @@
+import Login from "./auth/login";
 
 export const metadata = () => {
   return [
@@ -16,7 +17,7 @@ export const metadata = () => {
 
 const home = () => {
   return (
-    <div>home</div>
+    <Login/>
   )
 }
 

@@ -3,7 +3,7 @@ import { formAddressInit, formAddressValidations, type FormAddressModel, type Fo
 export interface BranchRequest {
   name: string;
   phone: string[];
-  cityId: string;
+  city: string;
   zone: string;
   detail: string;
 }

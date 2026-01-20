@@ -18,6 +18,7 @@ interface Props {
   error?: boolean;
   helperText?: string;
   className?: string;
+  disabled?: boolean;
 }
 
 export const InputCustom = ({
@@ -34,6 +35,7 @@ export const InputCustom = ({
   error = false,
   helperText = "",
   className = "",
+  disabled = false,
 }: Props) => {
   const inputId = id || name;
 
@@ -42,6 +44,7 @@ export const InputCustom = ({
       id={inputId}
       name={name}
       value={value}
+      disabled={disabled}
       onChange={onChange}
       placeholder={placeholder}
       className={cn("pr-10", error && "border-red-500", className)}
@@ -54,6 +57,7 @@ export const InputCustom = ({
       name={name}
       type={type}
       value={value}
+      disabled={disabled}
       onChange={onChange}
       placeholder={placeholder}
       className={cn("pr-10", error && "border-red-500", className)}

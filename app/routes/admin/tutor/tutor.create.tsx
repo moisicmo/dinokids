@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { useCityStore, useForm } from '@/hooks';
+import { useForm } from '@/hooks';
 import { Button, UserFormFields } from '@/components';
 import { formTutorInit, formTutorValidations, type TutorModel, type TutorRequest } from '@/models';
 
@@ -28,7 +28,6 @@ export const TutorCreate = (props: Props) => {
   } = useForm(item ?? formTutorInit, formTutorValidations);
 
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const { dataCity, getCityes } = useCityStore();
 
   const sendSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -43,7 +42,7 @@ export const TutorCreate = (props: Props) => {
         lastName: user.lastName.trim(),
         email: user.email.trim() == ''? null: user.email.trim(),
         phone: user.phone,
-        cityId: user.address.city.id,
+        city: user.address.city.trim(),
         zone: user.address.zone.trim(),
         detail: user.address.detail.trim(),
         numberCard: user.numberCard.trim() == ''? null: user.numberCard.trim(),
@@ -56,7 +55,7 @@ export const TutorCreate = (props: Props) => {
         lastName: user.lastName.trim(),
         email: user.email.trim() == ''? null: user.email.trim(),
         phone: user.phone,
-        cityId: user.address.city.id,
+        city: user.address.city.trim(),
         zone: user.address.zone.trim(),
         detail: user.address.detail.trim(),
         numberCard: user.numberCard.trim() == ''? null: user.numberCard.trim(),
