@@ -1,12 +1,14 @@
 import { coffeApi } from '@/services';
-import { useAlertStore, useErrorStore } from '.';
+import { useAlertStore, useAuthStore, useErrorStore } from '.';
 import { useState } from 'react';
-import { InitBaseResponse, type BaseResponse, type PermissionModel, type PermissionRequest } from '@/models';
+import { InitBaseResponse, TypeSubject, TypeAction, type BaseResponse, type PermissionModel, type PermissionRequest } from '@/models';
+import { formatTypeAction } from '@/lib/utils';
 
 export const usePermissionStore = () => {
   const [dataPermission, setDataPermission] = useState<BaseResponse<PermissionModel>>(InitBaseResponse);
 
   const { handleError } = useErrorStore();
+  const { roleUser } = useAuthStore();
   const { showSuccess, showWarning, showError } = useAlertStore();
 
   const baseUrl = 'permission';
@@ -61,6 +63,29 @@ export const usePermissionStore = () => {
     }
   };
 
+  const checkPermission = (action: TypeAction, subject: TypeSubject): boolean => {
+    if (!roleUser) return false;
+    const permissionKey = `${action}-${subject}`;
+    return roleUser.permissions.some(
+      (per) => `${formatTypeAction(per.action)}-${per.subject}` === permissionKey
+    );
+  };
+
+  const requirePermission = (action: TypeAction, subject: TypeSubject, errorMessage?: string) => {
+    if (!checkPermission(action, subject)) {
+      throw new Error(errorMessage || `No tienes permiso para ${action} ${subject}`);
+    }
+  };
+
+  const hasPermission = (action: TypeAction, subject: TypeSubject): boolean => {
+    try {
+      requirePermission(action, subject);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
   return {
     //* Propiedades
     dataPermission,
@@ -69,5 +94,10 @@ export const usePermissionStore = () => {
     createPermission,
     updatePermission,
     deletePermission,
+    // evaluation permissions
+    checkPermission,
+    requirePermission,
+    hasPermission,
+    hasAnyPermission: !!roleUser?.permissions.length,
   };
 };

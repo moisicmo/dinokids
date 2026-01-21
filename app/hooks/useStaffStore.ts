@@ -1,16 +1,18 @@
 import { coffeApi } from '@/services';
-import { useAlertStore, useErrorStore } from '.';
-import { InitBaseResponse, type BaseResponse, type StaffModel, type StaffRequest } from '@/models';
+import { useAlertStore, useErrorStore, usePermissionStore } from '.';
+import { InitBaseResponse, TypeAction, TypeSubject, type BaseResponse, type StaffModel, type StaffRequest } from '@/models';
 import { useState } from 'react';
 
 export const useStaffStore = () => {
   const [dataStaff, setDataStaff] = useState<BaseResponse<StaffModel>>(InitBaseResponse);
   const { handleError } = useErrorStore();
+  const { requirePermission } = usePermissionStore();
   const { showSuccess, showWarning, showError } = useAlertStore();
   const baseUrl = 'staff';
 
   const getStaffs = async (page = 1, limit = 10, keys = '') => {
     try {
+      requirePermission(TypeAction.read, TypeSubject.staff);
       const res = await coffeApi.get(`/${baseUrl}?page=${page}&limit=${limit}&keys=${keys}`);
       const { data, meta } = res.data;
       console.log(res.data);
@@ -26,6 +28,7 @@ export const useStaffStore = () => {
 
   const createStaff = async (body: StaffRequest) => {
     try {
+      requirePermission(TypeAction.create, TypeSubject.staff);
       const { data } = await coffeApi.post(`/${baseUrl}/`, body);
       console.log(data);
       getStaffs();
@@ -36,6 +39,7 @@ export const useStaffStore = () => {
   };
   const updateStaff = async (id: string, body: StaffRequest) => {
     try {
+      requirePermission(TypeAction.update, TypeSubject.staff);
       const { data } = await coffeApi.patch(`/${baseUrl}/${id}`, body);
       console.log(data);
       getStaffs();
@@ -46,6 +50,7 @@ export const useStaffStore = () => {
   };
   const deleteStaff = async (id: string) => {
     try {
+      requirePermission(TypeAction.delete, TypeSubject.staff);
       const result = await showWarning();
       if (result.isConfirmed) {
         await coffeApi.delete(`/${baseUrl}/${id}`);

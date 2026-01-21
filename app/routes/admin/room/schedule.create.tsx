@@ -1,5 +1,5 @@
 import { Trash2 } from 'lucide-react';
-import { Button, DateTimePickerCustom, InputCustom, ScheduleCustom, SelectCustom, type ValueSelect } from '@/components';
+import { Button, ColorPickerCustom, DateTimePickerCustom, InputCustom, ScheduleCustom, SelectCustom, type ValueSelect } from '@/components';
 import { DayOfWeek, type FormScheduleModel } from '@/models';
 
 interface Props {
@@ -8,6 +8,7 @@ interface Props {
   formSubmitted: boolean;
   schedulesValid?: string | null;
 }
+
 export const ScheduleForm = ({
   schedules,
   onChange,
@@ -21,6 +22,7 @@ export const ScheduleForm = ({
       start: null,
       end: null,
       capacity: 0,
+      color: '#3B82F6', // Color por defecto (azul)
     };
     onChange([...schedules, newSchedule]);
   };
@@ -34,7 +36,7 @@ export const ScheduleForm = ({
   const handleFieldChange = (
     index: number,
     field: keyof FormScheduleModel,
-    value: Date | DayOfWeek | String | null,
+    value: any,
   ) => {
     const updated = [...schedules];
     updated[index] = {
@@ -44,7 +46,6 @@ export const ScheduleForm = ({
     onChange(updated);
   };
 
-  // Función auxiliar para actualizar el estado de manera controlada
   const updateSchedule = (index: number, start: Date | null, end: Date | null) => {
     const updated = [...schedules];
     updated[index] = {
@@ -68,9 +69,7 @@ export const ScheduleForm = ({
       <div className="flex-1 space-y-2">
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-lg font-semibold">Horarios:</h2>
-          <Button
-            onClick={handleAdd}
-          >
+          <Button onClick={handleAdd}>
             Agregar Horario
           </Button>
         </div>
@@ -85,71 +84,89 @@ export const ScheduleForm = ({
                 <Trash2 size={18} />
               </button>
 
-              <SelectCustom
-                label="Día"
-                options={dayOptions}
-                selected={
-                  schedule.day
-                    ? dayOptions.find((opt) => opt.id === schedule.day) ?? null
-                    : null
-                }
-                onSelect={(value) => {
-                  if (value && !Array.isArray(value)) {
-                    handleFieldChange(idx, 'day', value.id);
-                  }
-                }}
-                error={formSubmitted && schedule.day === null}
-                helperText={formSubmitted && schedule.day === null ? 'Campo requerido' : ''}
-              />
-
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <DateTimePickerCustom
-                  name={`start-${idx}`}
-                  label="Hora inicio"
-                  mode="time"
-                  minTime={new Date('1970-01-01T08:00')}
-                  maxTime={new Date('1970-01-01T20:00')}
-                  value={schedule.start}
-                  onChange={(val) => {
-                    if (val && schedule.end && val > schedule.end) {
-                      // Si la hora de inicio es mayor que la hora de fin, reiniciar la hora de fin a null
-                      updateSchedule(idx, val, null);
-                    } else {
-                      // Actualizar solo la hora de inicio
-                      updateSchedule(idx, val, schedule.end);
-                    }
-                  }}
-                  error={formSubmitted && schedule.start == null}
-                  helperText={formSubmitted && schedule.start === null ? 'Campo requerido' : ''}
+              {/* Indicador visual del color */}
+              <div className="absolute top-2 left-2 flex items-center gap-2 z-10">
+                <div 
+                  className="w-4 h-4 rounded-full border"
+                  style={{ backgroundColor: schedule.color }}
                 />
-                <DateTimePickerCustom
-                  name={`end-${idx}`}
-                  label="Hora Fin"
-                  mode="time"
-                  minTime={new Date('1970-01-01T08:00')}
-                  maxTime={new Date('1970-01-01T20:00')}
-                  value={schedule.end}
-                  onChange={(val) => {
-                    if (val && schedule.start && val < schedule.start) {
-                      // Si la hora de fin es menor que la hora de inicio, reiniciar la hora de inicio a null
-                      updateSchedule(idx, null, val);
-                    } else {
-                      // Actualizar solo la hora de fin
-                      updateSchedule(idx, schedule.start, val);
+                <span className="text-xs text-gray-500">
+                  Horario {idx + 1}
+                </span>
+              </div>
+
+              <div className="mt-6 space-y-4">
+                <SelectCustom
+                  label="Día"
+                  options={dayOptions}
+                  selected={
+                    schedule.day
+                      ? dayOptions.find((opt) => opt.id === schedule.day) ?? null
+                      : null
+                  }
+                  onSelect={(value) => {
+                    if (value && !Array.isArray(value)) {
+                      handleFieldChange(idx, 'day', value.id);
                     }
                   }}
-                  error={formSubmitted && schedule.end == null}
-                  helperText={formSubmitted && schedule.end === null ? 'Campo requerido' : ''}
+                  error={formSubmitted && schedule.day === null}
+                  helperText={formSubmitted && schedule.day === null ? 'Campo requerido' : ''}
+                />
+
+                <ColorPickerCustom
+                  label="Color del horario"
+                  value={schedule.color || '#3B82F6'}
+                  onChange={(color) => handleFieldChange(idx, 'color', color)}
+                  error={formSubmitted && !schedule.color}
+                  helperText={formSubmitted && !schedule.color ? 'Selecciona un color' : ''}
+                />
+
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <DateTimePickerCustom
+                    name={`start-${idx}`}
+                    label="Hora inicio"
+                    mode="time"
+                    minTime={new Date('1970-01-01T08:00')}
+                    maxTime={new Date('1970-01-01T20:00')}
+                    value={schedule.start}
+                    onChange={(val) => {
+                      if (val && schedule.end && val > schedule.end) {
+                        updateSchedule(idx, val, null);
+                      } else {
+                        updateSchedule(idx, val, schedule.end);
+                      }
+                    }}
+                    error={formSubmitted && schedule.start == null}
+                    helperText={formSubmitted && schedule.start === null ? 'Campo requerido' : ''}
+                  />
+                  <DateTimePickerCustom
+                    name={`end-${idx}`}
+                    label="Hora Fin"
+                    mode="time"
+                    minTime={new Date('1970-01-01T08:00')}
+                    maxTime={new Date('1970-01-01T20:00')}
+                    value={schedule.end}
+                    onChange={(val) => {
+                      if (val && schedule.start && val < schedule.start) {
+                        updateSchedule(idx, null, val);
+                      } else {
+                        updateSchedule(idx, schedule.start, val);
+                      }
+                    }}
+                    error={formSubmitted && schedule.end == null}
+                    helperText={formSubmitted && schedule.end === null ? 'Campo requerido' : ''}
+                  />
+                </div>
+                
+                <InputCustom
+                  name={`capacity-${idx}`}
+                  value={schedule.capacity}
+                  label="Capacidad"
+                  onChange={(val) => handleFieldChange(idx, 'capacity', val.target.value)}
+                  error={formSubmitted && schedule.capacity == 0}
+                  helperText={formSubmitted && schedule.capacity === 0 ? 'Campo requerido' : ''}
                 />
               </div>
-              <InputCustom
-                name={`capacity-${idx}`}
-                value={schedule.capacity}
-                label="Capacidad"
-                onChange={(val) => handleFieldChange(idx, 'capacity', val.target.value)}
-                error={formSubmitted && schedule.capacity == 0}
-                helperText={formSubmitted && schedule.capacity === 0 ? 'Campo requerido' : ''}
-              />
             </div>
           ))}
         </div>
@@ -164,9 +181,7 @@ export const ScheduleForm = ({
         <ScheduleCustom
           schedules={schedules}
           selectedSchedules={[]}
-          scheduleSelect={(val) => {  }}
-        >
-        </ScheduleCustom>
+        />
       </div>
     </div>
   );

@@ -11,7 +11,9 @@ const createAxiosInstance = (baseURL: string) => {
 
   instance.interceptors.request.use((request) => {
     const token = localStorage.getItem(`token`);
+    const branchSelect = localStorage.getItem('branchSelect');
     if (token) request.headers.set('Authorization', `Bearer ${token}`);
+    if (branchSelect) request.headers.set('branch-select', JSON.parse(branchSelect).id);
     return request;
   });
 

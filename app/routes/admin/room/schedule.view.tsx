@@ -57,7 +57,6 @@ export const ScheduleView = (props: Props) => {
         >
           {selectedSchedule && (
             <div className="">
-              {/* 📊 Cupo */}
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-600">{enrolled} / {selectedSchedule.capacity}</span>
               </div>
@@ -67,8 +66,6 @@ export const ScheduleView = (props: Props) => {
                   style={{ width: `${Math.min(100, (enrolled / selectedSchedule.capacity) * 100)}%` }}
                 />
               </div>
-
-              {/* 👥 Estudiantes inscritos */}
               <div>
                 <h3 className="font-semibold text-md">Estudiantes inscritos:</h3>
                 {enrolled === 0 ? (

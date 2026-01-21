@@ -1,7 +1,12 @@
 import { useLocation } from 'react-router';
-import { menu } from '@/utils/menu';
+import { useEffect, useState } from 'react';
+import { ChevronRight } from 'lucide-react';
+
 import logo from '@/assets/images/logo.png';
 import { SideNavCustom } from '@/components';
+import { useMenu } from '@/hooks/useMenuStore';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { cn } from '@/lib/utils';
 
 interface Props {
   open: boolean;
@@ -9,69 +14,138 @@ interface Props {
   isLargeScreen: boolean;
 }
 
-export const SideNav = (props: Props) => {
-  const {
-    open,
-    onClose,
-    isLargeScreen,
-  } = props;
+export const SideNav = ({ open, onClose, isLargeScreen }: Props) => {
   const { pathname } = useLocation();
+  const menuItems = useMenu();
 
-  const content = (
-    <nav className="w-[180px] h-full px-2 py-4  shadow-md overflow-y-auto ">
-      <div className="flex flex-col items-center">
-        <img src={logo} alt="Logo" className="w-24 mb-4" />
-        <ul className="w-full space-y-2">
-          {menu().map((item) => (
-            <li key={item.title}>
-              {item.path ? (
-                <SideNavCustom
-                  active={pathname === item.path}
-                  icon={item.icon}
-                  path={item.path}
-                  title={item.title}
-                />
-              ) : (
-                <>
-                  <p className="text-sm font-semibold uppercase mb-1">{item.title}</p>
-                  {item.group?.map((element: any) => (
-                    <SideNavCustom
-                      key={element.title}
-                      active={pathname === element.path}
-                      icon={element.icon}
-                      path={element.path}
-                      title={element.title}
-                    />
-                  ))}
-                </>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </nav>
+  const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
+    {}
   );
 
-  // 👉 Sidebar permanente en pantallas grandes
+  // Abrir automáticamente el menú activo
+useEffect(() => {
+  const next: Record<string, boolean> = {};
+
+  menuItems.forEach((item) => {
+    if (item.group) {
+      const isActive = item.group.some(
+        (sub) => sub.path === pathname
+      );
+      if (isActive) {
+        next[item.title] = true;
+      }
+    }
+  });
+
+  if (Object.keys(next).length) {
+    setExpandedMenus((prev) => ({ ...prev, ...next }));
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [pathname]);
+
+
+  const toggleMenu = (title: string) => {
+    setExpandedMenus((prev) => ({
+      ...prev,
+      [title]: !prev[title],
+    }));
+  };
+
+  const content = (
+    <div className="flex h-full flex-col">
+      {/* Header */}
+      <div className="h-14 flex items-center justify-center">
+        <img src={logo} alt="Logo" className="h-14" />
+      </div>
+
+      {/* Navigation */}
+      <ScrollArea className="flex-1 px-2 py-3">
+        <nav className="space-y-1">
+          {menuItems.map((item) => {
+            // ITEM SIMPLE
+            if (item.path) {
+              return (
+                <SideNavCustom
+                  key={item.title}
+                  title={item.title}
+                  icon={item.icon}
+                  path={item.path}
+                  active={pathname === item.path}
+                />
+              );
+            }
+
+            // ITEM CON SUBMENÚ
+            if (item.group) {
+              const isExpanded = expandedMenus[item.title];
+              const isActive = item.group.some(
+                (sub) => sub.path === pathname
+              );
+
+              return (
+                <div key={item.title} className="space-y-1">
+                  <SideNavCustom
+                    title={item.title}
+                    icon={item.icon}
+                    active={isActive}
+                    onClick={() => toggleMenu(item.title)}
+                    rightIcon={
+                      <ChevronRight
+                        className={cn(
+                          'h-4 w-4 transition-transform',
+                          isExpanded && 'rotate-90'
+                        )}
+                      />
+                    }
+                  />
+
+                  {isExpanded && (
+                    <div className="ml-6 space-y-1">
+                      {item.group.map((sub) => (
+                        <SideNavCustom
+                          key={sub.title}
+                          title={sub.title}
+                          path={sub.path}
+                          active={pathname === sub.path}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
+            return null;
+          })}
+        </nav>
+      </ScrollArea>
+    </div>
+  );
+
+  // Desktop
   if (isLargeScreen) {
     return (
-      <aside className="h-screen fixed top-0 left-0 bg-white w-[180px]  z-40">
+      <aside className="hidden lg:fixed lg:inset-y-0 lg:z-30 lg:flex lg:w-56 lg:flex-col border-r bg-background">
         {content}
       </aside>
-
     );
   }
 
-  // 👉 Sidebar móvil deslizante con overlay
+  // Mobile
   return (
     <>
-      {!isLargeScreen && open && (
-        <div className="fixed inset-0 z-40 bg-black/60" onClick={onClose}></div>
+      {open && (
+        <div
+          className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm lg:hidden"
+          onClick={onClose}
+        />
       )}
 
       <aside
-        className={`fixed top-0 left-0 h-full z-50 bg-white w-[190px] transform ${open ? 'translate-x-0' : '-translate-x-full'
-          } transition-transform duration-300`}
+        className={cn(
+          'fixed inset-y-0 left-0 z-50 w-56 bg-background border-r shadow-lg transition-transform duration-200 lg:hidden',
+          open ? 'translate-x-0' : '-translate-x-full'
+        )}
       >
         {content}
       </aside>

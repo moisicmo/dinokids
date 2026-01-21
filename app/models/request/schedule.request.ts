@@ -5,6 +5,7 @@ export interface ScheduleRequest {
   start: Date;
   end: Date;
   capacity: number;
+  color?: string;
 }
 
 export interface FormScheduleModel {
@@ -14,6 +15,7 @@ export interface FormScheduleModel {
   start: Date | null,
   end: Date | null,
   capacity: number;
+  color?: string;
 }
 
 export interface FormScheduleValidations {
@@ -21,4 +23,5 @@ export interface FormScheduleValidations {
   start: [(value: Date) => boolean, string];
   end: [(value: Date) => boolean, string];
   capacity: [(value: number) => boolean, string];
+  color?: [(value: string) => boolean, string];
 }

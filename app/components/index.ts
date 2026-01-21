@@ -7,6 +7,7 @@ export * from './slider.custom';
 export * from './schedule.custom';
 export * from './input.phone.custom';
 export * from './user.form';
+export * from './colorPicker.custom';
 
 
 export * from '@/components/ui/button';

@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { coffeApi } from '@/services';
-import { onLogin, onLogout, setRoleUser } from '@/store';
-import { useErrorStore } from '.';
-import type { AuthModel, AuthRequest, ValidatePinRequest } from '@/models';
+import { onLogin, onLogout, setBranch, setBranchesUser, setRoleUser } from '@/store';
+import { useAppSelector, useErrorStore } from '.';
+import type { AuthModel, AuthRequest, BranchModel, ValidatePinRequest } from '@/models';
 import { useState } from 'react';
 
 export interface validateEmail {
@@ -13,7 +13,7 @@ export interface validateEmail {
 
 
 export const useAuthStore = () => {
-  const { status, user } = useSelector((state: any) => state.auth);
+  const { status, user, roleUser, branchesUser, branchSelect } = useAppSelector(state => state.auth);
   const [showValidateEmail, setShowValidateEmail] = useState<validateEmail | null>(null);
 
   const dispatch = useDispatch();
@@ -28,8 +28,12 @@ export const useAuthStore = () => {
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', user);
       localStorage.setItem('role', JSON.stringify(role));
+      localStorage.setItem('branches', JSON.stringify(data.branches));
+      localStorage.setItem('branchSelect', JSON.stringify(data.branches[0]));
       dispatch(onLogin(user));
       dispatch(setRoleUser({ role }));
+      dispatch(setBranchesUser({ branches: data.branches }));
+      setBranchSelect(data.branches[0]);
     } catch (error: any) {
       console.log(error);
       dispatch(onLogout());
@@ -54,6 +58,21 @@ export const useAuthStore = () => {
     if (token) {
       const user = localStorage.getItem('user');
       dispatch(onLogin(user));
+      // rol
+      const role = localStorage.getItem('role');
+      if (role != null){
+        dispatch(setRoleUser({ role: JSON.parse(role) }));
+      }
+      //branches
+      const branches = localStorage.getItem('branches');
+      if (branches != null) {
+        dispatch(setBranchesUser({ branches: JSON.parse(branches) }));
+      }
+      // branch select
+      const branchSelect = localStorage.getItem('branchSelect');
+      if (branchSelect != null) {
+        dispatch(setBranch({ branch: JSON.parse(branchSelect) }));
+      }
       return true;
     } else {
       localStorage.clear();
@@ -73,17 +92,26 @@ export const useAuthStore = () => {
     console.log(resp.data);
   }
 
+  const setBranchSelect = (branch: BranchModel) => {
+    localStorage.setItem('branchSelect', JSON.stringify(branch));
+    dispatch(setBranch({ branch }));
+  }
+
   return {
     //* Propiedades
     status,
     user,
+    roleUser,
     showValidateEmail,
+    branchesUser,
+    branchSelect,
     //* Métodos
     startLogin,
     checkAuthToken,
     setShowValidateEmail,
     sendPin,
     validatePin,
+    setBranchSelect,
   };
 };
 

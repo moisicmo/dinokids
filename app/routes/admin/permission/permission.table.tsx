@@ -65,7 +65,7 @@ export const PermissionTable = (props: Props) => {
                   {TypeAction[item.action as unknown as keyof typeof TypeAction]}
               </TableCell>
               <TableCell>
-                  {TypeSubject[item.subject as unknown as keyof typeof TypeSubject]}
+                  {item.subject}
               </TableCell>
               <TableCell className="sticky right-0 z-10 bg-white">
                 <ActionButtons

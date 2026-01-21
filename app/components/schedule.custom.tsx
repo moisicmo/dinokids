@@ -6,7 +6,7 @@ interface Props {
   schedules: FormScheduleModel[];
   selectedSchedules: FormAssignmentScheduleModel[];
   children?: React.ReactNode;
-  scheduleSelect: (value:string)=> void;
+  scheduleSelect?: (value: string) => void;
 }
 
 const dayEnumMap: Record<string, DayOfWeek> = {
@@ -21,23 +21,35 @@ const dayEnumMap: Record<string, DayOfWeek> = {
 const displayDays = Object.entries(dayEnumMap);
 const hours = Array.from({ length: 13 }, (_, i) => `${(8 + i).toString().padStart(2, '0')}:00`);
 
-const getOverlapStyle = (dateStart: Date, dateEnd: Date, hour: string) => {
+// Función auxiliar para convertir a Date
+const safeToDate = (value: Date | string | null): Date | null => {
+  if (!value) return null;
+  return new Date(value); // Esto funciona tanto para Date como para string ISO
+};
+
+const getOverlapStyle = (dateStart: Date | string | null, dateEnd: Date | string | null, hour: string) => {
+  if (!dateStart || !dateEnd) return null;
+  
+  const start = safeToDate(dateStart);
+  const end = safeToDate(dateEnd);
+  if (!start || !end) return null;
+  
   const [h] = hour.split(':').map(Number);
-  const rangeStart = new Date(dateStart);
+  const rangeStart = new Date(start);
   rangeStart.setHours(h, 0, 0, 0);
   const rangeEnd = new Date(rangeStart);
   rangeEnd.setHours(h + 1, 0, 0, 0);
 
-  const overlapStart = dateStart > rangeStart ? dateStart : rangeStart;
-  const overlapEnd = dateEnd < rangeEnd ? dateEnd : rangeEnd;
+  const overlapStart = start > rangeStart ? start : rangeStart;
+  const overlapEnd = end < rangeEnd ? end : rangeEnd;
   if (overlapEnd <= overlapStart) return null;
 
   const totalMs = rangeEnd.getTime() - rangeStart.getTime();
   const overlapMs = overlapEnd.getTime() - overlapStart.getTime();
   const heightPercent = (overlapMs / totalMs) * 100;
 
-  const eventStartHour = dateStart.getHours();
-  const eventEndHour = dateEnd.getHours();
+  const eventStartHour = start.getHours();
+  const eventEndHour = end.getHours();
   const isStartHour = h === eventStartHour;
   const isEndHour = h === eventEndHour;
 
@@ -61,11 +73,19 @@ export const ScheduleCustom: React.FC<Props> = ({ schedules, selectedSchedules, 
     schedules.find(schedule =>
       schedule.day === dayKey &&
       schedule.start && schedule.end &&
-      getOverlapStyle(new Date(schedule.start), new Date(schedule.end), hour) !== null
+      getOverlapStyle(schedule.start, schedule.end, hour) !== null
     );
 
-  const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
-  const primaryColor200 = getComputedStyle(document.documentElement).getPropertyValue('--color-primary-200').trim();
+  // Función para formatear la hora de manera segura
+  const formatTime = (dateValue: Date | string | null) => {
+    const date = safeToDate(dateValue);
+    if (!date) return '';
+    return date.toLocaleTimeString('es-ES', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: false // Para formato 24 horas
+    });
+  };
 
   return (
     <div className="w-full overflow-x-auto">
@@ -88,7 +108,7 @@ export const ScheduleCustom: React.FC<Props> = ({ schedules, selectedSchedules, 
             <div className="text-center bg-amber-50 text-xs">{hour}</div>
             {displayDays.map(([key]) => {
               const event = getEvent(key, hour);
-              const overlapStyle = event ? getOverlapStyle(new Date(event.start!), new Date(event.end!), hour) : null;
+              const overlapStyle = event ? getOverlapStyle(event.start, event.end, hour) : null;
               const isSelected = selectedSchedules?.some(sel => sel.schedule.id === event?.id && sel.day === key);
 
               return event ? (
@@ -108,10 +128,11 @@ export const ScheduleCustom: React.FC<Props> = ({ schedules, selectedSchedules, 
                         position: 'relative',
                         height: 40,
                         border: '0.1px solid #ddd',
-                        cursor: 'pointer',
+                        cursor: scheduleSelect ? 'pointer' : 'default',
                         overflow: 'hidden',
                       }}
                       onClick={() => {
+                        if (scheduleSelect == null) return;
                         if (event.id != null) {
                           scheduleSelect(event.id);
                         }
@@ -124,16 +145,44 @@ export const ScheduleCustom: React.FC<Props> = ({ schedules, selectedSchedules, 
                           position: 'absolute',
                           left: 0,
                           right: 0,
-                          backgroundColor: isSelected ? primaryColor : primaryColor200,
-                          transition: 'height 0.3s ease',
+                          backgroundColor: event.color || '#3B82F6',
+                          opacity: scheduleSelect? isSelected ? 1 : 0.3 : 1,
+                          transition: 'all 0.3s ease',
                           ...overlapStyle!,
                         }}
+                        // ¡AHORA SÍ FUNCIONA! Usamos formatTime que convierte strings a Date
+                        title={`${event.day} ${formatTime(event.start)} - ${formatTime(event.end)} (Capacidad: ${event.capacity})`}
                       />
                     </div>
                   </PopoverAnchor>
 
                   <PopoverContent side="top" align="center" className="w-64 z-50">
-                    {children}
+                    {children || (
+                      <div className="p-2">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div 
+                            className="w-4 h-4 rounded-full border"
+                            style={{ backgroundColor: event.color || '#3B82F6' }}
+                          />
+                          <h4 className="font-semibold">Horario</h4>
+                        </div>
+                        <p><strong>Día:</strong> {event.day}</p>
+                        <p>
+                          <strong>Horario:</strong> {formatTime(event.start)} - {formatTime(event.end)}
+                        </p>
+                        <p><strong>Capacidad:</strong> {event.capacity}</p>
+                        {event.color && (
+                          <p className="flex items-center gap-2">
+                            <strong>Color:</strong>
+                            <div 
+                              className="w-4 h-4 rounded-full border"
+                              style={{ backgroundColor: event.color }}
+                            />
+                            <span>{event.color}</span>
+                          </p>
+                        )}
+                      </div>
+                    )}
                   </PopoverContent>
                 </Popover>
               ) : (

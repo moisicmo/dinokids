@@ -6,6 +6,7 @@ interface ScheduleRequest {
   days: DayOfWeek[];
   start: Date;
   end: Date;
+  color: string;
   active?: boolean;
 }
 export interface AssignmentScheduleRequest {

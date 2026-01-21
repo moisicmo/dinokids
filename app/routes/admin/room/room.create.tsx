@@ -225,6 +225,7 @@ export const RoomCreate = (props: Props) => {
           {/* Botones de acción */}
           <div className="flex justify-end gap-2 pt-4">
             <Button
+              type="button"
               onClick={() => {
                 if (step === 1) {
                   onResetForm();

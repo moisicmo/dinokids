@@ -1,8 +1,7 @@
 import { AxiosError } from 'axios';
-import { useAlertStore, useLogoutStore } from '.';
+import { useAlertStore } from '.';
 
 export const useErrorStore = () => {
-  const { startLogout } = useLogoutStore();
   const { showError } = useAlertStore();
 
   const handleError = (error: any) => {

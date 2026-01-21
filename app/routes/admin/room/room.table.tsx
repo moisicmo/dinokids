@@ -43,7 +43,6 @@ export const RoomTable = (props: Props) => {
   }, [page, rowsPerPage, debouncedQuery]);
 
   const [room, setRoom] = useState<RoomModel>();
-  const [dialog, setDialog] = useState(false);
 
   return (
     <>

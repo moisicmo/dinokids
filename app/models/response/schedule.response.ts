@@ -5,5 +5,6 @@ export interface ScheduleModel {
   day: DayOfWeek;
   start: Date;
   end: Date;
+  color?: string;
   capacity: number;
 }

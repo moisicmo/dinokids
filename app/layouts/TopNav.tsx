@@ -1,9 +1,10 @@
 import { Menu, ShoppingCart } from 'lucide-react';
-import { useCartStore, usePopover } from '@/hooks';
+import { useAuthStore, useCartStore, usePopover } from '@/hooks';
 import noimage from '@/assets/images/profile.png';
 import { AccountPopover } from './account.popover';
 import { useState } from 'react';
 import { Profile } from './profile';
+import { SelectCustom } from '@/components';
 
 interface Props {
   onNavOpen: () => void;
@@ -17,6 +18,7 @@ export const TopNav = (props: Props) => {
   } = props;
   const accountPopover = usePopover();
 
+  const { branchesUser, branchSelect, setBranchSelect } = useAuthStore();
   const { cart } = useCartStore();
   const [dialogProfile, setdialogProfile] = useState<boolean>(false)
 
@@ -40,7 +42,18 @@ export const TopNav = (props: Props) => {
 
 
           <div className="relative flex items-center gap-4">
-
+            <SelectCustom
+              options={branchesUser.map((branch) => ({ id: branch.id, value: branch.name })) ?? []}
+              selected={branchSelect ? { id: branchSelect.id, value: branchSelect.name } : null}
+              onSelect={(value) => {
+                if (value && !Array.isArray(value)) {
+                  const branch = branchesUser.find(b => b.id === value.id);
+                  if (branch) {
+                    setBranchSelect(branch);
+                  }
+                }
+              }}
+            />
             {/* Botón del carrito */}
             <div className="relative">
               <button

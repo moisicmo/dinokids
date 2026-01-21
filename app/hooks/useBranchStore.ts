@@ -1,17 +1,19 @@
 import { coffeApi } from '@/services';
-import { useAlertStore, useErrorStore } from '.';
-import { InitBaseResponse, type BaseResponse, type BranchModel, type BranchRequest } from '@/models';
+import { useAlertStore, useErrorStore, usePermissionStore } from '.';
+import { InitBaseResponse, TypeAction, TypeSubject, type BaseResponse, type BranchModel, type BranchRequest } from '@/models';
 import { useState } from 'react';
 
 export const useBranchStore = () => {
   const [dataBranch, setDataBranch] = useState<BaseResponse<BranchModel>>(InitBaseResponse);
   const { handleError } = useErrorStore();
+  const { requirePermission } = usePermissionStore();
   const { showSuccess, showWarning, showError } = useAlertStore();
   const baseUrl = 'branch';
 
   const getBranches = async (page: number = 1, limit: number = 10, keys: string = '') => {
 
     try {
+      requirePermission(TypeAction.read, TypeSubject.branch);
       const res = await coffeApi.get(`/${baseUrl}?page=${page}&limit=${limit}&keys=${keys}`);
       const { data, meta } = res.data;
       console.log(res.data);
@@ -28,6 +30,7 @@ export const useBranchStore = () => {
 
   const createBranch = async (body: BranchRequest) => {
     try {
+      requirePermission(TypeAction.create, TypeSubject.branch);
       const { data } = await coffeApi.post(`/${baseUrl}/`, body);
       console.log(data)
       getBranches();
@@ -39,6 +42,7 @@ export const useBranchStore = () => {
 
   const updateBranch = async (id: string, body: BranchRequest) => {
     try {
+      requirePermission(TypeAction.update, TypeSubject.branch);
       const { data } = await coffeApi.patch(`/${baseUrl}/${id}`, body);
       console.log(data)
       getBranches();
@@ -50,6 +54,7 @@ export const useBranchStore = () => {
 
   const deleteBranch = async (id: string) => {
     try {
+      requirePermission(TypeAction.delete, TypeSubject.branch);
       const result = await showWarning();
       if (result.isConfirmed) {
         await coffeApi.delete(`/${baseUrl}/${id}`);

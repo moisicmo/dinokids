@@ -35,14 +35,6 @@ const dashboard = () => {
             <p className="text-3xl font-bold">{data.metrics?.totalTeachers ?? "..."}</p>
           </CardContent>
         </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <h2 className="text-lg font-semibold">Sucursales</h2>
-            <p className="text-3xl font-bold">{data.metrics?.totalBranches ?? "..."}</p>
-          </CardContent>
-        </Card>
-
         <Card>
           <CardContent className="p-4">
             <h2 className="text-lg font-semibold">Deudas Pendientes</h2>

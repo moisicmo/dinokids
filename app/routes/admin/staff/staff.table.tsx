@@ -17,7 +17,6 @@ interface Props {
 export const StaffTable = (props: Props) => {
   const {
     handleEdit,
-    itemSelect,
     limitInit = 10,
     dataStaff,
     onRefresh,

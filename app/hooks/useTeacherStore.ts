@@ -1,17 +1,18 @@
 import { coffeApi } from '@/services';
-import { useAlertStore, useErrorStore } from '.';
-import { InitBaseResponse, type BaseResponse, type TeacherModel, type TeacherRequest } from '@/models';
+import { useAlertStore, useErrorStore, usePermissionStore } from '.';
+import { InitBaseResponse, TypeAction, TypeSubject, type BaseResponse, type TeacherModel, type TeacherRequest } from '@/models';
 import { useState } from 'react';
 
 export const useTeacherStore = () => {
   const [dataTeacher, setDataTeacher] = useState<BaseResponse<TeacherModel>>(InitBaseResponse);
-  
   const { handleError } = useErrorStore();
+  const { requirePermission } = usePermissionStore();
   const { showSuccess, showWarning, showError } = useAlertStore();
   const baseUrl = 'teacher';
 
   const getTeachers = async (page: number = 1, limit: number = 10, keys: string = '') => {
     try {
+      requirePermission(TypeAction.read, TypeSubject.teacher);
       const res = await coffeApi.get(`/${baseUrl}?page=${page}&limit=${limit}&keys=${keys}`);
       const { data, meta } = res.data;
       console.log(res.data);
@@ -26,6 +27,7 @@ export const useTeacherStore = () => {
   };
   const createTeacher = async (body: TeacherRequest) => {
     try {
+      requirePermission(TypeAction.create, TypeSubject.teacher);
       const { data } = await coffeApi.post(`/${baseUrl}/`, body);
       console.log(data);
       getTeachers();
@@ -36,6 +38,7 @@ export const useTeacherStore = () => {
   };
   const updateTeacher = async (id: string, body: TeacherRequest) => {
     try {
+      requirePermission(TypeAction.update, TypeSubject.teacher);
       const { data } = await coffeApi.patch(`/${baseUrl}/${id}`, body);
       console.log(data);
       getTeachers();
@@ -46,6 +49,7 @@ export const useTeacherStore = () => {
   };
   const deleteTeacher = async (id: string) => {
     try {
+      requirePermission(TypeAction.delete, TypeSubject.teacher);
       const result = await showWarning();
       if (result.isConfirmed) {
         await coffeApi.delete(`/${baseUrl}/${id}`);

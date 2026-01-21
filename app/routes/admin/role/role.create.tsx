@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useForm, usePermissionStore } from '@/hooks';
 import { Button, InputCustom, SelectCustom } from '@/components';
-import { formRoleInit, formRoleValidations, type PermissionModel, type RoleModel, type RoleRequest } from '@/models';
+import { formRoleInit, formRoleValidations, TypeAction, type PermissionModel, type RoleModel, type RoleRequest } from '@/models';
 
 interface Props {
   open: boolean;
@@ -70,54 +70,59 @@ export const RoleCreate = (props: Props) => {
 
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-2xl p-6 overflow-y-auto">
-        <h2 className="text-xl font-bold mb-4">
-          {item ? `Editar ${item.name}` : 'Nuevo rol'}
-        </h2>
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+      {/* Modal responsive - más grande en desktop */}
+      <div className="bg-white rounded-lg w-full max-w-4xl h-[60vh] flex flex-col">
+        <div className="p-6  flex-shrink-0">
 
-        <form onSubmit={sendSubmit} className="space-y-4">
-          <InputCustom
-            name="name"
-            value={name}
-            label="Nombre"
-            onChange={onInputChange}
-            error={!!nameValid && formSubmitted}
-            helperText={formSubmitted ? nameValid : ''}
-          />
-          <SelectCustom
-            multiple
-            label="Permisos"
-            options={dataPermission.data?.map((permission) => ({ id: permission.id, value: `${permission.action} ${permission.subject}` })) ?? []}
-            selected={permissions.map((s: PermissionModel) => ({ id: s.id, value: `${s.action} ${s.subject}` }))}
-            onSelect={(values) => {
-              if (Array.isArray(values)) {
-                const select = dataPermission.data?.filter((r) =>
-                  values.some((v) => v.id === r.id)
-                ) ?? [];
-                onValueChange('permissions', select);
-              }
-            }}
-            error={!!permissionsValid && formSubmitted}
-            helperText={formSubmitted ? permissionsValid : ''}
-          />
-          <div className="flex justify-end gap-2 pt-2">
-            <Button
-              onClick={() => {
-                onResetForm();
-                handleClose();
+          <h2 className="text-xl font-bold mb-4">
+            {item ? `Editar ${item.name}` : 'Nuevo rol'}
+          </h2>
+
+          <form onSubmit={sendSubmit} className="space-y-4">
+            <InputCustom
+              name="name"
+              value={name}
+              label="Nombre"
+              onChange={onInputChange}
+              error={!!nameValid && formSubmitted}
+              helperText={formSubmitted ? nameValid : ''}
+            />
+            <SelectCustom
+              multiple
+              label="Permisos"
+              options={dataPermission.data?.map((permission) => ({ id: permission.id, value: `${TypeAction[permission.action as unknown as keyof typeof TypeAction]} ${permission.subject}` })) ?? []}
+              selected={permissions.map((s: PermissionModel) => ({ id: s.id, value: `${TypeAction[s.action as unknown as keyof typeof TypeAction]} ${s.subject}` }))}
+              onSelect={(values) => {
+                if (Array.isArray(values)) {
+                  const select = dataPermission.data?.filter((r) =>
+                    values.some((v) => v.id === r.id)
+                  ) ?? [];
+                  onValueChange('permissions', select);
+                }
               }}
-              color='bg-gray-400'
-            >
-              Cancelar
-            </Button>
-            <Button
-              type='submit'
-            >
-              {item ? 'Editar' : 'Crear'}
-            </Button>
-          </div>
-        </form>
+              error={!!permissionsValid && formSubmitted}
+              helperText={formSubmitted ? permissionsValid : ''}
+            />
+            <div className="flex justify-end gap-2 pt-2">
+              <Button
+                onClick={() => {
+                  onResetForm();
+                  handleClose();
+                }}
+                color='bg-gray-400'
+              >
+                Cancelar
+              </Button>
+              <Button
+                type='submit'
+              >
+                {item ? 'Editar' : 'Crear'}
+              </Button>
+            </div>
+          </form>
+
+        </div>
       </div>
     </div>
   );
