@@ -1,11 +1,9 @@
 import { useLocation } from 'react-router';
-import { useEffect, useState } from 'react';
-import { ChevronRight } from 'lucide-react';
-
 import logo from '@/assets/images/logo.png';
 import { SideNavCustom } from '@/components';
 import { useMenu } from '@/hooks/useMenuStore';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { useState } from 'react';
+import { ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface Props {
@@ -14,36 +12,15 @@ interface Props {
   isLargeScreen: boolean;
 }
 
-export const SideNav = ({ open, onClose, isLargeScreen }: Props) => {
+export const SideNav = (props: Props) => {
+  const {
+    open,
+    onClose,
+    isLargeScreen,
+  } = props;
   const { pathname } = useLocation();
   const menuItems = useMenu();
-
-  const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
-    {}
-  );
-
-  // Abrir automáticamente el menú activo
-useEffect(() => {
-  const next: Record<string, boolean> = {};
-
-  menuItems.forEach((item) => {
-    if (item.group) {
-      const isActive = item.group.some(
-        (sub) => sub.path === pathname
-      );
-      if (isActive) {
-        next[item.title] = true;
-      }
-    }
-  });
-
-  if (Object.keys(next).length) {
-    setExpandedMenus((prev) => ({ ...prev, ...next }));
-  }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [pathname]);
-
-
+  const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({});
   const toggleMenu = (title: string) => {
     setExpandedMenus((prev) => ({
       ...prev,
@@ -51,16 +28,12 @@ useEffect(() => {
     }));
   };
 
-  const content = (
-    <div className="flex h-full flex-col">
-      {/* Header */}
-      <div className="h-14 flex items-center justify-center">
-        <img src={logo} alt="Logo" className="h-14" />
-      </div>
 
-      {/* Navigation */}
-      <ScrollArea className="flex-1 px-2 py-3">
-        <nav className="space-y-1">
+  const content = (
+    <nav className="w-[210px] h-full px-2 py-4  shadow-md overflow-y-auto ">
+      <div className="flex flex-col items-center">
+        <img src={logo} alt="Logo" className="w-24 mb-4" />
+        <ul className="w-full space-y-2">
           {menuItems.map((item) => {
             // ITEM SIMPLE
             if (item.path) {
@@ -117,35 +90,31 @@ useEffect(() => {
 
             return null;
           })}
-        </nav>
-      </ScrollArea>
-    </div>
+        </ul>
+      </div>
+    </nav>
   );
 
-  // Desktop
+  // 👉 Sidebar permanente en pantallas grandes
   if (isLargeScreen) {
     return (
-      <aside className="hidden lg:fixed lg:inset-y-0 lg:z-30 lg:flex lg:w-56 lg:flex-col border-r bg-background">
+      <aside className="h-screen fixed top-0 left-0 bg-white z-40">
         {content}
       </aside>
+
     );
   }
 
-  // Mobile
+  // 👉 Sidebar móvil deslizante con overlay
   return (
     <>
-      {open && (
-        <div
-          className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm lg:hidden"
-          onClick={onClose}
-        />
+      {!isLargeScreen && open && (
+        <div className="fixed inset-0 z-40 bg-black/60" onClick={onClose}></div>
       )}
 
       <aside
-        className={cn(
-          'fixed inset-y-0 left-0 z-50 w-56 bg-background border-r shadow-lg transition-transform duration-200 lg:hidden',
-          open ? 'translate-x-0' : '-translate-x-full'
-        )}
+        className={`fixed top-0 left-0 h-full z-50 bg-white w-[210px] transform ${open ? 'translate-x-0' : '-translate-x-full'
+          } transition-transform duration-300`}
       >
         {content}
       </aside>

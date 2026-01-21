@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { useForm, useBranchStore, useTeacherStore, useSpecialtyStore } from '@/hooks';
+import { useForm, useTeacherStore, useSpecialtyStore, useAuthStore } from '@/hooks';
 import { Button, InputCustom, SelectCustom, SliderCustom } from '@/components';
 import { type RoomModel, formRoomValidations, formRoomInit, type FormScheduleModel, type RoomRequest, type ScheduleRequest } from '@/models';
 import { ScheduleForm } from './schedule.create';
@@ -20,14 +20,12 @@ export const RoomCreate = (props: Props) => {
     onCreate,
     onUpdate,
   } = props;
-  const { dataBranch, getBranches } = useBranchStore();
   const { dataTeacher, getTeachers } = useTeacherStore();
-  const { dataSpecialty, getSpecialtiesByBranch } = useSpecialtyStore();
+  const { dataSpecialty: dataBranchSpecialty, getSpecialties } = useSpecialtyStore();
 
   const {
     name,
     rangeYears,
-    branch,
     teacher,
     assistant,
     specialty,
@@ -39,7 +37,6 @@ export const RoomCreate = (props: Props) => {
     onArrayChange,
     nameValid,
     rangeYearsValid,
-    branchValid,
     teacherValid,
     assistantValid,
     specialtyValid,
@@ -48,6 +45,7 @@ export const RoomCreate = (props: Props) => {
 
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [step, setStep] = useState(1);
+  const { branchSelect } = useAuthStore();
 
   const sendSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -62,10 +60,10 @@ export const RoomCreate = (props: Props) => {
       onCreate({
         name: name.trim(),
         rangeYears,
-        branchId: branch.id,
+        branchId: `${branchSelect?.id}`,
         teacherId: teacher.userId,
         assistantId: assistant.userId,
-        specialtyId: specialty.id,
+        specialtyId: specialty.specialty.id,
         schedules: [
           ...schedules.map((e: ScheduleRequest) => {
             return {
@@ -80,10 +78,10 @@ export const RoomCreate = (props: Props) => {
       onUpdate(item.id, {
         name: name.trim(),
         rangeYears,
-        branchId: branch.id,
+        branchId: `${branchSelect?.id}`,
         teacherId: teacher.userId,
         assistantId: assistant.userId,
-        specialtyId: specialty.id,
+        specialtyId: `${ specialty?.specialty?.id ?? specialty.id}`,
         schedules: [
           ...schedules.map((e: ScheduleRequest) => {
             return {
@@ -108,19 +106,15 @@ export const RoomCreate = (props: Props) => {
   if (!open) return null;
 
   useEffect(() => {
-    getBranches();
     getTeachers();
-  }, [])
-
-  useEffect(() => {
     if (item) {
       onValueChange('specialty', specialty);
     } else {
       onValueChange('specialty', null);
     }
-    if (branch == null) return;
-    getSpecialtiesByBranch(branch.id);
-  }, [branch])
+    if (branchSelect?.id == null) return;
+    getSpecialties();
+  }, [])
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
@@ -154,20 +148,6 @@ export const RoomCreate = (props: Props) => {
                   helperText={formSubmitted ? rangeYearsValid : ''}
                 />
                 <SelectCustom
-                  label="Sucursal"
-                  options={dataBranch.data?.map((branch) => ({ id: branch.id, value: branch.name })) ?? []}
-                  selected={branch ? { id: branch.id, value: branch.name } : null}
-                  onSelect={(value) => {
-                    if (value && !Array.isArray(value)) {
-                      const selected = dataBranch.data?.find((r) => r.id === value.id);
-                      onValueChange('branch', selected);
-                      onValueChange('specialty', null);
-                    }
-                  }}
-                  error={!!branchValid && formSubmitted}
-                  helperText={formSubmitted ? branchValid : ''}
-                />
-                <SelectCustom
                   label="Profesor"
                   options={dataTeacher.data?.map((teacher) => ({ id: teacher.userId, value: `${teacher.user.name} ${teacher.user.lastName}` })) ?? []}
                   selected={teacher ? { id: teacher.id, value: `${teacher.user.name} ${teacher.user.lastName}` } : null}
@@ -193,22 +173,20 @@ export const RoomCreate = (props: Props) => {
                   error={!!assistantValid && formSubmitted}
                   helperText={formSubmitted ? assistantValid : ''}
                 />
-                {
-                  branch &&
-                  <SelectCustom
-                    label="Especialidad"
-                    options={dataSpecialty.data?.map((specialty) => ({ id: specialty.id, value: specialty.branchSpecialties[0].specialty.name })) ?? []}
-                    selected={specialty ? { id: specialty.id, value: specialty.branchSpecialties[0].specialty.name } : null}
-                    onSelect={(value) => {
-                      if (value && !Array.isArray(value)) {
-                        const selected = dataSpecialty.data?.find((r) => r.id === value.id);
-                        onValueChange('specialty', selected);
-                      }
-                    }}
-                    error={!!specialtyValid && formSubmitted}
-                    helperText={formSubmitted ? specialtyValid : ''}
-                  />
-                }
+                <SelectCustom
+                  label="Especialidad"
+                  options={dataBranchSpecialty.data?.map((branchSpecialty) => ({ id: branchSpecialty.id, value: branchSpecialty.specialty.name })) ?? []}
+                  selected={specialty ? { id: specialty.id, value: `${specialty.name ?? specialty?.specialty?.name}` } : null}
+                  onSelect={(value) => {
+                    if (value && !Array.isArray(value)) {
+                      onValueChange('specialty', null);
+                      const selected = dataBranchSpecialty.data?.find((r) => r.id === value.id);
+                      onValueChange('specialty', selected);
+                    }
+                  }}
+                  error={!!specialtyValid && formSubmitted}
+                  helperText={formSubmitted ? specialtyValid : ''}
+                />
               </div>
             }
             {
@@ -245,7 +223,6 @@ export const RoomCreate = (props: Props) => {
                   const hasError =
                     !!nameValid ||
                     !!rangeYearsValid ||
-                    !!branchValid ||
                     !!teacherValid ||
                     !!specialtyValid;
 

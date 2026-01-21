@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { type BaseResponse, type StudentModel } from '@/models';
-import { useDebounce } from '@/hooks';
+import { TypeAction, TypeSubject, type BaseResponse, type StudentModel } from '@/models';
+import { useDebounce, usePermissionStore } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
 import React from 'react';
@@ -37,6 +37,7 @@ export const StudentTable = (props: Props) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 500);
+  const { hasPermission } = usePermissionStore();
   useEffect(() => {
     const maxPage = Math.max(1, Math.ceil(dataStudent.total / rowsPerPage));
     if (page > maxPage) {
@@ -94,8 +95,8 @@ export const StudentTable = (props: Props) => {
                     item={item}
                     onSelect={handleSelect}
                     isSelected={expandedId === item.userId}
-                    onEdit={handleEdit}
-                    onDelete={onDelete}
+                    onEdit={hasPermission(TypeAction.update, TypeSubject.student) ? handleEdit : undefined}
+                    onDelete={hasPermission(TypeAction.delete, TypeSubject.student) ? onDelete : undefined}
                     onSessionTracking={onSessionTracking}
                     onWeeklyPlanning={onWeeklyPlanning}
                     onEvaluationPlanning={onEvaluationPlanning}

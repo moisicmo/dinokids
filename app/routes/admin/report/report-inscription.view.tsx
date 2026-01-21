@@ -2,10 +2,11 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
-import { useInscriptionStore, useReportStore } from "@/hooks";
+import { useInscriptionStore, usePermissionStore, useReportStore } from "@/hooks";
 import { useEffect, useState } from "react";
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { TypeAction, TypeSubject } from "@/models";
 
 const ReportInscription = () => {
 
@@ -13,6 +14,7 @@ const ReportInscription = () => {
   const { dataInscription, getInscriptions } = useInscriptionStore();
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
+  const { hasPermission } = usePermissionStore();
 
   const handleGenerateReport = async () => {
     if (!startDate || !endDate) {
@@ -32,7 +34,7 @@ const ReportInscription = () => {
     console.log('aquii')
     getInscriptions();
   }, [])
-  
+
 
   return (
     <div className="space-y-6 p-4">
@@ -59,11 +61,14 @@ const ReportInscription = () => {
                 className="border rounded px-2 py-1 w-full"
               />
             </div>
-            <div className="flex items-end">
-              <Button className="w-full" onClick={handleGenerateReport}>
-                Generar Reporte
-              </Button>
-            </div>
+            {
+              hasPermission(TypeAction.create, TypeSubject.report) &&
+              <div className="flex items-end">
+                <Button className="w-full" onClick={handleGenerateReport}>
+                  Generar Reporte
+                </Button>
+              </div>
+            }
           </div>
         </CardContent>
       </Card>

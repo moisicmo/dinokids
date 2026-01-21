@@ -1,14 +1,15 @@
 import { useCallback, useState } from 'react';
-import type { BranchModel } from '@/models';
+import { TypeAction, TypeSubject, type BranchModel } from '@/models';
 import { BranchCreate, BranchTable } from '.';
 import { Button } from '@/components';
-import { useBranchStore } from '@/hooks';
+import { useBranchStore, usePermissionStore } from '@/hooks';
 
 const branchView = () => {
   const { dataBranch, getBranches, createBranch, updateBranch, deleteBranch } = useBranchStore();
 
   const [openDialog, setOpenDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<BranchModel | null>(null);
+  const { hasPermission } = usePermissionStore();
 
   const handleDialog = useCallback((value: boolean) => {
     if (!value) setItemEdit(null);
@@ -20,9 +21,12 @@ const branchView = () => {
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">Sucursales</h2>
-        <Button
-          onClick={() => handleDialog(true)}
-        >Nueva Sucursal</Button>
+        {
+          hasPermission(TypeAction.create, TypeSubject.branch) &&
+          <Button
+            onClick={() => handleDialog(true)}
+          >Nueva Sucursal</Button>
+        }
       </div>
 
       {/* Tabla de branch */}

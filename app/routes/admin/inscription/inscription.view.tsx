@@ -1,14 +1,15 @@
 import { useCallback, useState } from 'react';
-import type { InscriptionModel } from '@/models';
+import { TypeAction, TypeSubject, type InscriptionModel } from '@/models';
 import { InscriptionCreate, InscriptionTable } from '.';
 import { Button } from '@/components';
-import { useInscriptionStore } from '@/hooks';
+import { useInscriptionStore, usePermissionStore } from '@/hooks';
 
 const inscriptionView = () => {
   const { dataInscription, getInscriptions, createInscription, updateInscription, deleteInscription, getPdf } = useInscriptionStore();
-  
+
   const [openDialog, setOpenDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<InscriptionModel | null>(null);
+  const { hasPermission } = usePermissionStore();
 
   const handleDialog = useCallback((value: boolean) => {
     if (!value) setItemEdit(null);
@@ -20,9 +21,12 @@ const inscriptionView = () => {
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">Inscripciones</h2>
-        <Button
-          onClick={() => handleDialog(true)}
-        >Nueva inscripción</Button>
+        {
+          hasPermission(TypeAction.create, TypeSubject.inscription) &&
+          <Button
+            onClick={() => handleDialog(true)}
+          >Nueva inscripción</Button>
+        }
       </div>
 
       {/* Tabla de inscription */}

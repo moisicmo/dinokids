@@ -20,11 +20,6 @@ const permissionView = () => {
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">Permisos</h2>
-        <Button
-          onClick={() => handleDialog(true)}
-        >
-          Nuevo Permiso
-        </Button>
       </div>
 
       {/* Tabla de role */}

@@ -1,13 +1,14 @@
 import { useCallback, useState } from 'react';
-import type { InscriptionModel } from '@/models';
+import { TypeAction, TypeSubject, type InscriptionModel } from '@/models';
 import { BookingCreate, BookingTable } from '.';
 import { Button } from '@/components';
-import { useBookingStore } from '@/hooks';
+import { useBookingStore, usePermissionStore } from '@/hooks';
 
 const bookingView = () => {
   const { dataBooking, getBookings, createBooking, updateBooking, deleteBooking } = useBookingStore();
   const [openDialog, setOpenDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<InscriptionModel | null>(null);
+  const { hasPermission } = usePermissionStore();
 
   const handleDialog = useCallback((value: boolean) => {
     if (!value) setItemEdit(null);
@@ -19,9 +20,12 @@ const bookingView = () => {
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">Reservas</h2>
-        <Button
-          onClick={() => handleDialog(true)}
-        >Nueva Reserva</Button>
+        {
+          hasPermission(TypeAction.create, TypeSubject.booking) &&
+          <Button
+            onClick={() => handleDialog(true)}
+          >Nueva Reserva</Button>
+        }
       </div>
 
       {/* Tabla de booking */}

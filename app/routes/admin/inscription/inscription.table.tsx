@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { type BaseResponse, type InscriptionModel } from '@/models';
-import { useInscriptionStore, useDebounce, useEnums } from '@/hooks';
+import { TypeAction, TypeSubject, type BaseResponse, type InscriptionModel } from '@/models';
+import { useInscriptionStore, useDebounce, useEnums, usePermissionStore } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
 import { format } from 'date-fns';
@@ -32,6 +32,8 @@ export const InscriptionTable = (props: Props) => {
   const [rowsPerPage, setRowsPerPage] = useState(limitInit);
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 1500);
+  const { hasPermission } = usePermissionStore();
+
   useEffect(() => {
     const maxPage = Math.max(1, Math.ceil(dataInscription.total / rowsPerPage));
     if (page > maxPage) {
@@ -94,7 +96,7 @@ export const InscriptionTable = (props: Props) => {
                     >
                       <p className="font-semibold text-sm text-gray-800 flex items-center gap-1">
                         <CalendarClock className="w-4 h-4 text-gray-500" />
-                        {`${assignmentRoom.room.branch.name} - ${assignmentRoom.room.name} - ${assignmentRoom.room.specialty.name}`}
+                        {`${assignmentRoom.room.name} - ${assignmentRoom.room.specialty.name}`}
                       </p>
                       <p className="text-xs text-gray-600 italic">
                         Inicio: {format(new Date(assignmentRoom.start), 'dd-MMMM-yyyy', { locale: es })}
@@ -113,8 +115,8 @@ export const InscriptionTable = (props: Props) => {
               <TableCell className="sticky right-0 z-10 bg-white">
                 <ActionButtons
                   item={item}
-                  onEdit={handleEdit}
-                  onDelete={onDelete}
+                  onEdit={hasPermission(TypeAction.update, TypeSubject.inscription) ? handleEdit : undefined}
+                  onDelete={hasPermission(TypeAction.delete, TypeSubject.inscription) ? onDelete : undefined}
                   onDownload={getPdf}
                 />
               </TableCell>

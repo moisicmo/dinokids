@@ -34,16 +34,7 @@ interface MenuItem {
 }
 
 export const useMenu = (): MenuItem[] => {
-  const { requirePermission } = usePermissionStore();
-
-  const hasPermission = (action: TypeAction, subject: TypeSubject): boolean => {
-    try {
-      requirePermission(action, subject);
-      return true;
-    } catch {
-      return false;
-    }
-  };
+  const { hasPermission } = usePermissionStore();
 
   const menuItems: MenuItem[] = [];
 
@@ -211,11 +202,11 @@ export const useMenu = (): MenuItem[] => {
   // Comunicación
   if (hasPermission(TypeAction.read, TypeSubject.correspondence)) {
     menuItems.push({
-      title: 'Comunicación',
+      title: 'Correspondencia',
       icon: <Correspondence size={18} />,
       group: [{
-        path: '/admin/correspondence',
-        title: 'Correspondencias',
+        path: '/admin/correspondence/evaluation',
+        title: 'Evaluaciones',
         icon: <Correspondence size={18} />,
       }],
     });

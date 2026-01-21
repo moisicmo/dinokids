@@ -1,14 +1,15 @@
 import { useCallback, useState } from 'react';
-import type { RoleModel } from '@/models';
+import { TypeAction, TypeSubject, type RoleModel } from '@/models';
 import { RoleCreate, RoleTable } from '.';
 import { Button } from '@/components';
-import { useRoleStore } from '@/hooks';
+import { usePermissionStore, useRoleStore } from '@/hooks';
 
 const roleView = () => {
-    const { dataRole, getRoles,createRole, updateRole, deleteRole } = useRoleStore();
+  const { dataRole, getRoles, createRole, updateRole, deleteRole } = useRoleStore();
 
   const [openDialog, setOpenDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<RoleModel | null>(null);
+  const { hasPermission } = usePermissionStore();
 
   const handleDialog = useCallback((value: boolean) => {
     if (!value) setItemEdit(null);
@@ -20,11 +21,14 @@ const roleView = () => {
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">Roles</h2>
-        <Button
-          onClick={() => handleDialog(true)}
-        >
-          Nuevo Rol
-        </Button>
+        {
+          hasPermission(TypeAction.create, TypeSubject.role) &&
+          <Button
+            onClick={() => handleDialog(true)}
+          >
+            Nuevo Rol
+          </Button>
+        }
       </div>
 
       {/* Tabla de role */}

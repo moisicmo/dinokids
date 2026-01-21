@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { useForm, useBranchStore } from '@/hooks';
+import { useForm, useBranchStore, useAuthStore } from '@/hooks';
 import { Button, DateTimePickerCustom, InputCustom, SelectCustom, UserFormFields, type ValueSelect } from '@/components';
 import { type BranchModel, type TeacherModel, formTeacherInit, formTeacherValidations, AcademicStatus, type TeacherRequest } from '@/models';
 
@@ -19,7 +19,6 @@ export const TeacherCreate = (props: Props) => {
     onCreate,
     onUpdate,
   } = props;
-  const { dataBranch, getBranches } = useBranchStore();
 
   const {
     user,
@@ -39,6 +38,7 @@ export const TeacherCreate = (props: Props) => {
   } = useForm(item ?? formTeacherInit, formTeacherValidations);
 
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const { branchesUser } = useAuthStore();
 
   const sendSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -60,7 +60,7 @@ export const TeacherCreate = (props: Props) => {
         academicStatus,
         startJob,
         brancheIds: branches.map((branch: BranchModel) => branch.id),
-        numberCard: user.numberCard.trim() == ''? null: user.numberCard.trim(),
+        numberCard: user.numberCard.trim() == '' ? null : user.numberCard.trim(),
       });
     } else {
       await onUpdate(item.userId, {
@@ -77,7 +77,7 @@ export const TeacherCreate = (props: Props) => {
         academicStatus,
         startJob,
         brancheIds: branches.map((branch: BranchModel) => branch.id),
-        numberCard: user.numberCard.trim() == ''? null: user.numberCard.trim(),
+        numberCard: user.numberCard.trim() == '' ? null : user.numberCard.trim(),
       });
     }
 
@@ -92,10 +92,6 @@ export const TeacherCreate = (props: Props) => {
   }, [item]);
 
   if (!open) return null;
-
-  useEffect(() => {
-    getBranches();
-  }, [])
 
   const academicStatusOptions: ValueSelect[] = Object.entries(AcademicStatus).map(
     ([key, value]) => ({
@@ -114,11 +110,11 @@ export const TeacherCreate = (props: Props) => {
           <SelectCustom
             multiple
             label="Sucursales"
-            options={dataBranch.data?.map((branch) => ({ id: branch.id, value: branch.name })) ?? []}
+            options={branchesUser?.map((branch) => ({ id: branch.id, value: branch.name })) ?? []}
             selected={branches.map((s: BranchModel) => ({ id: s.id, value: s.name }))}
             onSelect={(values) => {
               if (Array.isArray(values)) {
-                const select = dataBranch.data?.filter((r) =>
+                const select = branchesUser?.filter((r) =>
                   values.some((v) => v.id === r.id)
                 ) ?? [];
                 onValueChange('branches', select);

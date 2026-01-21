@@ -50,6 +50,7 @@ export const TopNav = (props: Props) => {
                   const branch = branchesUser.find(b => b.id === value.id);
                   if (branch) {
                     setBranchSelect(branch);
+                    window.location.reload();
                   }
                 }
               }}

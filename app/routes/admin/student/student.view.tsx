@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
-import type { StudentModel } from '@/models';
+import { TypeAction, TypeSubject, type StudentModel } from '@/models';
 import { Button } from '@/components';
 import { EvaluationPlanningModal, SessionTrackingModal, StudentCreate, StudentTable, WeeklyPlanningModal } from '.';
-import { useStudentStore } from '@/hooks';
+import { usePermissionStore, useStudentStore } from '@/hooks';
 
 const studentView = () => {
   const { dataStudent, getStudents, createStudent, updateStudent, deleteStudent } = useStudentStore();
@@ -13,6 +13,7 @@ const studentView = () => {
   const [sessionTracking, setSessionTracking] = useState<string | null>(null);
   const [weeklyPlanning, setWeeklyPlanning] = useState<string | null>(null);
   const [evaluationPlanning, setEvaluationPlanning] = useState<string | null>(null);
+  const { hasPermission } = usePermissionStore();
 
   const handleDialog = useCallback((value: boolean) => {
     if (!value) setItemEdit(null);
@@ -24,11 +25,14 @@ const studentView = () => {
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">Estudiantes</h2>
-        <Button
-          onClick={() => handleDialog(true)}
-        >
-          Nuevo estudiante
-        </Button>
+        {
+          hasPermission(TypeAction.create, TypeSubject.student) &&
+          <Button
+            onClick={() => handleDialog(true)}
+          >
+            Nuevo estudiante
+          </Button>
+        }
       </div>
 
       {/* Tabla de student */}
@@ -60,14 +64,14 @@ const studentView = () => {
       )}
       {
         sessionTracking && (
-          <SessionTrackingModal 
+          <SessionTrackingModal
             onClose={() => setSessionTracking(null)}
           />
         )
       }
       {
         weeklyPlanning && (
-          <WeeklyPlanningModal 
+          <WeeklyPlanningModal
             onClose={() => setWeeklyPlanning(null)}
             item={null}
           />
@@ -75,7 +79,7 @@ const studentView = () => {
       }
       {
         evaluationPlanning && (
-          <EvaluationPlanningModal 
+          <EvaluationPlanningModal
             onClose={() => setEvaluationPlanning(null)}
           />
         )

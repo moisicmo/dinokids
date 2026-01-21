@@ -1,5 +1,3 @@
-import type { BranchModel } from "../response/branch.response";
-
 export interface SpecialtyRequest {
   branchId: string;
   name: string;
@@ -7,28 +5,33 @@ export interface SpecialtyRequest {
   estimatedSessionCost: number;
 }
 
-interface FormSpecialtyModel {
-  branch: BranchModel | null;
+interface FormBranchSpecialtyModel {
   name: string;
   numberSessions: number;
   estimatedSessionCost: number;
 };
-export const formSpecialtyFields: FormSpecialtyModel = {
-  branch: null,
+export const formBranchSpecialtyFields: FormBranchSpecialtyModel = {
   name: '',
   numberSessions: 0,
   estimatedSessionCost: 0,
 };
 
-interface FormSpecialtyValidations {
-  branch: [(value: BranchModel) => boolean, string];
+interface FormBranchSpecialtyValidations {
   name: [(value: string) => boolean, string];
   numberSessions: [(value: string) => boolean, string];
   estimatedSessionCost: [(value: string) => boolean, string];
 }
-export const formSpecialtyValidations: FormSpecialtyValidations = {
-  branch: [(value) => value != null, 'Debe ingresar la sucursal'],
-  name: [(value) => value.length >= 1, 'Debe ingresar el nombre'],
-  numberSessions: [(value) => value.length > 0, 'Debe ingresar el número de sesiones'],
-  estimatedSessionCost: [(value) => value.length > 0, 'Debe ingresar el costo estimado por sesión'],
+export const formSpecialtyValidations: FormBranchSpecialtyValidations = {
+  name: [
+    (value: string) => value.trim().length > 0,
+    'Debe ingresar el nombre',
+  ],
+  numberSessions: [
+    (value: number | string) => Number(value) > 0,
+    'Debe ingresar el número de sesiones',
+  ],
+  estimatedSessionCost: [
+    (value: number | string) => Number(value) > 0,
+    'Debe ingresar el costo estimado por sesión',
+  ],
 };

@@ -19,9 +19,9 @@ export const SideNavCustom = ({
   rightIcon,
 }: Props) => {
   const classes = cn(
-    'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors w-full',
-    active
-      ? 'bg-accent text-accent-foreground font-medium'
+    'flex items-center gap-3 px-1 py-2 rounded-md text-sm transition-colors w-full',
+    active && path
+      ? 'bg-secondary text-white font-medium'
       : 'text-muted-foreground hover:bg-accent/50'
   );
 

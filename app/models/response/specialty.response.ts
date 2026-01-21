@@ -1,10 +1,9 @@
-import type { BranchModel } from "..";
-
 export interface BranchSpecialtiesModel {
+  id: string;
+  name: string|undefined;
   numberSessions: number;
   estimatedSessionCost: number;
   specialty: SpecialtyModel;
-  branch: BranchModel;
 }
 
 export interface SpecialtyModel {

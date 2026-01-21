@@ -1,14 +1,15 @@
 import { useCallback, useState } from 'react';
-import type { TeacherModel } from '@/models';
+import { TypeAction, TypeSubject, type TeacherModel } from '@/models';
 import { TeacherCreate, TeacherTable } from '.';
 import { Button } from '@/components';
-import { useTeacherStore } from '@/hooks';
+import { usePermissionStore, useTeacherStore } from '@/hooks';
 
 const teacherView = () => {
   const { dataTeacher, getTeachers, createTeacher, updateTeacher, deleteTeacher } = useTeacherStore();
 
   const [openDialog, setOpenDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<TeacherModel | null>(null);
+  const { hasPermission } = usePermissionStore();
 
   const handleDialog = useCallback((value: boolean) => {
     if (!value) setItemEdit(null);
@@ -20,11 +21,14 @@ const teacherView = () => {
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">Profesores</h2>
-        <Button
-          onClick={() => handleDialog(true)}
-        >
-          Nuevo profesor
-        </Button>
+        {
+          hasPermission(TypeAction.create, TypeSubject.teacher) &&
+          <Button
+            onClick={() => handleDialog(true)}
+          >
+            Nuevo profesor
+          </Button>
+        }
       </div>
 
       {/* Tabla de teacher */}

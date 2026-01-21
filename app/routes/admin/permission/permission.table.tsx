@@ -55,7 +55,6 @@ export const PermissionTable = (props: Props) => {
           <TableRow>
             <TableHead>Acción</TableHead>
             <TableHead>Recurso</TableHead>
-            <TableHead className="sticky right-0 z-10 bg-white">Acciones</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -66,13 +65,6 @@ export const PermissionTable = (props: Props) => {
               </TableCell>
               <TableCell>
                   {item.subject}
-              </TableCell>
-              <TableCell className="sticky right-0 z-10 bg-white">
-                <ActionButtons
-                  item={item}
-                  onEdit={handleEdit}
-                  onDelete={onDelete}
-                />
               </TableCell>
             </TableRow>
           ))}

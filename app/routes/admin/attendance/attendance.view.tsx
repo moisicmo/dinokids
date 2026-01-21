@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { useAttendanceStore, useBranchStore, useForm } from "@/hooks";
+import { useAttendanceStore, useAuthStore, useForm } from "@/hooks";
 import { formAttendanceFields, formAttendanceValidations } from "@/models";
-import { InputCustom, SelectCustom } from "@/components";
+import { InputCustom } from "@/components";
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import {
@@ -20,25 +20,19 @@ export default function AttendanceView() {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { dataAttendance, setAttendance, clearData } = useAttendanceStore();
-  const { dataBranch, getBranches } = useBranchStore();
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const { branchSelect } = useAuthStore();
 
   const {
-    branch,
     numberCard,
     onInputChange,
     isFormValid,
     onValueChange,
-    branchValid,
     numberCardValid,
   } = useForm(formAttendanceFields, formAttendanceValidations);
 
-  // 🟩 NUEVO: estado local para recordar el branch seleccionado
-  const [selectedBranch, setSelectedBranch] = useState<any>(null);
-
   // Mantener el input enfocado y cargar sucursales
   useEffect(() => {
-    getBranches();
     const focusInterval = setInterval(() => {
       if (document.activeElement !== inputRef.current) {
         inputRef.current?.focus();
@@ -46,19 +40,6 @@ export default function AttendanceView() {
     }, 500);
     return () => clearInterval(focusInterval);
   }, []);
-
-  // 🟦 Cuando se cargan las sucursales
-  useEffect(() => {
-    if (dataBranch?.data?.length === 1) {
-      // Si solo hay una sucursal, seleccionarla automáticamente
-      const defaultBranch = dataBranch.data[0];
-      setSelectedBranch(defaultBranch);
-      onValueChange("branch", defaultBranch);
-    } else if (selectedBranch) {
-      // Si ya se había elegido antes, mantenerla
-      onValueChange("branch", selectedBranch);
-    }
-  }, [dataBranch]);
 
   useEffect(() => {
     if (numberCard.length == 10) {
@@ -71,7 +52,7 @@ export default function AttendanceView() {
     if (!isFormValid) return;
 
     await setAttendance({
-      branchId: branch?.id!,
+      branchId: `${branchSelect?.id}`,
       numberCard: rfid,
     });
 
@@ -130,20 +111,6 @@ export default function AttendanceView() {
   return (
     <div className="w-full p-4 md:p-6 flex flex-col">
       {/* Input invisible para lector RFID */}
-      <SelectCustom
-        label="Sucursal"
-        options={dataBranch.data?.map((branch) => ({ id: branch.id, value: branch.name })) ?? []}
-        selected={branch ? { id: branch.id, value: branch.name } : null}
-        onSelect={(value) => {
-          if (value && !Array.isArray(value)) {
-            const select = dataBranch.data?.find((r) => r.id === value.id);
-            setSelectedBranch(select); // ✅ guardar en estado local
-            onValueChange("branch", select);
-          }
-        }}
-        error={!!branchValid && formSubmitted}
-        helperText={formSubmitted ? branchValid : ""}
-      />
       <div className="absolute opacity-0 pointer-events-none">
         <InputCustom
           name="numberCard"

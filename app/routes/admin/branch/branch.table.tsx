@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import type { BaseResponse, BranchModel } from '@/models';
-import { useDebounce } from '@/hooks';
+import { TypeAction, TypeSubject, type BaseResponse, type BranchModel } from '@/models';
+import { useDebounce, usePermissionStore } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -8,7 +8,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 interface Props {
   handleEdit: (branch: BranchModel) => void;
   limitInit?: number;
-  itemSelect?: (branch: BranchModel) => void;
   dataBranch: BaseResponse<BranchModel>;
   onRefresh: (page?: number, limit?: number, keys?: string) => void;
   onDelete: (id: string) => void;
@@ -17,7 +16,6 @@ interface Props {
 export const BranchTable = (props: Props) => {
   const {
     handleEdit,
-    itemSelect,
     limitInit = 10,
     dataBranch,
     onRefresh,
@@ -29,6 +27,7 @@ export const BranchTable = (props: Props) => {
   const [rowsPerPage, setRowsPerPage] = useState(limitInit);
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 1500);
+  const { hasPermission } = usePermissionStore();
   useEffect(() => {
     const maxPage = Math.max(1, Math.ceil(dataBranch.total / rowsPerPage));
     if (page > maxPage) {
@@ -68,8 +67,8 @@ export const BranchTable = (props: Props) => {
               <TableCell className="sticky right-0 z-10 bg-white">
                 <ActionButtons
                   item={item}
-                  onEdit={handleEdit}
-                  onDelete={onDelete}
+                  onEdit={hasPermission(TypeAction.update, TypeSubject.branch) ? handleEdit : undefined}
+                  onDelete={hasPermission(TypeAction.delete, TypeSubject.branch) ? onDelete : undefined}
                 />
               </TableCell>
             </TableRow>

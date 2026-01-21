@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
-import type { BaseResponse, SpecialtyModel } from '@/models';
-import { useDebounce } from '@/hooks';
+import { TypeAction, TypeSubject, type BaseResponse, type BranchSpecialtiesModel } from '@/models';
+import { useDebounce, usePermissionStore } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 interface Props {
-  handleEdit: (specialty: SpecialtyModel) => void;
+  handleEdit: (branchSpecialty: BranchSpecialtiesModel) => void;
   limitInit?: number;
-  itemSelect?: (specialty: SpecialtyModel) => void;
-  dataSpecialty: BaseResponse<SpecialtyModel>;
+  dataSpecialty: BaseResponse<BranchSpecialtiesModel>;
   onRefresh: (page?: number, limit?: number, keys?: string) => void;
   onDelete: (id: string) => void;
 }
@@ -17,9 +16,8 @@ interface Props {
 export const SpecialtyTable = (props: Props) => {
   const {
     handleEdit,
-    itemSelect,
     limitInit = 10,
-    dataSpecialty,
+    dataSpecialty: dataBranchSpecialty,
     onRefresh,
     onDelete,
   } = props;
@@ -29,12 +27,15 @@ export const SpecialtyTable = (props: Props) => {
   const [rowsPerPage, setRowsPerPage] = useState(limitInit);
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 1500);
+  const { hasPermission } = usePermissionStore();
+
+
   useEffect(() => {
-    const maxPage = Math.max(1, Math.ceil(dataSpecialty.total / rowsPerPage));
+    const maxPage = Math.max(1, Math.ceil(dataBranchSpecialty.total / rowsPerPage));
     if (page > maxPage) {
       setPage(maxPage);
     }
-  }, [dataSpecialty.total, rowsPerPage]);
+  }, [dataBranchSpecialty.total, rowsPerPage]);
 
   useEffect(() => {
     onRefresh(page, rowsPerPage, debouncedQuery)
@@ -54,33 +55,31 @@ export const SpecialtyTable = (props: Props) => {
         <TableHeader>
           <TableRow>
             <TableHead>Nombre</TableHead>
-            <TableHead>Sucursal</TableHead>
             <TableHead>Número de sesiones</TableHead>
             <TableHead>Costo estimado por sesión</TableHead>
             <TableHead className="sticky right-0 z-10 bg-white">Acciones</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {dataSpecialty.data.map((specialty) => specialty.branchSpecialties.map((branchSpecialty) => (
-            <TableRow key={branchSpecialty.specialty.id}>
+          {dataBranchSpecialty.data.map((branchSpecialty) => (
+            <TableRow key={branchSpecialty.id}>
               <TableCell>{branchSpecialty.specialty.name}</TableCell>
-              <TableCell>{branchSpecialty.branch.name}</TableCell>
               <TableCell>{branchSpecialty.numberSessions}</TableCell>
-              <TableCell>{branchSpecialty.estimatedSessionCost}</TableCell>
+              <TableCell>{branchSpecialty.estimatedSessionCost} Bs.</TableCell>
               <TableCell className="sticky right-0 z-10 bg-white">
                 <ActionButtons
-                  item={specialty}
-                  onEdit={handleEdit}
-                  onDelete={onDelete}
+                  item={branchSpecialty}
+                  onEdit={hasPermission(TypeAction.update, TypeSubject.specialty) ? handleEdit : undefined}
+                  onDelete={hasPermission(TypeAction.delete, TypeSubject.specialty) ? onDelete : undefined}
                 />
               </TableCell>
             </TableRow>
-          )))}
+          ))}
         </TableBody>
       </Table>
       {/* Controles de paginación */}
       <PaginationControls
-        total={dataSpecialty.total}
+        total={dataBranchSpecialty.total}
         page={page}
         limit={rowsPerPage}
         onPageChange={(newPage) => setPage(newPage)}

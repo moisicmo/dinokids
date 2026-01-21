@@ -1,10 +1,10 @@
 import { coffeApi } from '@/services';
 import { useAlertStore, useErrorStore, usePermissionStore } from '.';
-import { InitBaseResponse, TypeAction, TypeSubject, type BaseResponse, type SpecialtyModel, type SpecialtyRequest } from '@/models';
+import { InitBaseResponse, TypeAction, TypeSubject, type BaseResponse, type BranchSpecialtiesModel, type SpecialtyModel, type SpecialtyRequest } from '@/models';
 import { useState } from 'react';
 
 export const useSpecialtyStore = () => {
-  const [dataSpecialty, setDataSpecialty] = useState<BaseResponse<SpecialtyModel>>(InitBaseResponse);
+  const [dataSpecialty, setDataSpecialty] = useState<BaseResponse<BranchSpecialtiesModel>>(InitBaseResponse);
   const { handleError } = useErrorStore();
   const { requirePermission } = usePermissionStore();
   const { showSuccess, showWarning, showError } = useAlertStore();
@@ -16,7 +16,7 @@ export const useSpecialtyStore = () => {
       const res = await coffeApi.get(`/${baseUrl}?page=${page}&limit=${limit}&keys=${keys}`);
       const { data, meta } = res.data;
       console.log(res.data);
-      const payload: BaseResponse<SpecialtyModel> = {
+      const payload: BaseResponse<BranchSpecialtiesModel> = {
         ...meta,
         data,
       };
@@ -26,21 +26,21 @@ export const useSpecialtyStore = () => {
     }
   };
 
-  const getSpecialtiesByBranch = async (branchId: string, page: number = 1, limit: number = 10, keys: string = '') => {
-    try {
-      requirePermission(TypeAction.read, TypeSubject.specialty);
-      const res = await coffeApi.get(`/${baseUrl}/branch/${branchId}?page=${page}&limit=${limit}&keys=${keys}`);
-      const { data, meta } = res.data;
-      console.log(res.data);
-      const payload: BaseResponse<SpecialtyModel> = {
-        ...meta,
-        data,
-      };
-      setDataSpecialty(payload);
-    } catch (error) {
-      throw handleError(error);
-    }
-  };
+  // const getSpecialtiesByBranch = async (branchId: string, page: number = 1, limit: number = 10, keys: string = '') => {
+  //   try {
+  //     requirePermission(TypeAction.read, TypeSubject.specialty);
+  //     const res = await coffeApi.get(`/${baseUrl}/branch/${branchId}?page=${page}&limit=${limit}&keys=${keys}`);
+  //     const { data, meta } = res.data;
+  //     console.log(res.data);
+  //     const payload: BaseResponse<BranchSpecialtiesModel> = {
+  //       ...meta,
+  //       data,
+  //     };
+  //     setDataSpecialty(payload);
+  //   } catch (error) {
+  //     throw handleError(error);
+  //   }
+  // };
 
   const createSpecialty = async (body: SpecialtyRequest) => {
     try {
@@ -85,7 +85,7 @@ export const useSpecialtyStore = () => {
     dataSpecialty,
     //* Métodos
     getSpecialties,
-    getSpecialtiesByBranch,
+    // getSpecialtiesByBranch,
     createSpecialty,
     updateSpecialty,
     deleteSpecialty,

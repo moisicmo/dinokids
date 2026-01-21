@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import type { BaseResponse, TeacherModel } from '@/models';
-import { useDebounce } from '@/hooks';
+import { TypeAction, TypeSubject, type BaseResponse, type TeacherModel } from '@/models';
+import { useDebounce, usePermissionStore } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
 import { format } from 'date-fns';
@@ -30,6 +30,8 @@ export const TeacherTable = (props: Props) => {
   const [rowsPerPage, setRowsPerPage] = useState(limitInit);
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 500);
+  const { hasPermission } = usePermissionStore();
+
   useEffect(() => {
     const maxPage = Math.max(1, Math.ceil(dataTeacher.total / rowsPerPage));
     if (page > maxPage) {
@@ -70,7 +72,7 @@ export const TeacherTable = (props: Props) => {
               <TableCell>{item.user.numberDocument}</TableCell>
               <TableCell>{`${item.major} ${item.user.name} ${item.user.lastName}`}</TableCell>
               <TableCell>{item.user.email}</TableCell>
-              <TableCell>{`${item.user.phone?.map(e=>e)}`}</TableCell>
+              <TableCell>{`${item.user.phone?.map(e => e)}`}</TableCell>
               <TableCell>{`${item.user.address?.city.name} ${item.user.address?.zone}/${item.user.address?.detail}`}</TableCell>
               <TableCell>{item.academicStatus}</TableCell>
               <TableCell>
@@ -80,8 +82,8 @@ export const TeacherTable = (props: Props) => {
               <TableCell className="sticky right-0 z-10 bg-white">
                 <ActionButtons
                   item={item}
-                  onEdit={handleEdit}
-                  onDelete={onDelete}
+                  onEdit={hasPermission(TypeAction.update, TypeSubject.teacher) ? handleEdit : undefined}
+                  onDelete={hasPermission(TypeAction.delete, TypeSubject.teacher) ? onDelete : undefined}
                 />
               </TableCell>
             </TableRow>

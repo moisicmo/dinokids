@@ -1,12 +1,12 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { useForm, useBranchStore } from '@/hooks';
-import { Button, InputCustom, SelectCustom } from '@/components';
-import { formSpecialtyFields, formSpecialtyValidations, type SpecialtyModel, type SpecialtyRequest } from '@/models';
+import { useAuthStore, useForm } from '@/hooks';
+import { Button, InputCustom } from '@/components';
+import { formBranchSpecialtyFields, formSpecialtyValidations, type BranchSpecialtiesModel, type SpecialtyRequest } from '@/models';
 
 interface Props {
   open: boolean;
   handleClose: () => void;
-  item: SpecialtyModel | null;
+  item: BranchSpecialtiesModel | null;
   onCreate: (body: SpecialtyRequest) => void;
   onUpdate: (id: string, body: SpecialtyRequest) => void;
 }
@@ -19,40 +19,40 @@ export const SpecialtyCreate = (props: Props) => {
     onCreate,
     onUpdate,
   } = props;
-  const { dataBranch, getBranches } = useBranchStore();
 
   const {
-    branch,
     name,
     numberSessions,
     estimatedSessionCost,
     onInputChange,
     onResetForm,
     isFormValid,
-    onValueChange,
-    branchValid,
     nameValid,
     numberSessionsValid,
     estimatedSessionCostValid,
-  } = useForm(item ?? formSpecialtyFields, formSpecialtyValidations);
+  } = useForm(item ?? formBranchSpecialtyFields, formSpecialtyValidations);
 
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const { branchSelect } = useAuthStore();
 
   const sendSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    console.log('name', name );
+    console.log('numberSessions', numberSessions );
+    console.log('estimatedSessionCost', estimatedSessionCost );
     e.preventDefault();
     setFormSubmitted(true);
     if (!isFormValid) return;
 
     if (item == null) {
       await onCreate({
-        branchId: branch.id,
+        branchId: `${branchSelect?.id}`,
         name: name.trim(),
         numberSessions: parseInt(numberSessions),
         estimatedSessionCost: parseInt(estimatedSessionCost),
       });
     } else {
       await onUpdate(item.id, {
-        branchId: branch.id,
+        branchId: `${branchSelect?.id}`,
         name: name.trim(),
         numberSessions: parseInt(numberSessions),
         estimatedSessionCost: parseInt(estimatedSessionCost),
@@ -71,10 +71,6 @@ export const SpecialtyCreate = (props: Props) => {
 
   if (!open) return null;
 
-  useEffect(() => {
-    getBranches();
-  }, [])
-
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
@@ -84,19 +80,6 @@ export const SpecialtyCreate = (props: Props) => {
         </h2>
 
         <form onSubmit={sendSubmit} className="space-y-4">
-          <SelectCustom
-            label="Sucursal"
-            options={dataBranch.data?.map((branch) => ({ id: branch.id, value: branch.name })) ?? []}
-            selected={branch ? { id: branch.id, value: branch.name } : null}
-            onSelect={(value) => {
-              if (value && !Array.isArray(value)) {
-                const select = dataBranch.data?.find((r) => r.id === value.id);
-                onValueChange('branch', select);
-              }
-            }}
-            error={!!branchValid && formSubmitted}
-            helperText={formSubmitted ? branchValid : ''}
-          />
           <InputCustom
             name="name"
             value={name}

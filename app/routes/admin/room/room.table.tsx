@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import type { BaseResponse, RoomModel } from '@/models';
-import { useDebounce } from '@/hooks';
+import { TypeAction, TypeSubject, type BaseResponse, type RoomModel } from '@/models';
+import { useDebounce, usePermissionStore } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
 import { CalendarClock } from 'lucide-react';
@@ -10,7 +10,6 @@ import { ScheduleView } from '.';
 interface Props {
   handleEdit: (room: RoomModel) => void;
   limitInit?: number;
-  itemSelect?: (room: RoomModel) => void;
   dataRoom: BaseResponse<RoomModel>;
   onRefresh: (page?: number, limit?: number, keys?: string) => void;
   onDelete: (id: string) => void;
@@ -19,7 +18,6 @@ interface Props {
 export const RoomTable = (props: Props) => {
   const {
     handleEdit,
-    itemSelect,
     limitInit = 10,
     dataRoom,
     onRefresh,
@@ -31,6 +29,8 @@ export const RoomTable = (props: Props) => {
   const [rowsPerPage, setRowsPerPage] = useState(limitInit);
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 1500);
+  const { hasPermission } = usePermissionStore();
+
   useEffect(() => {
     const maxPage = Math.max(1, Math.ceil(dataRoom.total / rowsPerPage));
     if (page > maxPage) {
@@ -59,7 +59,6 @@ export const RoomTable = (props: Props) => {
           <TableHeader>
             <TableRow>
               <TableHead>Nombre</TableHead>
-              <TableHead>Sucursal</TableHead>
               <TableHead>Rango de edad</TableHead>
               <TableHead>Especialidad</TableHead>
               <TableHead>Profesor</TableHead>
@@ -69,32 +68,31 @@ export const RoomTable = (props: Props) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {dataRoom.data.map(item => (
-              <TableRow key={item.id}>
-                <TableCell>{item.name}</TableCell>
-                <TableCell>{item.branch.name}</TableCell>
+            {dataRoom.data.map(room => (
+              <TableRow key={room.id}>
+                <TableCell>{room.name}</TableCell>
                 <TableCell>
-                  {item.rangeYears?.length === 2
-                    ? item.rangeYears[0] === item.rangeYears[1]
-                      ? `${item.rangeYears[0]} años`
-                      : `${item.rangeYears[0]} a ${item.rangeYears[1]} años`
+                  {room.rangeYears?.length === 2
+                    ? room.rangeYears[0] === room.rangeYears[1]
+                      ? `${room.rangeYears[0]} años`
+                      : `${room.rangeYears[0]} a ${room.rangeYears[1]} años`
                     : 'No especificado'}
                 </TableCell>
-                <TableCell>{item.specialty.name}</TableCell>
-                <TableCell>{item.teacher.user.name}</TableCell>
-                <TableCell>{item.assistant.user.name}</TableCell>
+                <TableCell>{room.specialty.name}</TableCell>
+                <TableCell>{room.teacher.user.name}</TableCell>
+                <TableCell>{room.assistant.user.name}</TableCell>
                 <TableCell>
                   <button
-                    onClick={() => setRoom(item)}
+                    onClick={() => setRoom(room)}
                     title="Horario" className="cursor-pointer">
                     <CalendarClock color="var(--color-info)" className="w-5 h-5" />
                   </button>
                 </TableCell>
                 <TableCell className="sticky right-0 z-10 bg-white">
                   <ActionButtons
-                    item={item}
-                    onEdit={handleEdit}
-                    onDelete={onDelete}
+                    item={room}
+                    onEdit={hasPermission(TypeAction.update, TypeSubject.room) ? handleEdit : undefined}
+                    onDelete={hasPermission(TypeAction.delete, TypeSubject.room) ? onDelete : undefined}
                   />
                 </TableCell>
               </TableRow>

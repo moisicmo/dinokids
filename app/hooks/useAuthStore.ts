@@ -95,7 +95,8 @@ export const useAuthStore = () => {
   const setBranchSelect = (branch: BranchModel) => {
     localStorage.setItem('branchSelect', JSON.stringify(branch));
     dispatch(setBranch({ branch }));
-  }
+  };
+
 
   return {
     //* Propiedades

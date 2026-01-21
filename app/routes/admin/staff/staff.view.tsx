@@ -1,14 +1,15 @@
 import { useCallback, useState } from 'react';
-import type { StaffModel } from '@/models';
+import { TypeAction, TypeSubject, type StaffModel } from '@/models';
 import { StaffCreate, StaffTable } from '.';
 import { Button } from '@/components';
-import { useStaffStore } from '@/hooks';
+import { usePermissionStore, useStaffStore } from '@/hooks';
 
 const staffView = () => {
   const { dataStaff, getStaffs, createStaff, updateStaff, deleteStaff } = useStaffStore();
 
   const [openDialog, setOpenDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<StaffModel | null>(null);
+  const { hasPermission } = usePermissionStore();
 
   const handleDialog = useCallback((value: boolean) => {
     if (!value) setItemEdit(null);
@@ -20,11 +21,14 @@ const staffView = () => {
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">Staffs</h2>
-        <Button
-          onClick={() => handleDialog(true)}
-        >
-          Nuevo staff
-        </Button>
+        {
+          hasPermission(TypeAction.create, TypeSubject.staff) &&
+          <Button
+            onClick={() => handleDialog(true)}
+          >
+            Nuevo staff
+          </Button>
+        }
       </div>
 
       {/* Tabla de staff */}

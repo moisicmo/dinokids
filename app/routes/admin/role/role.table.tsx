@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { TypeAction, type BaseResponse, type RoleModel } from '@/models';
-import { useDebounce } from '@/hooks';
+import { TypeAction, TypeSubject, type BaseResponse, type RoleModel } from '@/models';
+import { useDebounce, usePermissionStore } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -20,14 +20,14 @@ interface Props {
 // Agrupar permisos por módulo
 const groupPermissions = (permissions: RoleModel['permissions']) => {
   const groups: Record<string, string[]> = {};
-  
+
   permissions.forEach(perm => {
     if (!groups[perm.subject]) {
       groups[perm.subject] = [];
     }
     groups[perm.subject].push(TypeAction[perm.action as unknown as keyof typeof TypeAction]);
   });
-  
+
   return groups;
 };
 
@@ -45,7 +45,9 @@ export const RoleTable = (props: Props) => {
   const [rowsPerPage, setRowsPerPage] = useState(limitInit);
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 1500);
-  
+  const { hasPermission } = usePermissionStore();
+
+
   useEffect(() => {
     const maxPage = Math.max(1, Math.ceil(dataRole.total / rowsPerPage));
     if (page > maxPage) {
@@ -79,7 +81,7 @@ export const RoleTable = (props: Props) => {
           {dataRole.data.map(item => {
             const permissionGroups = groupPermissions(item.permissions);
             const moduleCount = Object.keys(permissionGroups).length;
-            
+
             return (
               <TableRow key={item.id}>
                 <TableCell>
@@ -100,16 +102,16 @@ export const RoleTable = (props: Props) => {
                         </div>
                       </AccordionTrigger>
                       <AccordionContent>
-                          {Object.entries(permissionGroups).map(([module, actions]) => (
-                            <div key={module} className="border-l-2 border-primary pl-3 py-1">
-                              <div className="flex items-center justify-between">
-                                <span className="text-sm font-medium truncate">{module}</span>
-                              </div>
-                              <div className="text-xs text-gray-500 mt-1">
-                                {actions.join(', ')}
-                              </div>
+                        {Object.entries(permissionGroups).map(([module, actions]) => (
+                          <div key={module} className="border-l-2 border-primary pl-3 py-1">
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm font-medium truncate">{module}</span>
                             </div>
-                          ))}
+                            <div className="text-xs text-gray-500 mt-1">
+                              {actions.join(', ')}
+                            </div>
+                          </div>
+                        ))}
                       </AccordionContent>
                     </AccordionItem>
                   </Accordion>
@@ -117,8 +119,8 @@ export const RoleTable = (props: Props) => {
                 <TableCell className="sticky right-0 z-10 bg-white">
                   <ActionButtons
                     item={item}
-                    onEdit={handleEdit}
-                    onDelete={onDelete}
+                    onEdit={hasPermission(TypeAction.update, TypeSubject.role) ? handleEdit : undefined}
+                    onDelete={hasPermission(TypeAction.delete, TypeSubject.role) ? onDelete : undefined}
                   />
                 </TableCell>
               </TableRow>

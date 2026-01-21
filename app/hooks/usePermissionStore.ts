@@ -73,6 +73,7 @@ export const usePermissionStore = () => {
 
   const requirePermission = (action: TypeAction, subject: TypeSubject, errorMessage?: string) => {
     if (!checkPermission(action, subject)) {
+      // throw  showError('Necesitas permisos', `No tienes permiso para ${action} ${subject}`);
       throw new Error(errorMessage || `No tienes permiso para ${action} ${subject}`);
     }
   };

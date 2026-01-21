@@ -1,14 +1,15 @@
 import { useCallback, useState } from 'react';
-import type { RoomModel } from '@/models';
+import { TypeAction, TypeSubject, type RoomModel } from '@/models';
 import { RoomCreate, RoomTable } from '.';
 import { Button } from '@/components';
-import { useRoomStore } from '@/hooks';
+import { usePermissionStore, useRoomStore } from '@/hooks';
 
 const roomView = () => {
   const { dataRoom, getRooms, createRoom, updateRoom, deleteRoom } = useRoomStore();
 
   const [openDialog, setOpenDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<RoomModel | null>(null);
+  const { hasPermission } = usePermissionStore();
 
   const handleDialog = useCallback((value: boolean) => {
     if (!value) setItemEdit(null);
@@ -20,11 +21,14 @@ const roomView = () => {
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">Aulas</h2>
-        <Button
-          onClick={() => handleDialog(true)}
-        >
-          Nueva Aula
-        </Button>
+        {
+          hasPermission(TypeAction.create, TypeSubject.room) &&
+          <Button
+            onClick={() => handleDialog(true)}
+          >
+            Nueva Aula
+          </Button>
+        }
       </div>
 
       {/* Tabla de room */}

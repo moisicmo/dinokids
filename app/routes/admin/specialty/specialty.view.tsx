@@ -1,14 +1,14 @@
 import { useCallback, useState } from 'react';
-import type { SpecialtyModel } from '@/models';
+import { TypeAction, TypeSubject, type BranchSpecialtiesModel } from '@/models';
 import { SpecialtyCreate, SpecialtyTable } from '.';
 import { Button } from '@/components';
-import { useSpecialtyStore } from '@/hooks';
+import { usePermissionStore, useSpecialtyStore } from '@/hooks';
 
 const specialtyView = () => {
-    const { dataSpecialty, getSpecialties, createSpecialty, updateSpecialty, deleteSpecialty } = useSpecialtyStore();
-
+  const { dataSpecialty, getSpecialties, createSpecialty, updateSpecialty, deleteSpecialty } = useSpecialtyStore();
   const [openDialog, setOpenDialog] = useState(false);
-  const [itemEdit, setItemEdit] = useState<SpecialtyModel | null>(null);
+  const [itemEdit, setItemEdit] = useState<BranchSpecialtiesModel | null>(null);
+  const { hasPermission } = usePermissionStore();
 
   const handleDialog = useCallback((value: boolean) => {
     if (!value) setItemEdit(null);
@@ -21,11 +21,14 @@ const specialtyView = () => {
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-800">Especialidades</h2>
-        <Button
-          onClick={() => handleDialog(true)}
-        >
-          Nueva Especialidad
-        </Button>
+        {
+          hasPermission(TypeAction.create, TypeSubject.specialty) &&
+          <Button
+            onClick={() => handleDialog(true)}
+          >
+            Nueva Especialidad
+          </Button>
+        }
       </div>
 
       {/* Tabla de specialty */}
@@ -45,7 +48,10 @@ const specialtyView = () => {
         <SpecialtyCreate
           open={openDialog}
           handleClose={() => handleDialog(false)}
-          item={itemEdit == null ? null : { ...itemEdit }}
+          item={itemEdit == null ? null : {
+            ...itemEdit,
+            name: itemEdit.specialty.name,
+          }}
           onCreate={createSpecialty}
           onUpdate={updateSpecialty}
         />
