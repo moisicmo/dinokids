@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
 export const useForm = (initialForm: any = {}, formValidations: any = {}) => {
-
   const [formState, setFormState] = useState({ ...initialForm });
   const [formValidation, setFormValidation] = useState<any>({});
 
@@ -37,28 +36,29 @@ export const useForm = (initialForm: any = {}, formValidations: any = {}) => {
     setFormState({
       ...formState,
       [name]: text
-    })
-  }
+    });
+  };
+
   const onFileChange = (name: string, file: File) => {
     setFormState({
       ...formState,
       [name]: file
-    })
-  }
+    });
+  };
 
   const onSwitchChange = (name: string, state: boolean) => {
     setFormState({
       ...formState,
       [name]: state
-    })
-  }
+    });
+  };
 
   const onArrayChange = (name: string, state: Array<any>) => {
     setFormState({
       ...formState,
       [name]: state
-    })
-  }
+    });
+  };
 
   const onValueChange = (name: string, value: any) => {
     setFormState((prevState: any) => setNestedValue(prevState, name, value));
@@ -83,11 +83,23 @@ export const useForm = (initialForm: any = {}, formValidations: any = {}) => {
   const createValidators = () => {
     const buildValidation = (state: any, validations: any) => {
       const result: any = {};
+      
       for (const key in validations) {
-        if (typeof validations[key] === 'object' && !Array.isArray(validations[key])) {
-          result[`${key}Valid`] = buildValidation(state[key] ?? {}, validations[key]);
-        } else {
-          const [fn, message] = validations[key];
+        const validation = validations[key];
+        
+        // Si es una validación de array (como sessions: [(fn), 'mensaje'])
+        if (Array.isArray(validation) && validation.length === 2) {
+          const [fn, message] = validation;
+          // Aplicar la validación al valor completo del campo
+          result[`${key}Valid`] = fn(state[key], state) ? null : message;
+        }
+        // Si es un objeto anidado (validaciones para propiedades de un objeto)
+        else if (typeof validation === 'object' && validation !== null) {
+          result[`${key}Valid`] = buildValidation(state[key] ?? {}, validation);
+        }
+        // Caso por defecto
+        else {
+          const [fn, message] = validation;
           result[`${key}Valid`] = fn(state[key], state) ? null : message;
         }
       }

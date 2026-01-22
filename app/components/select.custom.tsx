@@ -20,6 +20,7 @@ interface Props {
   error?: boolean;
   helperText?: string;
   showSelectAll?: boolean;
+  disabled?: boolean;
 }
 
 export const SelectCustom = ({
@@ -27,6 +28,7 @@ export const SelectCustom = ({
   options,
   selected,
   onSelect,
+  disabled,
   multiple = false,
   error = false,
   helperText = '',
@@ -76,7 +78,7 @@ export const SelectCustom = ({
   const handleSelectAll = () => {
     if (multiple) {
       const current = Array.isArray(selected) ? selected : [];
-      
+
       if (current.length === options.length) {
         onSelect([]);
       } else {
@@ -96,30 +98,30 @@ export const SelectCustom = ({
   const isAllSelected = () => {
     if (!multiple) return false;
     const current = Array.isArray(selected) ? selected : [];
-    
+
     if (search) {
       const filteredIds = filteredOptions.map(opt => opt.id);
-      return filteredIds.length > 0 && 
-             filteredIds.every(id => current.some(item => item.id === id));
+      return filteredIds.length > 0 &&
+        filteredIds.every(id => current.some(item => item.id === id));
     }
-    
+
     return current.length === options.length && options.length > 0;
   };
 
-const isSomeSelected = () => {
-  if (!multiple) return false;
+  const isSomeSelected = () => {
+    if (!multiple) return false;
 
-  const current = Array.isArray(selected) ? selected : [];
+    const current = Array.isArray(selected) ? selected : [];
 
-  if (search) {
-    const filteredIds = filteredOptions.map(opt => opt.id);
-    return filteredIds.some(id =>
-      current.some(item => item.id === id)
-    );
-  }
+    if (search) {
+      const filteredIds = filteredOptions.map(opt => opt.id);
+      return filteredIds.some(id =>
+        current.some(item => item.id === id)
+      );
+    }
 
-  return current.length > 0 && current.length < options.length;
-};
+    return current.length > 0 && current.length < options.length;
+  };
 
 
   const renderLabel = () => {
@@ -147,13 +149,13 @@ const isSomeSelected = () => {
   return (
     <div className="w-full relative" ref={dropdownRef}>
       {label && <label className="block text-sm font-medium mb-1">{label}</label>}
-      
+
       {/* INPUT PRINCIPAL */}
       <div
-        onClick={toggleDropdown}
-        className={`w-full border ${
-          error ? 'border-red-500' : 'border-gray-300'
-        } rounded-md bg-white cursor-pointer px-3 py-2 flex items-center justify-between min-h-[42px]`}
+        onClick={disabled ? undefined : toggleDropdown}
+        className={`w-full border ${error ? 'border-red-500' : 'border-gray-300'
+          } rounded-md bg-white cursor-pointer ${disabled ? 'bg-gray-100 cursor-not-allowed' : ''
+          } px-3 py-2 flex items-center justify-between min-h-[42px]`}
       >
         <div className="flex flex-wrap gap-1 flex-1 items-center">
           {multiple ? (
@@ -197,9 +199,8 @@ const isSomeSelected = () => {
             )
           ) : (
             <span
-              className={`text-sm ${
-                selected ? 'text-gray-800' : 'text-gray-400'
-              } select-none px-1`}
+              className={`text-sm ${selected ? 'text-gray-800' : 'text-gray-400'
+                } select-none px-1`}
             >
               {renderLabel()}
             </span>
@@ -207,9 +208,8 @@ const isSomeSelected = () => {
         </div>
 
         <ChevronDown
-          className={`w-4 h-4 text-gray-500 shrink-0 transition-transform ${
-            open ? 'rotate-180' : ''
-          }`}
+          className={`w-4 h-4 text-gray-500 shrink-0 transition-transform ${open ? 'rotate-180' : ''
+            }`}
         />
       </div>
 
@@ -224,12 +224,16 @@ const isSomeSelected = () => {
           <div className="flex items-center border-b border-gray-200 px-3 py-2 gap-2">
             {/* Checkbox de "Seleccionar todo" */}
             {multiple && showSelectAll && (
-              <button
-                type="button"
-                onClick={handleSelectAll}
-                className="flex items-center justify-center w-5 h-5 border border-gray-300 rounded hover:border-primary transition-colors"
-                title={isAllSelected() ? "Deseleccionar todo" : "Seleccionar todo"}
-              >
+             <button
+  type="button"
+  onClick={!disabled ? handleSelectAll : undefined}
+  className={`flex items-center justify-center w-5 h-5 border border-gray-300 rounded hover:border-primary transition-colors ${
+    disabled ? 'cursor-not-allowed opacity-50' : ''
+  }`}
+  title={isAllSelected() ? "Deseleccionar todo" : "Seleccionar todo"}
+  disabled={disabled}
+>
+
                 {isAllSelected() ? (
                   <Check className="w-4 h-4 text-primary" />
                 ) : isSomeSelected() ? (
@@ -237,7 +241,7 @@ const isSomeSelected = () => {
                 ) : null}
               </button>
             )}
-            
+
             {/* Buscador */}
             <div className="flex items-center flex-1">
               <Search className="w-4 h-4 text-gray-400 mr-2" />
@@ -245,12 +249,15 @@ const isSomeSelected = () => {
                 autoFocus
                 type="text"
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => !disabled && setSearch(e.target.value)}
                 placeholder="Buscar..."
-                className="w-full outline-none text-sm text-gray-700 bg-transparent"
+                className={`w-full outline-none text-sm text-gray-700 bg-transparent ${disabled ? 'cursor-not-allowed' : ''
+                  }`}
+                disabled={disabled}
               />
+
             </div>
-            
+
             {/* Indicador de selección (opcional) */}
             {multiple && (
               <span className="text-xs text-gray-500 whitespace-nowrap">
@@ -278,9 +285,8 @@ const isSomeSelected = () => {
                       <Check className="w-4 h-4 text-white" />
                     )}
                   </div>
-                  <span className={`text-sm ${
-                    isSelected(opt.id) ? 'text-primary font-medium' : 'text-gray-700'
-                  }`}>
+                  <span className={`text-sm ${isSelected(opt.id) ? 'text-primary font-medium' : 'text-gray-700'
+                    }`}>
                     {opt.value}
                   </span>
                 </li>

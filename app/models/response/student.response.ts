@@ -14,4 +14,7 @@ export interface StudentModel {
   tutors: TutorModel[];
   user: UserModel;
   inscriptions: InscriptionModel[];
+  sessionTrackings?: JSON;
+  weeklyPlannings?: JSON;
+  evaluationPlannings?: JSON;
 }

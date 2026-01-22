@@ -10,9 +10,9 @@ const studentView = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<StudentModel | null>(null);
 
-  const [sessionTracking, setSessionTracking] = useState<string | null>(null);
-  const [weeklyPlanning, setWeeklyPlanning] = useState<string | null>(null);
-  const [evaluationPlanning, setEvaluationPlanning] = useState<string | null>(null);
+  const [sessionTracking, setSessionTracking] = useState<StudentModel | null>(null);
+  const [weeklyPlanning, setWeeklyPlanning] = useState<StudentModel | null>(null);
+  const [evaluationPlanning, setEvaluationPlanning] = useState<StudentModel | null>(null);
   const { hasPermission } = usePermissionStore();
 
   const handleDialog = useCallback((value: boolean) => {
@@ -66,6 +66,8 @@ const studentView = () => {
         sessionTracking && (
           <SessionTrackingModal
             onClose={() => setSessionTracking(null)}
+            student={sessionTracking}
+            onUpdate={updateStudent}
           />
         )
       }
@@ -73,7 +75,8 @@ const studentView = () => {
         weeklyPlanning && (
           <WeeklyPlanningModal
             onClose={() => setWeeklyPlanning(null)}
-            item={null}
+            student={weeklyPlanning}
+            onUpdate={updateStudent}
           />
         )
       }
@@ -81,6 +84,8 @@ const studentView = () => {
         evaluationPlanning && (
           <EvaluationPlanningModal
             onClose={() => setEvaluationPlanning(null)}
+            student={evaluationPlanning}
+            onUpdate={updateStudent}
           />
         )
       }

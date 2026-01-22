@@ -9,9 +9,9 @@ interface ActionButtonsProps<T extends { id?: string; userId?: string }> {
   onDownload?: (id: string) => void;
   onPayment?: (id: string) => void;
   onSelect?: (id: string) => void;
-  onSessionTracking?: (id: string) => void;
-  onWeeklyPlanning?: (id: string) => void;
-  onEvaluationPlanning?: (id: string) => void;
+  onSessionTracking?: (item: T) => void;
+  onWeeklyPlanning?: (item: T) => void;
+  onEvaluationPlanning?: (item: T) => void;
   isSelected?: boolean;
   children?: React.ReactNode;
   isPopoverOpen?: boolean;
@@ -96,17 +96,17 @@ export const ActionButtons = <T extends { id?: string; userId?: string }>({
         </button>
       )}
       {onSessionTracking && identifier && (
-        <button onClick={() => onSessionTracking(identifier)} title="Seguimiento de sesiones" className="cursor-pointer">
+        <button onClick={() => onSessionTracking(item)} title="Seguimiento de sesiones" className="cursor-pointer">
           <Activity className="w-5 h-5 text-success" />
         </button>
       )}
       {onWeeklyPlanning && identifier && (
-        <button onClick={() => onWeeklyPlanning(identifier)} title="Planificación Semanal" className="cursor-pointer">
+        <button onClick={() => onWeeklyPlanning(item)} title="Planificación Semanal" className="cursor-pointer">
           <CalendarRange className="w-5 h-5 text-primary" />
         </button>
       )}
       {onEvaluationPlanning && identifier && (
-        <button onClick={() => onEvaluationPlanning(identifier)} title="Planificación de Evaluación" className="cursor-pointer">
+        <button onClick={() => onEvaluationPlanning(item)} title="Planificación de Evaluación" className="cursor-pointer">
           <ClipboardCheck className="w-5 h-5 text-warning" />
         </button>
       )}

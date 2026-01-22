@@ -1,22 +1,27 @@
 import { useEffect, useState } from 'react';
 import { evaluationCatalog } from './evaluations/catalog';
 import EvaluationForm from './evaluation.form';
-import { useCorrespondenceStore } from '@/hooks';
+import { useCorrespondenceStore, usePermissionStore } from '@/hooks';
 import { CorrespondenceTable } from './correspondence.table';
 import type { Evaluation } from '.';
 import type { DocumentTransmissionModel } from '@/models';
 
 const EvaluationView = () => {
   const { dataCorrespondence, getCorrespondencees } = useCorrespondenceStore();
+  const { hasPermission } = usePermissionStore();
 
   const [selectedEvaluation, setSelectedEvaluation] = useState<null | typeof evaluationCatalog[0]>(null);
-
   const [viewEvaluation, setViewEvaluation] = useState<DocumentTransmissionModel | null>(null);
 
   // ✅ HOOK SIEMPRE ARRIBA
   useEffect(() => {
     getCorrespondencees();
   }, []);
+
+  // ✅ Filtrar solo las evaluaciones con permiso usando el hook dentro del componente
+  const filteredEvaluations = evaluationCatalog.filter(ev =>
+    hasPermission(ev.action, ev.subject)
+  );
 
   // ✅ retorno condicional DESPUÉS de hooks
   if (selectedEvaluation) {
@@ -32,7 +37,7 @@ const EvaluationView = () => {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-        {evaluationCatalog.map((ev: any) => (
+        {filteredEvaluations.map((ev: any) => (
           <div
             key={ev.id}
             className="bg-white rounded-xl shadow p-5 flex flex-col justify-between hover:shadow-lg transition"
@@ -51,7 +56,6 @@ const EvaluationView = () => {
           </div>
         ))}
       </div>
-
       <CorrespondenceTable
         dataCorrespondence={dataCorrespondence}
         onRefresh={getCorrespondencees}

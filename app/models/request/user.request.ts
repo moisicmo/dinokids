@@ -1,13 +1,13 @@
 import { type FormAddressModel, type FormAddressValidations, formAddressInit, formAddressValidations } from "..";
 
 export interface UserRequest {
-  numberDocument: string | null;
-  typeDocument: string;
-  name: string;
-  lastName: string;
-  email: string | null;
-  phone: string[];
-  numberCard: string | null;
+  numberDocument?: string | null;
+  typeDocument?: string;
+  name?: string;
+  lastName?: string;
+  email?: string | null;
+  phone?: string[];
+  numberCard?: string | null;
 }
 
 // formulario

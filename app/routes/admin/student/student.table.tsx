@@ -10,19 +10,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 interface Props {
   handleEdit: (student: StudentModel) => void;
   limitInit?: number;
-  itemSelect?: (student: StudentModel) => void;
   dataStudent: BaseResponse<StudentModel>;
   onRefresh: (page?: number, limit?: number, keys?: string) => void;
   onDelete: (id: string) => void;
-  onSessionTracking?: (id: string) => void;
-  onWeeklyPlanning?: (id: string) => void;
-  onEvaluationPlanning?: (id: string) => void;
+  onSessionTracking?: (student: StudentModel) => void;
+  onWeeklyPlanning?: (student: StudentModel) => void;
+  onEvaluationPlanning?: (student: StudentModel) => void;
 }
 
 export const StudentTable = (props: Props) => {
   const {
     handleEdit,
-    itemSelect,
     limitInit = 10,
     dataStudent,
     onRefresh,
@@ -88,8 +86,8 @@ export const StudentTable = (props: Props) => {
                 <TableCell>{item.user.numberDocument}</TableCell>
                 <TableCell>{`${item.user.name} ${item.user.lastName}`}</TableCell>
                 <TableCell>{item.user.email}</TableCell>
-                <TableCell>{item.school.name}</TableCell>
-                <TableCell>{`${item.grade}º ${item.educationLevel}`}</TableCell>
+                <TableCell>{item.school?.name}</TableCell>
+                <TableCell>{`${item?.grade}º ${item?.educationLevel}`}</TableCell>
                 <TableCell className="sticky right-0 z-10 bg-white">
                   <ActionButtons
                     item={item}
@@ -97,9 +95,9 @@ export const StudentTable = (props: Props) => {
                     isSelected={expandedId === item.userId}
                     onEdit={hasPermission(TypeAction.update, TypeSubject.student) ? handleEdit : undefined}
                     onDelete={hasPermission(TypeAction.delete, TypeSubject.student) ? onDelete : undefined}
-                    onSessionTracking={onSessionTracking}
-                    onWeeklyPlanning={onWeeklyPlanning}
-                    onEvaluationPlanning={onEvaluationPlanning}
+                    onSessionTracking={hasPermission(TypeAction.create, TypeSubject.sessionTracking) ? onSessionTracking : undefined}
+                    onWeeklyPlanning={hasPermission(TypeAction.create, TypeSubject.weeklyPlanning) ? onWeeklyPlanning : undefined}
+                    onEvaluationPlanning={hasPermission(TypeAction.create, TypeSubject.evaluationPlanning) ? onEvaluationPlanning : undefined}
                   />
                 </TableCell>
               </TableRow>
