@@ -3,8 +3,7 @@ import { Outlet, useLocation } from 'react-router';
 import { ProtectedRoute } from './protected.layout';
 import { SideNav } from './SideNav';
 import { TopNav } from './TopNav';
-import { CartDrawer } from './cart/cart.nav';
-import { CartView } from './cart';
+import { CartDrawer, CartView } from './cart';
 
 const AdminLayout = () => {
   const { pathname } = useLocation();

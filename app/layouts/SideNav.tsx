@@ -5,6 +5,7 @@ import { useMenu } from '@/hooks/useMenuStore';
 import { useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuthStore } from '@/hooks';
 
 interface Props {
   open: boolean;
@@ -19,6 +20,7 @@ export const SideNav = (props: Props) => {
     isLargeScreen,
   } = props;
   const { pathname } = useLocation();
+  const { user, roleUser } = useAuthStore();
   const menuItems = useMenu();
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({});
   const toggleMenu = (title: string) => {
@@ -30,9 +32,15 @@ export const SideNav = (props: Props) => {
 
 
   const content = (
-    <nav className="w-[210px] h-full px-2 py-4  shadow-md overflow-y-auto ">
-      <div className="flex flex-col items-center">
-        <img src={logo} alt="Logo" className="w-24 mb-4" />
+<nav className="w-[210px] h-full px-2 py-4 shadow-md overflow-y-auto">
+  <div className="flex flex-col items-center">
+    <img src={logo} alt="Logo" className="w-24 mb-4" />
+
+    {/* Contenedor solo para texto */}
+    <div className="w-full text-left px-2">
+      <span className="block text-sm text-gray-700">{`${user}`}</span>
+      <span className="block text-sm text-gray-700">{roleUser?.name}</span>
+    </div>
         <ul className="w-full space-y-2">
           {menuItems.map((item) => {
             // ITEM SIMPLE
