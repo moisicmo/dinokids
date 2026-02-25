@@ -2,6 +2,6 @@ import type { RoleModel, UserModel } from "..";
 
 export interface StaffModel{
   userId: string;
-  role: RoleModel;
+  //role: RoleModel;
   user: UserModel;
 }

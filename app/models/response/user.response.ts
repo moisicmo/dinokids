@@ -1,4 +1,4 @@
-import type { AddressModel, StaffModel, StudentModel, TeacherModel, TutorModel } from "..";
+import type { AddressModel, StaffModel, StudentModel, TeacherModel, TutorModel, RoleModel } from "..";
 
 export interface UserModel {
   id: string;
@@ -13,5 +13,6 @@ export interface UserModel {
   teacher?: TeacherModel;
   tutor?:TutorModel;
   address?: AddressModel;
+  role?: RoleModel | null;
   numberCard?: string;
 }

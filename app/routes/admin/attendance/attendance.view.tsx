@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { useAttendanceStore, useAuthStore, useForm } from "@/hooks";
-import { formAttendanceFields, formAttendanceValidations } from "@/models";
+import { useAttendanceStore, useAuthStore, useForm, usePermissionStore } from "@/hooks";
+import { formAttendanceFields, formAttendanceValidations, TypeAction, TypeSubject } from "@/models";
 import { InputCustom } from "@/components";
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -22,6 +22,7 @@ export default function AttendanceView() {
   const { dataAttendance, setAttendance, clearData } = useAttendanceStore();
   const [formSubmitted, setFormSubmitted] = useState(false);
   const { branchSelect } = useAuthStore();
+  const { hasPermission } = usePermissionStore();
 
   const {
     numberCard,
@@ -267,6 +268,7 @@ export default function AttendanceView() {
                 color: "text-green-600",
                 icon: <DollarSign className="text-secondary w-6 h-6" />,
                 barColor: "bg-secondary",
+                permission: () => hasPermission(TypeAction.read, TypeSubject.debt),
               },
               {
                 title: "Estado de la Cuenta",
@@ -274,8 +276,10 @@ export default function AttendanceView() {
                 color: "text-green-600",
                 icon: <ClipboardCheck className="text-secondary w-6 h-6" />,
                 barColor: "bg-secondary",
+                permission: () => hasPermission(TypeAction.read, TypeSubject.debt),
               },
-            ].map((c, i) => (
+            ].filter((c) => !c.permission || c.permission())
+            .map((c, i) => (
               <Card
                 key={i}
                 className="text-center p-4 rounded-2xl bg-white shadow-sm border border-gray-100 flex flex-col items-center justify-between"
