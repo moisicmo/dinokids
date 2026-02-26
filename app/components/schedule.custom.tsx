@@ -7,6 +7,7 @@ interface Props {
   selectedSchedules: FormAssignmentScheduleModel[];
   children?: React.ReactNode;
   scheduleSelect?: (value: string) => void;
+  onToggle?: (scheduleId: string) => void;
 }
 
 const dayEnumMap: Record<string, DayOfWeek> = {
@@ -65,7 +66,7 @@ const getOverlapStyle = (dateStart: Date | string | null, dateEnd: Date | string
   }
 };
 
-export const ScheduleCustom: React.FC<Props> = ({ schedules, selectedSchedules, children, scheduleSelect }) => {
+export const ScheduleCustom: React.FC<Props> = ({ schedules, selectedSchedules, children, scheduleSelect, onToggle }) => {
   const [popoverOpen, setPopoverOpen] = React.useState(false);
   const [selectedEvent, setSelectedEvent] = React.useState<string | undefined>(undefined);
 
@@ -128,10 +129,14 @@ export const ScheduleCustom: React.FC<Props> = ({ schedules, selectedSchedules, 
                         position: 'relative',
                         height: 40,
                         border: '0.1px solid #ddd',
-                        cursor: scheduleSelect ? 'pointer' : 'default',
+                        cursor: (scheduleSelect || onToggle) ? 'pointer' : 'default',
                         overflow: 'hidden',
                       }}
                       onClick={() => {
+                        if (onToggle && event.id != null) {
+                          onToggle(event.id);
+                          return;
+                        }
                         if (scheduleSelect == null) return;
                         if (event.id != null) {
                           scheduleSelect(event.id);
@@ -146,7 +151,7 @@ export const ScheduleCustom: React.FC<Props> = ({ schedules, selectedSchedules, 
                           left: 0,
                           right: 0,
                           backgroundColor: event.color || '#3B82F6',
-                          opacity: scheduleSelect? isSelected ? 1 : 0.3 : 1,
+                          opacity: (scheduleSelect || onToggle) ? (isSelected ? 1 : 0.3) : 1,
                           transition: 'all 0.3s ease',
                           ...overlapStyle!,
                         }}

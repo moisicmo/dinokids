@@ -46,6 +46,7 @@ export const formUserValidations: FormUserValidations = {
   numberDocument: [(value) => value.length > 0, 'Debe ingresar el número de documento'],
   name: [(value) => value.length > 0, 'Debe ingresar el nombre'],
   lastName: [(value) => value.length > 0, 'Debe ingresar el apellido'],
+  email: [(value) => !value || value.trim() === '' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim()), 'El correo electrónico no es válido'],
   phone: [(value) => value.length > 0 && value[0].length > 0, 'Debe ingresar el correo electrónico'],
   address: formAddressValidations,
 };

@@ -77,8 +77,14 @@ export const ScheduleView = (props: Props) => {
                       return (
                         <li key={idx} className="flex items-center gap-3 rounded-lg bg-gray-50">
                           <div>
-                            <p className="font-medium">{student?.user.name} {student?.user.lastName}</p>
-                            <p className="text-sm text-gray-600">Código: {student?.code}</p>
+                            {
+                              ar.inscription.booking != null ?
+                                <p className="text-sm text-gray-600">Reservado: {ar.inscription.booking.name}</p> :
+                                <>
+                                  <p className="font-medium">{student?.user.name} {student?.user.lastName}</p>
+                                  <p className="text-sm text-gray-600">Código: {student?.code}</p>
+                                </>
+                            }
                           </div>
                         </li>
                       );

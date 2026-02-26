@@ -3,5 +3,6 @@ export interface BookingModel {
   days: number;
   dni: string;
   name: string;
+  phone: string[];
   amount: number;
 }

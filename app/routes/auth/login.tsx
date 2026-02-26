@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router';
 import { Button, InputCustom } from '@/components';
 import { Eye, EyeOff } from 'lucide-react';
 import { ValidateEmail } from './validate.email';
+import { ForgotPassword } from './forgot-password';
 
 const loginFormFields = {
-  email: 'moisic.mo@gmail.com',
+  email: '',
   password: 'Muyseguro123*',
 };
 
@@ -19,6 +20,7 @@ const Login = () => {
   const { startLogin, showValidateEmail, setShowValidateEmail } = useAuthStore();
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   const {
     email,
@@ -36,8 +38,8 @@ const Login = () => {
       event.preventDefault();
       setFormSubmitted(true);
       if (!isFormValid) return;
-      await startLogin({ email, password });
-      navigate("/admin/dashboard");
+      const success = await startLogin({ email, password });
+      if (success) navigate("/admin/dashboard");
     } catch (error) {
 
     }
@@ -79,6 +81,15 @@ const Login = () => {
             >
               INGRESAR
             </Button>
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={() => setShowForgotPassword(true)}
+                className="text-sm text-blue-600 hover:underline"
+              >
+                ¿Olvidaste tu contraseña?
+              </button>
+            </div>
           </form>
         </div>
       </div>
@@ -87,6 +98,9 @@ const Login = () => {
           handleClose={() => setShowValidateEmail(null)}
           showValidateEmail={showValidateEmail}
         />
+      )}
+      {showForgotPassword && (
+        <ForgotPassword handleClose={() => setShowForgotPassword(false)} />
       )}
     </>
   );

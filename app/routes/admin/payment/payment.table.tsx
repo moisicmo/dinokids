@@ -40,7 +40,7 @@ export const PaymentTable = (props: Props) => {
         <InputCustom
           name="query"
           value={query}
-          placeholder="Buscar sucursal..."
+          placeholder="Buscar pago..."
           onChange={(e) => setQuery(e.target.value)}
         />
       </div>

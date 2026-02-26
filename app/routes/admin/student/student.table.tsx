@@ -4,7 +4,7 @@ import { useDebounce, usePermissionStore } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
 import { ActionButtons, InputCustom } from '@/components';
 import React from 'react';
-import { DebtTable } from '.';
+import { DebtTable, DocumentEditor } from '.';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 interface Props {
@@ -33,6 +33,7 @@ export const StudentTable = (props: Props) => {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(limitInit);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [reportStudent, setReportStudent] = useState<StudentModel | null>(null);
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 500);
   const { hasPermission } = usePermissionStore();
@@ -98,6 +99,7 @@ export const StudentTable = (props: Props) => {
                     onSessionTracking={hasPermission(TypeAction.create, TypeSubject.sessionTracking) ? onSessionTracking : undefined}
                     onWeeklyPlanning={hasPermission(TypeAction.create, TypeSubject.weeklyPlanning) ? onWeeklyPlanning : undefined}
                     onEvaluationPlanning={hasPermission(TypeAction.create, TypeSubject.evaluationPlanning) ? onEvaluationPlanning : undefined}
+                    onReport={(s) => setReportStudent(s)}
                   />
                 </TableCell>
               </TableRow>
@@ -124,6 +126,16 @@ export const StudentTable = (props: Props) => {
           setPage(1);
         }}
       />
+
+      {reportStudent && (
+        <DocumentEditor
+          student={reportStudent}
+          onClose={() => setReportStudent(null)}
+          onSessionTracking={onSessionTracking}
+          onWeeklyPlanning={onWeeklyPlanning}
+          onEvaluationPlanning={onEvaluationPlanning}
+        />
+      )}
     </div>
   );
 };

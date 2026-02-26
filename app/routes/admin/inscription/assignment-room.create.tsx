@@ -1,8 +1,18 @@
 import { Trash2 } from 'lucide-react';
 import { Button, DateTimePickerCustom, ScheduleCustom, SelectCustom } from '@/components';
-import { type FormAssignmentRoomModel } from '@/models';
+import { type FormAssignmentRoomModel, type FormAssignmentScheduleModel } from '@/models';
 import { useEnums, useRoomStore } from '@/hooks';
 import { useEffect, useState } from 'react';
+
+const dayOfWeekToJsDay: Record<string, number> = {
+  MONDAY: 1, TUESDAY: 2, WEDNESDAY: 3,
+  THURSDAY: 4, FRIDAY: 5, SATURDAY: 6,
+};
+
+const dayNames: Record<string, string> = {
+  MONDAY: 'Lunes', TUESDAY: 'Martes', WEDNESDAY: 'Miércoles',
+  THURSDAY: 'Jueves', FRIDAY: 'Viernes', SATURDAY: 'Sábado',
+};
 
 interface Props {
   assignmentRooms: FormAssignmentRoomModel[];
@@ -57,8 +67,8 @@ export const AssignmentRoomForm = (props: Props) => {
     getRooms();
   }, [])
 
-
-  const [scheduleId, setScheduleId] = useState('')
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   return (
     <div className="flex flex-col lg:flex-row gap-4">
@@ -71,6 +81,16 @@ export const AssignmentRoomForm = (props: Props) => {
         <div className="max-h-[60vh] overflow-y-auto pr-3 space-y-2">
           {assignmentRooms.map((assignmentRoom, idx) => {
             const isOpen = activeIndex === idx;
+
+            const allowedJsDays = [...new Set(
+              assignmentRoom.assignmentSchedules
+                .map(s => dayOfWeekToJsDay[s.day] ?? -1)
+                .filter(d => d !== -1)
+            )];
+            const allowedDayNames = [...new Set(
+              assignmentRoom.assignmentSchedules.map(s => dayNames[s.day] ?? s.day)
+            )];
+
             return (
               <div key={idx} className="border rounded-md overflow-hidden">
                 {/* Header clickable */}
@@ -148,11 +168,16 @@ export const AssignmentRoomForm = (props: Props) => {
                         label="Inicio de clases"
                         mode="date"
                         value={assignmentRoom.start}
+                        minDate={today}
                         onChange={(val) => handleFieldChange(idx, 'start', val)}
-                        error={formSubmitted && !assignmentRoom.start}
+                        error={formSubmitted && (!assignmentRoom.start || (allowedJsDays.length > 0 && !!assignmentRoom.start && !allowedJsDays.includes(new Date(assignmentRoom.start).getDay())))}
                         helperText={
                           formSubmitted && !assignmentRoom.start
                             ? 'Campo requerido'
+                            : formSubmitted && allowedJsDays.length > 0 && !!assignmentRoom.start && !allowedJsDays.includes(new Date(assignmentRoom.start).getDay())
+                            ? `Solo se puede iniciar en: ${allowedDayNames.join(', ')}`
+                            : allowedDayNames.length > 0
+                            ? `Solo: ${allowedDayNames.join(', ')}`
                             : ''
                         }
                       />
@@ -182,38 +207,34 @@ export const AssignmentRoomForm = (props: Props) => {
                       <ScheduleCustom
                         schedules={assignmentRoom.room?.schedules ?? []}
                         selectedSchedules={assignmentRoom.assignmentSchedules ?? []}
-                        scheduleSelect={(val) => setScheduleId(val)}
-                      >
-                        {/* popover interno */}
-                        <div className="p-3 text-center">
-                          <Button
-                            size="sm"
-                            onClick={() => {
-                              if (!scheduleId) return;
+                        onToggle={(scheduleId) => {
+                          const schedule = assignmentRoom.room?.schedules?.find((s) => s.id === scheduleId);
+                          if (!schedule) return;
 
-                              const schedule = assignmentRoom.room?.schedules?.find((s) => s.id === scheduleId);
-                              if (!schedule) return;
+                          const existing = assignmentRoom.assignmentSchedules.find(
+                            (s) => s.schedule.id === scheduleId
+                          );
 
-                              const existing = assignmentRoom.assignmentSchedules.find(
-                                (s) => s.schedule.id === scheduleId
-                              );
+                          const updatedSchedules = existing
+                            ? assignmentRoom.assignmentSchedules.filter((s) => s.schedule.id !== scheduleId)
+                            : [...assignmentRoom.assignmentSchedules, { schedule, day: schedule.day }];
 
-                              const updatedAssignmentSchedules = existing
-                                ? assignmentRoom.assignmentSchedules.filter(
-                                  (s) => s.schedule.id !== scheduleId
-                                )
-                                : [...assignmentRoom.assignmentSchedules, { schedule, day: schedule.day }];
+                          const newAllowedDays = [...new Set(
+                            updatedSchedules.map(s => dayOfWeekToJsDay[s.day] ?? -1).filter(d => d !== -1)
+                          )];
+                          const currentStart = assignmentRoom.start;
+                          const startValid = !currentStart || newAllowedDays.length === 0
+                            || newAllowedDays.includes(new Date(currentStart).getDay());
 
-                              handleFieldChange(idx, 'assignmentSchedules', updatedAssignmentSchedules);
-                            }}
-                          >
-                            {assignmentRoom.assignmentSchedules.some((s) => s.schedule.id === scheduleId)
-                              ? 'Quitar horario'
-                              : 'Agregar horario'}
-                          </Button>
-                        </div>
-                      </ScheduleCustom>
-
+                          const updated = [...assignmentRooms];
+                          updated[idx] = {
+                            ...updated[idx],
+                            assignmentSchedules: updatedSchedules as FormAssignmentScheduleModel[],
+                            start: startValid ? assignmentRoom.start : null,
+                          };
+                          onChange(updated);
+                        }}
+                      />
                     </div>
                   </div>
                 </div>

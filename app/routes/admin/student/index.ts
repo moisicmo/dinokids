@@ -9,3 +9,4 @@ export * from './payment/payment.table';
 export * from './session.traking';
 export * from './weekly.planning';
 export * from './evaluation.planning';
+export * from './document-editor';;

@@ -31,7 +31,7 @@ export const InscriptionTable = (props: Props) => {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(limitInit);
   const [query, setQuery] = useState('');
-  const debouncedQuery = useDebounce(query, 1500);
+  const debouncedQuery = useDebounce(query, 500);
   const { hasPermission } = usePermissionStore();
 
   useEffect(() => {
@@ -42,8 +42,13 @@ export const InscriptionTable = (props: Props) => {
   }, [dataInscription.total, rowsPerPage]);
 
   useEffect(() => {
+    setPage(1);
+    onRefresh(1, rowsPerPage, debouncedQuery);
+  }, [debouncedQuery]);
+
+  useEffect(() => {
     onRefresh(page, rowsPerPage, debouncedQuery);
-  }, [page, rowsPerPage, debouncedQuery]);
+  }, [page, rowsPerPage]);
 
 
   return (

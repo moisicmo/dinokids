@@ -20,6 +20,9 @@ export * from './request/assignment-schedule.request';
 export * from './request/assignment-room.request';
 export * from './request/cart.request';
 export * from './request/validate-pin.request';
+export * from './request/update-profile.request';
+export * from './request/update-password.request';
+export * from './request/forgot-password.request';
 export * from './request/attendance.request';
 export * from './request/correspondence.request';
 

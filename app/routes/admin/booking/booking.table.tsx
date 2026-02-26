@@ -60,6 +60,7 @@ export const BookingTable = (props: Props) => {
           <TableRow>
             <TableHead>Número de documento</TableHead>
             <TableHead>Nombre</TableHead>
+            <TableHead>Telefono</TableHead>
             <TableHead>Cant. días</TableHead>
             <TableHead>Monto</TableHead>
             <TableHead>Asignaciones</TableHead>
@@ -71,6 +72,7 @@ export const BookingTable = (props: Props) => {
             <TableRow key={item.id}>
               <TableCell>{item.booking?.dni}</TableCell>
               <TableCell>{item.booking?.name}</TableCell>
+              <TableCell>{item.booking?.phone}</TableCell>
               <TableCell>{`${item.booking?.days} días`}</TableCell>
               <TableCell>{`${item.booking?.amount} Bs`}</TableCell>
               <TableCell>

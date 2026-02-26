@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { ChevronDown, Search, Check } from 'lucide-react';
+import { useDebounce } from '@/hooks';
 
 export class ValueSelect {
   id: string;
@@ -16,6 +17,7 @@ interface Props {
   options: ValueSelect[];
   selected: ValueSelect | ValueSelect[] | null;
   onSelect: (value: ValueSelect | ValueSelect[] | null) => void;
+  onSearch?: (value: string) => void;
   multiple?: boolean;
   error?: boolean;
   helperText?: string;
@@ -28,6 +30,7 @@ export const SelectCustom = ({
   options,
   selected,
   onSelect,
+  onSearch,
   disabled,
   multiple = false,
   error = false,
@@ -38,6 +41,12 @@ export const SelectCustom = ({
   const [openUp, setOpenUp] = useState(false);
   const [search, setSearch] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const debouncedSearch = useDebounce(search, 400);
+
+  useEffect(() => {
+    if (onSearch) onSearch(debouncedSearch);
+  }, [debouncedSearch]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -130,9 +139,9 @@ export const SelectCustom = ({
     return 'Seleccionar...';
   };
 
-  const filteredOptions = options.filter((opt) =>
-    opt.value.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredOptions = onSearch
+    ? options
+    : options.filter((opt) => opt.value.toLowerCase().includes(search.toLowerCase()));
 
   const toggleDropdown = () => {
     if (!open) {

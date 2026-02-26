@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useForm } from '@/hooks';
-import { Button, InputCustom } from '@/components';
+import { Button, InputCustom, InputPhonesCustom } from '@/components';
 import { formBookingInscriptionInit, formBookingValidations, type BookingRequest, type FormAssignmentRoomModel, type InscriptionModel } from '@/models';
 import { AssignmentRoomForm } from '../inscription';
 
@@ -51,6 +51,7 @@ export const BookingCreate = (props: Props) => {
         days: parseInt(booking.days),
         dni: booking.dni.trim(),
         name: booking.name.trim(),
+        phone: booking.phone,
         amount: parseFloat(booking.amount),
         assignmentRooms: [
           ...assignmentRooms.map((assignmentRoom: FormAssignmentRoomModel) => ({
@@ -62,10 +63,11 @@ export const BookingCreate = (props: Props) => {
         ],
       });
     } else {
-      await onUpdate(item.id, {
+      await onUpdate(booking.id, {
         days: parseInt(booking.days),
         dni: booking.dni.trim(),
         name: booking.name.trim(),
+        phone: booking.phone,
         amount: parseFloat(booking.amount),
         assignmentRooms: [
           ...assignmentRooms.map((assignmentRoom: FormAssignmentRoomModel) => ({
@@ -120,6 +122,14 @@ export const BookingCreate = (props: Props) => {
                   error={!!bookingValid?.dniValid && formSubmitted}
                   helperText={formSubmitted ? bookingValid?.dniValid : ''}
                 />
+                <InputPhonesCustom
+                  name="booking.phone"
+                  value={booking.phone}
+                  label="Teléfonos"
+                  onChange={(phones) => onInputChange({ target: { name: 'booking.phone', value: phones } } as any)}
+                  error={!!bookingValid?.phoneValid && formSubmitted}
+                  helperText={formSubmitted ? bookingValid?.phoneValid : ''}
+                />
                 <InputCustom
                   name="booking.amount"
                   value={booking.amount}
@@ -172,6 +182,7 @@ export const BookingCreate = (props: Props) => {
                   const hasError =
                     !!bookingValid?.nameValid ||
                     !!bookingValid?.dniValid ||
+                    !!bookingValid?.phoneValid ||
                     !!bookingValid?.amountValid ||
                     !!bookingValid?.daysValid;
                   ;

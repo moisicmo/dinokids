@@ -58,7 +58,12 @@ export const formStudentValidations: FormStudentValidations = {
     name: [(value) => value.length > 0, 'Debe ingresar el nombre'],
     lastName: [(value) => value.length > 0, 'Debe ingresar el apellido'],
   },
-  birthdate: [(value) => value != null, 'Debe ingresar la fecha de nacimiento'],
+  birthdate: [(value) => {
+    if (value == null) return false;
+    const twoYearsAgo = new Date();
+    twoYearsAgo.setFullYear(twoYearsAgo.getFullYear() - 2);
+    return new Date(value) <= twoYearsAgo;
+  }, 'El estudiante debe tener al menos 2 años de edad'],
   gender: [(value) => value != null, 'Debe ingresar el género'],
   tutors: [(value) => value.length > 0, 'Debe ingresar al menos un tutor'],
 };

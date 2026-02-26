@@ -65,12 +65,31 @@ const EvaluationView = () => {
       {viewEvaluation && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto p-2">
-            <EvaluationForm
-              evaluationInit={viewEvaluation.document.data}
-              readOnly
-              onBack={() => setViewEvaluation(null)}
-              title={viewEvaluation.document.type}
-            />
+            {(viewEvaluation.document.data as any[])[0]?.type === 'html' ? (
+              <div className="flex flex-col h-full">
+                <div className="flex items-center justify-between px-6 pt-5 pb-3 border-b">
+                  <h2 className="text-lg font-semibold text-gray-800">{viewEvaluation.document.type}</h2>
+                  <button
+                    onClick={() => setViewEvaluation(null)}
+                    className="text-sm text-gray-500 hover:text-gray-800 px-3 py-1.5 rounded hover:bg-gray-100"
+                  >
+                    ← Volver
+                  </button>
+                </div>
+                <div
+                  className="px-10 py-8"
+                  style={{ fontFamily: 'Arial, sans-serif', fontSize: '12pt', lineHeight: '1.5' }}
+                  dangerouslySetInnerHTML={{ __html: (viewEvaluation.document.data as any[])[0].content }}
+                />
+              </div>
+            ) : (
+              <EvaluationForm
+                evaluationInit={viewEvaluation.document.data}
+                readOnly
+                onBack={() => setViewEvaluation(null)}
+                title={viewEvaluation.document.type}
+              />
+            )}
           </div>
         </div>
       )}

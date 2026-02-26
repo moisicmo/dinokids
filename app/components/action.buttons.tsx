@@ -1,5 +1,5 @@
 import { useCartStore } from '@/hooks';
-import { Activity, CalendarRange, ChevronDown, ChevronUp, ClipboardCheck, Download, Pencil, ShoppingCart, Trash2 } from 'lucide-react';
+import { Activity, CalendarRange, ChevronDown, ChevronUp, ClipboardCheck, Download, FileText, Pencil, ShoppingCart, Trash2 } from 'lucide-react';
 import { Button } from './ui/button';
 import { Popover, PopoverTrigger } from '.';
 interface ActionButtonsProps<T extends { id?: string; userId?: string }> {
@@ -12,6 +12,7 @@ interface ActionButtonsProps<T extends { id?: string; userId?: string }> {
   onSessionTracking?: (item: T) => void;
   onWeeklyPlanning?: (item: T) => void;
   onEvaluationPlanning?: (item: T) => void;
+  onReport?: (item: T) => void;
   isSelected?: boolean;
   children?: React.ReactNode;
   isPopoverOpen?: boolean;
@@ -27,6 +28,7 @@ export const ActionButtons = <T extends { id?: string; userId?: string }>({
   onSessionTracking,
   onWeeklyPlanning,
   onEvaluationPlanning,
+  onReport,
   isSelected,
   children,
   isPopoverOpen,
@@ -108,6 +110,11 @@ export const ActionButtons = <T extends { id?: string; userId?: string }>({
       {onEvaluationPlanning && identifier && (
         <button onClick={() => onEvaluationPlanning(item)} title="Planificación de Evaluación" className="cursor-pointer">
           <ClipboardCheck className="w-5 h-5 text-warning" />
+        </button>
+      )}
+      {onReport && (
+        <button onClick={() => onReport(item)} title="Hacer informe" className="cursor-pointer">
+          <FileText className="w-5 h-5 text-purple-500" />
         </button>
       )}
     </div>

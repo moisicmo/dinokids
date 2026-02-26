@@ -3,6 +3,20 @@ import { useForm, useStudentStore } from '@/hooks';
 import { Button, InputCustom, SelectCustom } from '@/components';
 import { type FormAssignmentRoomModel, type InscriptionModel, type InscriptionRequest, formInscriptionInit, formInscriptionValidations } from '@/models';
 import { AssignmentRoomForm } from '.';
+import { StudentCreate } from '../student/student.create';
+
+const dayOfWeekToJsDay: Record<string, number> = {
+  MONDAY: 1, TUESDAY: 2, WEDNESDAY: 3,
+  THURSDAY: 4, FRIDAY: 5, SATURDAY: 6,
+};
+
+const isAssignmentRoomInvalid = (room: FormAssignmentRoomModel) => {
+  if (!room.room || !room.start || room.assignmentSchedules.length === 0) return true;
+  const allowedDays = [...new Set(
+    room.assignmentSchedules.map(s => dayOfWeekToJsDay[s.day] ?? -1).filter(d => d !== -1)
+  )];
+  return allowedDays.length > 0 && !allowedDays.includes(new Date(room.start).getDay());
+};
 
 interface Props {
   open: boolean;
@@ -20,7 +34,7 @@ export const InscriptionCreate = (props: Props) => {
     onCreate,
     onUpdate,
   } = props;
-  const { dataStudent, getStudents } = useStudentStore();
+  const { dataStudent, getStudents, createStudent } = useStudentStore();
 
   const {
     student,
@@ -40,12 +54,13 @@ export const InscriptionCreate = (props: Props) => {
 
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [step, setStep] = useState(1);
+  const [showStudentModal, setShowStudentModal] = useState(false);
 
   const sendSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormSubmitted(true);
     const hasInvalid = assignmentRooms.some((room: FormAssignmentRoomModel) =>
-      !room.room || !room.start || room.assignmentSchedules.length === 0
+      isAssignmentRoomInvalid(room)
     );
     if (hasInvalid) return;
     if (!isFormValid) return;
@@ -88,16 +103,17 @@ export const InscriptionCreate = (props: Props) => {
     }
   }, [item]);
 
-  if (!open) return null;
-
   useEffect(() => {
     getStudents();
   }, [])
 
+  if (!open) return null;
+
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div className={`bg-white rounded-lg ${step === 2 ? 'max-w-5xl' : 'max-w-lg'} p-6 max-h-[90vh] overflow-y-auto`}>
+    <>
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+      <div className={`bg-white rounded-lg w-max  p-6 h-[60 vh] overflow-y-auto`}>
         <h2 className="text-xl font-bold mb-4">
           {item ? 'Editar inscripción' : 'Nueva Inscripción'}
         </h2>
@@ -107,19 +123,29 @@ export const InscriptionCreate = (props: Props) => {
           <div className="flex space-x-2 mb-4">
             {
               step === 1 &&
-              <SelectCustom
-                label="Estudiante"
-                options={dataStudent.data?.map((student) => ({ id: student.userId, value: `${student.user.name} ${student.user.lastName}` })) ?? []}
-                selected={student ? { id: student.id, value: `${student.user.name} ${student.user.lastName}` } : null}
-                onSelect={(value) => {
-                  if (value && !Array.isArray(value)) {
-                    const selected = dataStudent.data?.find((r) => r.userId === value.id);
-                    onValueChange('student', selected);
-                  }
-                }}
-                error={!!studentValid && formSubmitted}
-                helperText={formSubmitted ? studentValid : ''}
-              />
+              <div className="w-full space-y-1">
+                <SelectCustom
+                  label="Estudiante"
+                  options={dataStudent.data?.map((student) => ({ id: student.userId, value: `${student.user.name} ${student.user.lastName}` })) ?? []}
+                  selected={student ? { id: student.id, value: `${student.user.name} ${student.user.lastName}` } : null}
+                  onSelect={(value) => {
+                    if (value && !Array.isArray(value)) {
+                      const selected = dataStudent.data?.find((r) => r.userId === value.id);
+                      onValueChange('student', selected);
+                    }
+                  }}
+                  onSearch={(keys) => getStudents(1, 20, keys)}
+                  error={!!studentValid && formSubmitted}
+                  helperText={formSubmitted ? studentValid : ''}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowStudentModal(true)}
+                  className="text-sm text-primary hover:underline"
+                >
+                  + Crear nuevo estudiante
+                </button>
+              </div>
             }
             {
               step === 2 &&
@@ -179,7 +205,7 @@ export const InscriptionCreate = (props: Props) => {
                   if (step === 2) {
                     setFormSubmitted(true);
                     const hasInvalid = assignmentRooms.some((room: FormAssignmentRoomModel) =>
-                      !room.room || !room.start || room.assignmentSchedules.length === 0
+                      isAssignmentRoomInvalid(room)
                     );
                     if (hasInvalid) return;
                     setStep(3);
@@ -196,5 +222,14 @@ export const InscriptionCreate = (props: Props) => {
         </form>
       </div>
     </div>
+
+    <StudentCreate
+      open={showStudentModal}
+      handleClose={() => setShowStudentModal(false)}
+      item={null}
+      onCreate={createStudent}
+      onUpdate={async () => {}}
+    />
+    </>
   );
 };
