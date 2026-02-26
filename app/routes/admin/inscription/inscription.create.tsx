@@ -181,6 +181,7 @@ export const InscriptionCreate = (props: Props) => {
           {/* Botones de acción */}
           <div className="flex justify-end gap-2 pt-4">
             <Button
+              type="button"
               onClick={() => {
                 if (step === 1) {
                   onResetForm();
@@ -193,6 +194,7 @@ export const InscriptionCreate = (props: Props) => {
 
             {(step === 1 || step === 2) && (
               <Button
+                type="button"
                 onClick={() => {
                   setFormSubmitted(true);
 

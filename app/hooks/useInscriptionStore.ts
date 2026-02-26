@@ -57,6 +57,12 @@ export const useInscriptionStore = () => {
   const updateInscription = async (id: string, inscriptionRequest: InscriptionRequest) => {
     try {
       requirePermission(TypeAction.update, TypeSubject.inscription);
+      showLoading('Actualizando inscripción...');
+      const res = await coffeApi.patch(`/${baseUrl}/${id}`, inscriptionRequest);
+      const { pdfBase64 } = res.data;
+      await getInscriptions();
+      showSuccess('Inscripción actualizada correctamente');
+      await handlePdf(pdfBase64);
     } catch (error) {
       throw handleError(error);
     }
