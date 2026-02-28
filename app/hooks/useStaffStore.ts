@@ -10,10 +10,17 @@ export const useStaffStore = () => {
   const { showSuccess, showWarning, showError } = useAlertStore();
   const baseUrl = 'staff';
 
-  const getStaffs = async (page = 1, limit = 10, keys = '') => {
+  interface GetStaffParams {
+    page?: number;
+    limit?: number;
+    keys?: string;
+    role?: string;
+  }
+
+  const getStaffs = async ({page = 1, limit = 10, keys = '', role = ''}: GetStaffParams = {}) => {
     try {
       requirePermission(TypeAction.read, TypeSubject.staff);
-      const res = await coffeApi.get(`/${baseUrl}?page=${page}&limit=${limit}&keys=${keys}`);
+      const res = await coffeApi.get(`/${baseUrl}?page=${page}&limit=${limit}&keys=${keys}&role=${role}`);
       const { data, meta } = res.data;
       console.log(res.data);
       const payload: BaseResponse<StaffModel> = {

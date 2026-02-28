@@ -7,6 +7,7 @@ export * from './useStore';
 
 export * from './useAuthStore';
 export * from './useBranchStore';
+export * from './useUserStore';
 export * from './useStaffStore';
 export * from './useTeacherStore';
 export * from './useStudentStore';

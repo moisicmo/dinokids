@@ -7,6 +7,8 @@ import {
   useCorrespondenceStore,
   useForm,
   useStaffStore,
+  useUserStore,
+  useAuthStore
 } from "@/hooks";
 import type { Evaluation } from "./model";
 import { BodyForm } from "./body.form";
@@ -31,6 +33,7 @@ const EvaluationForm = ({
   const prev = () => setStep((s) => Math.max(s - 1, 0));
   const bodyRef = useRef<HTMLDivElement>(null);
 
+  const { roleUser } = useAuthStore();
 
   const progress = ((step + 1) / evaluationInit.length) * 100;
 
@@ -59,6 +62,7 @@ const EvaluationForm = ({
 
   const { createCorrespondence } = useCorrespondenceStore();
   const { dataStaff, getStaffs } = useStaffStore();
+  const { dataUser, getByRole } = useUserStore();
 
   const [receiver, setReceiver] = useState<{
     id: string;
@@ -66,7 +70,20 @@ const EvaluationForm = ({
   } | null>(null);
 
   useEffect(() => {
-    if (!readOnly) getStaffs();
+    if (readOnly) return;
+    const roleParam = (() => {
+      switch (roleUser?.name) {
+        case 'Asesor Comercial':
+          return 'Evaluador';
+        case 'Evaluador':
+          return 'Profesor';
+        default:
+          return '';
+      }
+    })();
+    if (roleParam) {
+      getByRole(roleParam);
+    }
   }, [readOnly]);
 
   const finish = async () => {
@@ -177,9 +194,9 @@ const EvaluationForm = ({
               <SelectCustom
                 label="Enviar a"
                 options={
-                  dataStaff.data?.map((s) => ({
-                    id: s.userId,
-                    value: `${s.user.name} ${s.user.lastName}`,
+                  dataUser.data?.map((u) => ({
+                    id: u.id,
+                    value: `${u.name} ${u.lastName}`,
                   })) ?? []
                 }
                 selected={
