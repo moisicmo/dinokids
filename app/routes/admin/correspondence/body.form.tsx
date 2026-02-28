@@ -97,7 +97,7 @@ export const BodyForm = ({
                 </div>
               )}
 
-            {q.typeAnswer.includes("comment") && (
+            {q.typeAnswer && q.typeAnswer.includes("comment") && (
               <>
                 <label className="flex items-center gap-2 mt-3 text-sm">
                   <input

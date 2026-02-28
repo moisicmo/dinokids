@@ -45,7 +45,7 @@ const EvaluationForm = ({
           question: q.question,
           typeAnswer: q.typeAnswer,
           answer: q.answer ?? "",
-          ...(q.typeAnswer.includes("comment")
+          ...(q.typeAnswer && q.typeAnswer.includes("comment")
             ? {
               comment: q.comment ?? "",
               enableComment: q.enableComment ?? false,
