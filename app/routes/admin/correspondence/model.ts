@@ -6,11 +6,13 @@ type AnswerType =
   | 'yes_no_comment'
   | 'scale_3'
   | 'scale_3_comment'
-  | 'table';
+  | 'table'
+  | 'select';
 
 export interface Question {
   question: string;
   typeAnswer: AnswerType;
+  options?: string[];
   answer?: any;
   comment?: string;
   enableComment?: boolean;

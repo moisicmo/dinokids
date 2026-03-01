@@ -67,6 +67,7 @@ export enum TypeSubject {
   evaluation456Primaria = 'evaluacion 4to 5to 6to primaria',
   evaluation123Secundaria = 'evaluacion 1ro 2do 3ro secundaria',
   reportByStudent = 'reportes por estudiante',
+  sentCorrespondenceAll = 'historial global de envios',
 }
 
 export enum TypeDebt {

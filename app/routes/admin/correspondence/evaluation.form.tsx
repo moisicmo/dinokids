@@ -18,6 +18,8 @@ interface Props {
   title: string;
   childInfo?: Question[];
   sendToRole?: string;
+  studentUserId?: string;
+  sourceDocumentId?: string;
 }
 const EvaluationForm = ({
   evaluationInit,
@@ -26,6 +28,8 @@ const EvaluationForm = ({
   title,
   childInfo,
   sendToRole,
+  studentUserId,
+  sourceDocumentId,
 }: Props) => {
 
   const [step, setStep] = useState(0);
@@ -111,6 +115,8 @@ const EvaluationForm = ({
       data: result,
       receiverId: receiver.id,
       ...(resolvedChildInfo ? { childInfo: resolvedChildInfo } : {}),
+      ...(studentUserId ? { studentUserId } : {}),
+      ...(sourceDocumentId ? { sourceDocumentId } : {}),
     });
 
     onBack?.();

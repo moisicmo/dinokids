@@ -80,8 +80,13 @@ export const CorrespondenceTable = (props: Props) => {
         <TableBody>
           {dataCorrespondence.data.map((item) => {
             const childInfo = item.document?.childInfo ?? [];
-            const childName = childInfo.find((q) => q.question === 'Nombre del niño')?.answer;
-            const tutorName = childInfo.find((q) => q.question === 'Nombre del Tutor')?.answer;
+            const nombre = childInfo.find((q) => q.question === 'Nombre')?.answer
+              ?? childInfo.find((q) => q.question === 'Nombre del niño')?.answer?.toString().split(' ')[0];
+            const apellido = childInfo.find((q) => q.question === 'Apellido')?.answer;
+            const childName = nombre ? `${nombre}${apellido ? ' ' + apellido : ''}` : undefined;
+            const tutorNombre = childInfo.find((q) => q.question === 'Nombre del Tutor')?.answer;
+            const tutorApellido = childInfo.find((q) => q.question === 'Apellido del Tutor')?.answer;
+            const tutorName = tutorNombre ? `${tutorNombre}${tutorApellido ? ' ' + tutorApellido : ''}` : undefined;
 
             return (
               <TableRow key={item.id}>

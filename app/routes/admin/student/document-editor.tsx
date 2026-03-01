@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import {
   Bold, Italic, Underline, Strikethrough,
   AlignLeft, AlignCenter, AlignRight, AlignJustify,
@@ -15,7 +15,10 @@ import {
   Activity, CalendarRange, ClipboardCheck,
   ChevronLeft, ChevronRight,
   Send,
+  Cloud,
+  CloudOff,
 } from 'lucide-react';
+import { io, type Socket } from 'socket.io-client';
 import { useCorrespondenceStore, useStaffStore } from '@/hooks';
 import { Button, SelectCustom } from '@/components';
 import type { StudentModel } from '@/models';
@@ -27,6 +30,8 @@ interface DocumentEditorProps {
   onWeeklyPlanning?: (student: StudentModel) => void;
   onEvaluationPlanning?: (student: StudentModel) => void;
 }
+
+const BACKEND_URL = import.meta.env.VITE_HOST_BACKEND ?? 'http://127.0.0.1:3000';
 
 const generateTemplate = (student: StudentModel): string => {
   const date = new Date().toLocaleDateString('es-PE', {
@@ -113,6 +118,9 @@ export const DocumentEditor = ({
   onEvaluationPlanning,
 }: DocumentEditorProps) => {
   const editorRef = useRef<HTMLDivElement>(null);
+  const socketRef = useRef<Socket | null>(null);
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const [zoom, setZoom] = useState(100);
   const [showSidebar, setShowSidebar] = useState(false);
   const [docTitle, setDocTitle] = useState(
@@ -124,7 +132,7 @@ export const DocumentEditor = ({
     underline: false,
     strikeThrough: false,
   });
-  const [savedNotice, setSavedNotice] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'offline'>('idle');
   const [showPageSettings, setShowPageSettings] = useState(false);
   const [showSendModal, setShowSendModal] = useState(false);
   const [sendReceiver, setSendReceiver] = useState<{ id: string; name: string } | null>(null);
@@ -135,15 +143,64 @@ export const DocumentEditor = ({
   const [pageOrientation, setPageOrientation] = useState<'portrait' | 'landscape'>('portrait');
   const [margins, setMargins] = useState({ top: 2, bottom: 2, left: 2, right: 2 });
 
-  const storageKey = `doc-editor-${student.userId}`;
-
-  // Load saved content on mount
+  // ── Socket.io setup ────────────────────────────────────────────────────────
   useEffect(() => {
-    const saved = localStorage.getItem(storageKey);
-    if (editorRef.current) {
-      editorRef.current.innerHTML = saved ?? generateTemplate(student);
-    }
-  }, []);
+    const token = localStorage.getItem('token');
+    const socket = io(`${BACKEND_URL}/documents`, {
+      auth: { token },
+      transports: ['websocket'],
+    });
+    socketRef.current = socket;
+
+    socket.on('connect', () => {
+      socket.emit('doc:join', { studentId: student.userId });
+    });
+
+    socket.on('doc:loaded', ({ content }: { content: string | null }) => {
+      if (editorRef.current) {
+        editorRef.current.innerHTML = content ?? generateTemplate(student);
+      }
+    });
+
+    socket.on('doc:saved', () => {
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 2500);
+    });
+
+    // Sync content from another tab/device
+    socket.on('doc:synced', ({ content }: { content: string }) => {
+      if (editorRef.current && document.activeElement !== editorRef.current) {
+        editorRef.current.innerHTML = content;
+      }
+    });
+
+    socket.on('doc:cleared', () => {
+      if (editorRef.current) {
+        editorRef.current.innerHTML = generateTemplate(student);
+      }
+      setSaveStatus('idle');
+    });
+
+    socket.on('connect_error', () => setSaveStatus('offline'));
+    socket.on('disconnect', () => setSaveStatus('offline'));
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [student.userId]);
+
+  // ── Debounced auto-save on every input ────────────────────────────────────
+  const handleInput = useCallback(() => {
+    if (!socketRef.current?.connected || !editorRef.current) return;
+    setSaveStatus('saving');
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => {
+      socketRef.current?.emit('doc:update', {
+        studentId: student.userId,
+        content: editorRef.current!.innerHTML,
+      });
+    }, 1500);
+  }, [student.userId]);
 
   // Track active format states on selection change
   useEffect(() => {
@@ -170,10 +227,11 @@ export const DocumentEditor = ({
   };
 
   const handleSave = () => {
-    if (!editorRef.current) return;
-    localStorage.setItem(storageKey, editorRef.current.innerHTML);
-    setSavedNotice(true);
-    setTimeout(() => setSavedNotice(false), 2500);
+    if (!socketRef.current?.connected || !editorRef.current) return;
+    socketRef.current.emit('doc:update', {
+      studentId: student.userId,
+      content: editorRef.current.innerHTML,
+    });
   };
 
   const handlePrint = () => {
@@ -231,6 +289,8 @@ export const DocumentEditor = ({
       data: [{ type: 'html', content: editorRef.current.innerHTML }] as any,
       receiverId: sendReceiver.id,
     });
+    // Clear draft on server and reset editor
+    socketRef.current?.emit('doc:clear', { studentId: student.userId });
     setShowSendModal(false);
     setSendReceiver(null);
   };
@@ -263,6 +323,13 @@ export const DocumentEditor = ({
 
   const initials = `${student.user.name?.[0] ?? ''}${student.user.lastName?.[0] ?? ''}`.toUpperCase();
 
+  const SaveIndicator = () => {
+    if (saveStatus === 'saving') return <span className="text-xs text-gray-400 flex items-center gap-1"><Cloud className="w-3.5 h-3.5 animate-pulse" /> Guardando...</span>;
+    if (saveStatus === 'saved') return <span className="text-xs text-green-600 flex items-center gap-1"><Cloud className="w-3.5 h-3.5" /> Guardado</span>;
+    if (saveStatus === 'offline') return <span className="text-xs text-red-500 flex items-center gap-1"><CloudOff className="w-3.5 h-3.5" /> Sin conexión</span>;
+    return null;
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-white">
 
@@ -275,9 +342,7 @@ export const DocumentEditor = ({
           onChange={(e) => setDocTitle(e.target.value)}
           placeholder="Título del documento"
         />
-        {savedNotice && (
-          <span className="text-xs text-green-600 font-semibold">✓ Guardado</span>
-        )}
+        <SaveIndicator />
         <button
           onClick={onClose}
           className="p-1.5 hover:bg-gray-100 rounded text-gray-500 hover:text-gray-800"
@@ -353,7 +418,7 @@ export const DocumentEditor = ({
           <button className={tbtn()} onMouseDown={(e) => { e.preventDefault(); handlePrint(); }} title="Imprimir">
             <Printer className="w-4 h-4" />
           </button>
-          <button className={tbtn()} onMouseDown={(e) => { e.preventDefault(); handleSave(); }} title="Guardar">
+          <button className={tbtn()} onMouseDown={(e) => { e.preventDefault(); handleSave(); }} title="Guardar ahora">
             <Save className="w-4 h-4" />
           </button>
         </div>
@@ -547,6 +612,7 @@ export const DocumentEditor = ({
               ref={editorRef}
               contentEditable
               suppressContentEditableWarning
+              onInput={handleInput}
               className="bg-white shadow-lg outline-none"
               style={{
                 zoom: `${zoom}%`,
@@ -585,7 +651,7 @@ export const DocumentEditor = ({
               <div>
                 <h3 className="text-base font-semibold text-gray-800">Enviar como correspondencia</h3>
                 <p className="text-sm text-gray-500 mt-0.5">
-                  El documento se enviará a la bandeja del destinatario seleccionado.
+                  El documento se enviará a la bandeja del destinatario. El borrador se limpiará al enviar.
                 </p>
               </div>
 

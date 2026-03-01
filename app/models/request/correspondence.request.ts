@@ -5,4 +5,6 @@ export interface CorrespondenceRequest {
   data: Evaluation[];
   receiverId: string;
   childInfo?: Question[];
+  studentUserId?: string;
+  sourceDocumentId?: string;
 }

@@ -5,13 +5,22 @@ export const evaluationInit: Evaluation[] = [
   {
     title: "Datos Personales",
     questions: [
+      // ── Datos del Tutor ──────────────────────────────
       { question: "Nombre del Tutor", typeAnswer: "text" },
+      { question: "Apellido del Tutor", typeAnswer: "text" },
+      { question: "CI Tutor", typeAnswer: "text" },
       { question: "Celular del Tutor", typeAnswer: "text" },
-      { question: "Nombre del niño", typeAnswer: "text" },
-      { question: "Edad", typeAnswer: "text" },
-      { question: "Fecha de nacimiento", typeAnswer: "text" },
+      { question: "Email del Tutor", typeAnswer: "text" },
+      // ── Datos del Estudiante ─────────────────────────
+      { question: "Nombre del Estudiante", typeAnswer: "text" },
+      { question: "Apellido del Estudiante", typeAnswer: "text" },
+      { question: "CI Estudiante", typeAnswer: "text" },
+      { question: "Fecha de nacimiento", typeAnswer: "datetime" },
+      { question: "Género", typeAnswer: "select", options: ["Masculino", "Femenino"] },
       { question: "Unidad educativa", typeAnswer: "text" },
       { question: "Grado escolar", typeAnswer: "text" },
+      { question: "Nivel educativo", typeAnswer: "select", options: ["Primaria", "Secundaria"] },
+      // ── Evaluación ───────────────────────────────────
       { question: "Fecha y hora de evaluación", typeAnswer: "datetime" },
     ],
   },

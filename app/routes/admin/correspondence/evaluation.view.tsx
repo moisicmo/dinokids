@@ -4,15 +4,15 @@ import EvaluationForm from './evaluation.form';
 import { useCorrespondenceStore, usePermissionStore, useAuthStore, useStudentStore } from '@/hooks';
 import { CorrespondenceTable } from './correspondence.table';
 import type { Question } from '.';
-import { TypeAction, TypeSubject, type DocumentTransmissionModel, type StudentModel, type SentTransmissionModel } from '@/models';
+import { TypeAction, TypeSubject, type AdminSentTransmissionModel, type DocumentTransmissionModel, type StudentModel, type SentTransmissionModel } from '@/models';
 import { Button } from '@/components';
 import { SessionTrackingModal, WeeklyPlanningModal, EvaluationPlanningModal, DocumentEditor } from '@/routes/admin/student';
 
 const ChildInfoPanel = ({ childInfo }: { childInfo: Question[] }) => (
   <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-4">
-    <h4 className="text-sm font-semibold text-blue-700 mb-3">Datos del niño</h4>
+    <h4 className="text-sm font-semibold text-blue-700 mb-3">Datos del estudiante</h4>
     <div className="grid grid-cols-2 gap-x-6 gap-y-1">
-      {childInfo.filter((q) => q.question !== 'Celular del Tutor').map((q) => (
+      {childInfo.filter((q) => !['Celular del Tutor', 'CI Tutor', 'CI Estudiante', 'Email del Tutor'].includes(q.question)).map((q) => (
         <div key={q.question} className="text-sm">
           <span className="text-gray-500">{q.question}: </span>
           <span className="font-medium text-gray-800">{q.answer ?? '—'}</span>
@@ -23,7 +23,7 @@ const ChildInfoPanel = ({ childInfo }: { childInfo: Question[] }) => (
 );
 
 const EvaluationView = () => {
-  const { dataCorrespondence, getCorrespondencees } = useCorrespondenceStore();
+  const { dataCorrespondence, dataSent, dataAllSent, getCorrespondencees, getSentCorrespondences, getAllSentCorrespondences } = useCorrespondenceStore();
   const { hasPermission } = usePermissionStore();
   const { getStudentById, updateStudent } = useStudentStore();
 
@@ -54,6 +54,12 @@ const EvaluationView = () => {
   // ✅ HOOK SIEMPRE ARRIBA
   useEffect(() => {
     getCorrespondencees();
+    if (hasPermission(TypeAction.create, TypeSubject.correspondence)) {
+      getSentCorrespondences();
+    }
+    if (hasPermission(TypeAction.read, TypeSubject.sentCorrespondenceAll)) {
+      getAllSentCorrespondences();
+    }
   }, []);
 
   // ✅ Filtrar solo las evaluaciones con permiso usando el hook dentro del componente
@@ -66,7 +72,7 @@ const EvaluationView = () => {
     return (
       <EvaluationForm
         evaluationInit={selectedEvaluation.schema}
-        onBack={() => setSelectedEvaluation(null)}
+        onBack={() => { setSelectedEvaluation(null); getSentCorrespondences(); }}
         title={selectedEvaluation.title}
         sendToRole={selectedEvaluation.sendToRole}
       />
@@ -101,6 +107,116 @@ const EvaluationView = () => {
           onReport={(item) => openTrackingModal(item, setReportStudent)}
         />
       )}
+
+      {hasPermission(TypeAction.create, TypeSubject.correspondence) && dataSent.data.length > 0 && (() => {
+        // Agrupar por estudiante (studentUserId como clave, fallback a nombre)
+        const groups = dataSent.data.reduce<Record<string, { name: string; lastName: string; items: SentTransmissionModel[] }>>((acc, item) => {
+          const name = item.document.childInfo?.find((q) => q.question === 'Nombre')?.answer ?? '—';
+          const lastName = item.document.childInfo?.find((q) => q.question === 'Apellido')?.answer ?? '';
+          const key = item.document.studentUserId ?? `${name}_${lastName}`;
+          if (!acc[key]) acc[key] = { name, lastName, items: [] };
+          acc[key].items.push(item);
+          return acc;
+        }, {});
+
+        return (
+          <div className="mt-6">
+            <h3 className="text-sm font-semibold text-gray-600 mb-3">Historial de envíos</h3>
+            <div className="flex flex-col gap-3">
+              {Object.entries(groups).map(([key, group]) => (
+                <div key={key} className="border border-gray-200 rounded-xl overflow-hidden">
+                  {/* Header del estudiante */}
+                  <div className="bg-blue-50 px-4 py-2 flex items-center gap-2">
+                    <span className="text-sm font-semibold text-blue-700">
+                      {group.name} {group.lastName}
+                    </span>
+                    <span className="text-xs text-blue-400">· {group.items.length} evaluación{group.items.length !== 1 ? 'es' : ''}</span>
+                  </div>
+                  {/* Flujo de evaluaciones (cronológico) */}
+                  {[...group.items].reverse().map((item, idx) => (
+                    <div key={item.id} className="flex items-center gap-3 px-4 py-2 border-t border-gray-100 bg-white text-sm">
+                      {/* Indicador de paso */}
+                      <div className="flex flex-col items-center shrink-0">
+                        <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-600 text-xs flex items-center justify-center font-semibold">
+                          {idx + 1}
+                        </span>
+                      </div>
+                      <div className="flex-1 flex justify-between items-start">
+                        <div className="flex flex-col gap-0.5">
+                          <span className="font-medium text-gray-700">{item.document.type}</span>
+                          <span className="text-gray-400 text-xs">
+                            Para: {item.receiver.role?.name} — {item.receiver.name} {item.receiver.lastName}
+                          </span>
+                        </div>
+                        <span className="text-gray-400 text-xs shrink-0 ml-4">
+                          {new Date(item.createdAt).toLocaleString('es-PE', {
+                            day: '2-digit', month: '2-digit', year: 'numeric',
+                            hour: '2-digit', minute: '2-digit',
+                          })}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
+
+      {hasPermission(TypeAction.read, TypeSubject.sentCorrespondenceAll) && dataAllSent.data.length > 0 && (() => {
+        const groups = dataAllSent.data.reduce<Record<string, { name: string; lastName: string; items: AdminSentTransmissionModel[] }>>((acc, item) => {
+          const name = item.document.childInfo?.find((q) => q.question === 'Nombre')?.answer ?? '—';
+          const lastName = item.document.childInfo?.find((q) => q.question === 'Apellido')?.answer ?? '';
+          const key = item.document.studentUserId ?? `${name}_${lastName}`;
+          if (!acc[key]) acc[key] = { name, lastName, items: [] };
+          acc[key].items.push(item);
+          return acc;
+        }, {});
+
+        return (
+          <div className="mt-6">
+            <h3 className="text-sm font-semibold text-gray-600 mb-3">Historial global de envíos</h3>
+            <div className="flex flex-col gap-3">
+              {Object.entries(groups).map(([key, group]) => (
+                <div key={key} className="border border-gray-200 rounded-xl overflow-hidden">
+                  <div className="bg-purple-50 px-4 py-2 flex items-center gap-2">
+                    <span className="text-sm font-semibold text-purple-700">
+                      {group.name} {group.lastName}
+                    </span>
+                    <span className="text-xs text-purple-400">· {group.items.length} evaluación{group.items.length !== 1 ? 'es' : ''}</span>
+                  </div>
+                  {[...group.items].reverse().map((item, idx) => (
+                    <div key={item.id} className="flex items-center gap-3 px-4 py-2 border-t border-gray-100 bg-white text-sm">
+                      <div className="flex flex-col items-center shrink-0">
+                        <span className="w-5 h-5 rounded-full bg-purple-100 text-purple-600 text-xs flex items-center justify-center font-semibold">
+                          {idx + 1}
+                        </span>
+                      </div>
+                      <div className="flex-1 flex justify-between items-start">
+                        <div className="flex flex-col gap-0.5">
+                          <span className="font-medium text-gray-700">{item.document.type}</span>
+                          <span className="text-gray-400 text-xs">
+                            De: {item.sender.role?.name} — {item.sender.name} {item.sender.lastName}
+                            {' · '}
+                            Para: {item.receiver.role?.name} — {item.receiver.name} {item.receiver.lastName}
+                          </span>
+                        </div>
+                        <span className="text-gray-400 text-xs shrink-0 ml-4">
+                          {new Date(item.createdAt).toLocaleString('es-PE', {
+                            day: '2-digit', month: '2-digit', year: 'numeric',
+                            hour: '2-digit', minute: '2-digit',
+                          })}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
 
       {viewEvaluation && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
@@ -143,10 +259,13 @@ const EvaluationView = () => {
                         onBack={() => {
                           setSelectedContinuation(null);
                           setViewEvaluation(null);
+                          getSentCorrespondences();
                         }}
                         title={selectedContinuation.title}
                         childInfo={docChildInfo}
                         sendToRole={selectedContinuation.sendToRole}
+                        studentUserId={viewEvaluation.document.studentUserId}
+                        sourceDocumentId={viewEvaluation.document.id}
                       />
                     </div>
                   );
