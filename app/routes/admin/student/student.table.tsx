@@ -96,10 +96,6 @@ export const StudentTable = (props: Props) => {
                     isSelected={expandedId === item.userId}
                     onEdit={hasPermission(TypeAction.update, TypeSubject.student) ? handleEdit : undefined}
                     onDelete={hasPermission(TypeAction.delete, TypeSubject.student) ? onDelete : undefined}
-                    onSessionTracking={hasPermission(TypeAction.create, TypeSubject.sessionTracking) ? onSessionTracking : undefined}
-                    onWeeklyPlanning={hasPermission(TypeAction.create, TypeSubject.weeklyPlanning) ? onWeeklyPlanning : undefined}
-                    onEvaluationPlanning={hasPermission(TypeAction.create, TypeSubject.evaluationPlanning) ? onEvaluationPlanning : undefined}
-                    onReport={(s) => setReportStudent(s)}
                   />
                 </TableCell>
               </TableRow>

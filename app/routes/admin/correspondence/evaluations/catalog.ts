@@ -14,16 +14,18 @@ export interface EvaluationCatalogItem {
   schema: Evaluation[];
   action: TypeAction;
   subject: TypeSubject;
+  sendToRole: string;
 }
 
 export const evaluationCatalog: EvaluationCatalogItem[] = [
   {
     id: 'init',
-    title: 'Protocolo de Evaluación',
+    title: 'Asignación de Evaluación',
     description: 'Asignación de Evaluación',
     schema: evaluationInit,
     action: TypeAction.create,
     subject: TypeSubject.evaluationInit,
+    sendToRole: 'Evaluador',
   },
   {
     id: 'conductual',
@@ -32,6 +34,7 @@ export const evaluationCatalog: EvaluationCatalogItem[] = [
     schema: evaluationCondoctual,
     action: TypeAction.create,
     subject: TypeSubject.evaluationCondoctual,
+    sendToRole: 'Profesor',
   },
   {
     id: 'kinder',
@@ -40,6 +43,7 @@ export const evaluationCatalog: EvaluationCatalogItem[] = [
     schema: evaluationKinder,
     action: TypeAction.create,
     subject: TypeSubject.evaluationKinder,
+    sendToRole: 'Profesor',
   },
   {
     id: 'primaria-1-3',
@@ -48,6 +52,7 @@ export const evaluationCatalog: EvaluationCatalogItem[] = [
     schema: evaluation123Primaria,
     action: TypeAction.create,
     subject: TypeSubject.evaluation123Primaria,
+    sendToRole: 'Profesor',
   },
   {
     id: 'primaria-4-6',
@@ -56,6 +61,7 @@ export const evaluationCatalog: EvaluationCatalogItem[] = [
     schema: evaluation456Primaria,
     action: TypeAction.create,
     subject: TypeSubject.evaluation456Primaria,
+    sendToRole: 'Profesor',
   },
   {
     id: 'secundaria-1-3',
@@ -64,5 +70,6 @@ export const evaluationCatalog: EvaluationCatalogItem[] = [
     schema: evaluation123Secundaria,
     action: TypeAction.create,
     subject: TypeSubject.evaluation123Secundaria,
+    sendToRole: 'Profesor',
   },
 ];

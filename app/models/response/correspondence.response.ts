@@ -1,4 +1,12 @@
-import type { Evaluation } from "@/routes/admin/correspondence";
+import type { Evaluation, Question } from "@/routes/admin/correspondence";
+
+export interface SentTransmissionModel {
+  id: string;
+  receiverId: string;
+  status: string;
+  createdAt: string;
+  document: { type: string };
+}
 
 export interface DocumentTransmissionModel {
   id: string;
@@ -9,5 +17,7 @@ export interface DocumentTransmissionModel {
     id: string;
     type: string;
     data: Evaluation[];
+    childInfo?: Question[];
+    studentUserId?: string;
   }
 }

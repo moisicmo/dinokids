@@ -6,11 +6,9 @@ import {
 import {
   useCorrespondenceStore,
   useForm,
-  useStaffStore,
   useUserStore,
-  useAuthStore
 } from "@/hooks";
-import type { Evaluation } from "./model";
+import type { Evaluation, Question } from "./model";
 import { BodyForm } from "./body.form";
 
 interface Props {
@@ -18,12 +16,16 @@ interface Props {
   onBack?: () => void;
   readOnly?: boolean;
   title: string;
+  childInfo?: Question[];
+  sendToRole?: string;
 }
 const EvaluationForm = ({
   evaluationInit,
   onBack,
   readOnly = false,
   title,
+  childInfo,
+  sendToRole,
 }: Props) => {
 
   const [step, setStep] = useState(0);
@@ -32,8 +34,6 @@ const EvaluationForm = ({
   const next = () => setStep((s) => Math.min(s + 1, evaluationInit.length - 1));
   const prev = () => setStep((s) => Math.max(s - 1, 0));
   const bodyRef = useRef<HTMLDivElement>(null);
-
-  const { roleUser } = useAuthStore();
 
   const progress = ((step + 1) / evaluationInit.length) * 100;
 
@@ -61,7 +61,6 @@ const EvaluationForm = ({
   const { formState, onValueChange } = useForm(initialForm);
 
   const { createCorrespondence } = useCorrespondenceStore();
-  const { dataStaff, getStaffs } = useStaffStore();
   const { dataUser, getByRole } = useUserStore();
 
   const [receiver, setReceiver] = useState<{
@@ -70,21 +69,9 @@ const EvaluationForm = ({
   } | null>(null);
 
   useEffect(() => {
-    if (readOnly) return;
-    const roleParam = (() => {
-      switch (roleUser?.name) {
-        case 'Asesor Comercial':
-          return 'Evaluador';
-        case 'Evaluador':
-          return 'Profesor';
-        default:
-          return '';
-      }
-    })();
-    if (roleParam) {
-      getByRole(roleParam);
-    }
-  }, [readOnly]);
+    if (readOnly || !sendToRole) return;
+    getByRole(sendToRole);
+  }, [readOnly, sendToRole]);
 
   const finish = async () => {
     if (!receiver) {
@@ -107,10 +94,23 @@ const EvaluationForm = ({
       })
     );
 
+    // childInfo: si viene como prop (Evaluador continuando) se usa directo;
+    // si no, se extrae de la sección "Datos Personales" (Asesor Comercial)
+    const resolvedChildInfo: Question[] | undefined =
+      childInfo ??
+      (formState["Datos Personales"]
+        ? (Object.values(formState["Datos Personales"]) as any[]).map((q) => ({
+            question: q.question,
+            typeAnswer: q.typeAnswer,
+            answer: q.answer,
+          }))
+        : undefined);
+
     await createCorrespondence({
       type: title,
       data: result,
       receiverId: receiver.id,
+      ...(resolvedChildInfo ? { childInfo: resolvedChildInfo } : {}),
     });
 
     onBack?.();

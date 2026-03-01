@@ -12,14 +12,11 @@ import {
   ClipboardList as Inscription,
   CalendarClock as Booking,
   MonitorSmartphone as Room,
-  HandCoins as Debt,
   FileBarChart2 as Report,
   CalendarDays as Attendance,
   MessageSquareText as Correspondence,
   CreditCard as Payment,
   School as Specialty,
-  DollarSign as Price,
-  ArrowLeftRight as Refund,
   BarChart3 as ReportIcon,
   UserCog as Users,
   School,
@@ -57,7 +54,7 @@ export const useMenu = (): MenuItem[] => {
   // Académico
   const academicItems: MenuItem[] = [];
   
-  if (hasPermission(TypeAction.read, TypeSubject.inscription)) {
+  if (hasPermission(TypeAction.manage, TypeSubject.inscription)) {
     academicItems.push({
       path: '/admin/inscription',
       title: 'Inscripciones',
@@ -65,7 +62,7 @@ export const useMenu = (): MenuItem[] => {
     });
   }
   
-  if (hasPermission(TypeAction.read, TypeSubject.booking)) {
+  if (hasPermission(TypeAction.manage, TypeSubject.booking)) {
     academicItems.push({
       path: '/admin/booking',
       title: 'Reservas',
@@ -73,7 +70,7 @@ export const useMenu = (): MenuItem[] => {
     });
   }
   
-  if (hasPermission(TypeAction.read, TypeSubject.room)) {
+  if (hasPermission(TypeAction.manage, TypeSubject.room)) {
     academicItems.push({
       path: '/admin/room',
       title: 'Aulas',
@@ -81,7 +78,7 @@ export const useMenu = (): MenuItem[] => {
     });
   }
   
-  if (hasPermission(TypeAction.read, TypeSubject.specialty)) {
+  if (hasPermission(TypeAction.manage, TypeSubject.specialty)) {
     academicItems.push({
       path: '/admin/specialty',
       title: 'Especialidades',
@@ -89,7 +86,7 @@ export const useMenu = (): MenuItem[] => {
     });
   }
   
-  if (hasPermission(TypeAction.read, TypeSubject.teacher)) {
+  if (hasPermission(TypeAction.manage, TypeSubject.teacher)) {
     academicItems.push({
       path: '/admin/teacher',
       title: 'Profesores',
@@ -97,7 +94,7 @@ export const useMenu = (): MenuItem[] => {
     });
   }
   
-  if (hasPermission(TypeAction.read, TypeSubject.student)) {
+  if (hasPermission(TypeAction.manage, TypeSubject.student)) {
     academicItems.push({
       path: '/admin/student',
       title: 'Estudiantes',
@@ -105,7 +102,7 @@ export const useMenu = (): MenuItem[] => {
     });
   }
   
-  if (hasPermission(TypeAction.read, TypeSubject.tutor)) {
+  if (hasPermission(TypeAction.manage, TypeSubject.tutor)) {
     academicItems.push({
       path: '/admin/tutor',
       title: 'Tutores',
@@ -124,29 +121,13 @@ export const useMenu = (): MenuItem[] => {
   // Finanzas
   const financeItems: MenuItem[] = [];
   
-  if (hasPermission(TypeAction.read, TypeSubject.payment)) {
+  if (hasPermission(TypeAction.manage, TypeSubject.payment)) {
     financeItems.push({
       path: '/admin/payment',
       title: 'Pagos',
       icon: <Payment size={18} />,
     });
   }
-  
-  // if (hasPermission(TypeAction.read, TypeSubject.debt)) {
-  //   financeItems.push({
-  //     path: '/admin/debt',
-  //     title: 'Deudas',
-  //     icon: <Debt size={18} />,
-  //   });
-  // }
-  
-  // if (hasPermission(TypeAction.read, TypeSubject.refund)) {
-  //   financeItems.push({
-  //     path: '/admin/refund',
-  //     title: 'Devoluciones',
-  //     icon: <Refund size={18} />,
-  //   });
-  // }
   
   if (financeItems.length > 0) {
     menuItems.push({
@@ -159,7 +140,7 @@ export const useMenu = (): MenuItem[] => {
   // Administración
   const adminItems: MenuItem[] = [];
   
-  if (hasPermission(TypeAction.read, TypeSubject.branch)) {
+  if (hasPermission(TypeAction.manage, TypeSubject.branch)) {
     adminItems.push({
       path: '/admin/branch',
       title: 'Sucursales',
@@ -167,7 +148,7 @@ export const useMenu = (): MenuItem[] => {
     });
   }
   
-  if (hasPermission(TypeAction.read, TypeSubject.staff)) {
+  if (hasPermission(TypeAction.manage, TypeSubject.staff)) {
     adminItems.push({
       path: '/admin/staff',
       title: 'Staff',
@@ -175,7 +156,7 @@ export const useMenu = (): MenuItem[] => {
     });
   }
   
-  if (hasPermission(TypeAction.read, TypeSubject.role)) {
+  if (hasPermission(TypeAction.manage, TypeSubject.role)) {
     adminItems.push({
       path: '/admin/role',
       title: 'Roles',
@@ -183,7 +164,7 @@ export const useMenu = (): MenuItem[] => {
     });
   }
   
-  if (hasPermission(TypeAction.read, TypeSubject.permission)) {
+  if (hasPermission(TypeAction.manage, TypeSubject.permission)) {
     adminItems.push({
       path: '/admin/permission',
       title: 'Permisos',
@@ -198,22 +179,17 @@ export const useMenu = (): MenuItem[] => {
       group: adminItems,
     });
   }
-
-  // Comunicación
-  if (hasPermission(TypeAction.read, TypeSubject.correspondence)) {
+  // Evaluaciones
+  if (hasPermission(TypeAction.manage, TypeSubject.correspondence)) {
     menuItems.push({
-      title: 'Correspondencia',
-      icon: <Correspondence size={18} />,
-      group: [{
         path: '/admin/correspondence/evaluation',
         title: 'Evaluaciones',
         icon: <Correspondence size={18} />,
-      }],
     });
   }
 
   // Reportes
-  if (hasPermission(TypeAction.read, TypeSubject.report)) {
+  if (hasPermission(TypeAction.manage, TypeSubject.report)) {
     menuItems.push({
       title: 'Reportes',
       icon: <ReportIcon size={18} />,

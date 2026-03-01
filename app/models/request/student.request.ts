@@ -4,6 +4,7 @@ export interface StudentRequest extends UserRequest {
   birthdate: Date;
   gender: Gender;
   school?: string | null;
+  branchId?: string | null;
   grade?: number | null;
   educationLevel?: EducationLevel | null;
   tutorIds: string[];

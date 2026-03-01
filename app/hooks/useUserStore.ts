@@ -1,5 +1,5 @@
 import { coffeApi } from '@/services';
-import { useAlertStore, useErrorStore, usePermissionStore } from '.';
+import { useErrorStore, usePermissionStore } from '.';
 import { InitBaseResponse, TypeAction, TypeSubject, type BaseResponse, type UserModel, type UserRequest } from '@/models';
 import { useState } from 'react';
 
@@ -7,7 +7,6 @@ export const useUserStore = () => {
   const [dataUser, setDataUser] = useState<BaseResponse<UserModel>>(InitBaseResponse);
   const { handleError } = useErrorStore();
   const { requirePermission } = usePermissionStore();
-  const { showSuccess, showWarning, showError } = useAlertStore();
   const baseUrl = 'user';
 
   const getByRole = async (role: string) => {

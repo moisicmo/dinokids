@@ -1,5 +1,5 @@
 import { coffeApi } from '@/services';
-import { useAlertStore, useErrorStore, usePermissionStore } from '.';
+import { useAlertStore, useAuthStore, useErrorStore, usePermissionStore } from '.';
 import { InitBaseResponse, TypeAction, TypeSubject, type BaseResponse, type StudentModel, type StudentRequest } from '@/models';
 import { useState } from 'react';
 
@@ -8,6 +8,7 @@ export const useStudentStore = () => {
   const { handleError } = useErrorStore();
   const { requirePermission } = usePermissionStore();
   const { showSuccess, showWarning, showError } = useAlertStore();
+  const { branchSelect } = useAuthStore();
   const baseUrl = 'student';
 
   const getStudents = async (page: number = 1, limit: number = 10, keys: string = '') => {
@@ -28,7 +29,10 @@ export const useStudentStore = () => {
   const createStudent = async (body: StudentRequest) => {
     try {
       requirePermission(TypeAction.create, TypeSubject.student);
-      const { data } = await coffeApi.post(`/${baseUrl}/`, body);
+      const { data } = await coffeApi.post(`/${baseUrl}/`, {
+        ...body,
+        branchId: branchSelect?.id ?? body.branchId,
+      });
       console.log(data);
       getStudents();
       showSuccess('Estudiante creado correctamente');
@@ -47,6 +51,12 @@ export const useStudentStore = () => {
       throw handleError(error);
     }
   };
+  const getStudentById = async (id: string): Promise<StudentModel> => {
+    requirePermission(TypeAction.read, TypeSubject.student);
+    const { data } = await coffeApi.get(`/${baseUrl}/${id}`);
+    return data;
+  };
+
   const deleteStudent = async (id: string) => {
     try {
       requirePermission(TypeAction.delete, TypeSubject.student);
@@ -68,6 +78,7 @@ export const useStudentStore = () => {
     dataStudent,
     //* Métodos
     getStudents,
+    getStudentById,
     createStudent,
     updateStudent,
     deleteStudent,

@@ -9,6 +9,10 @@ export interface StudentModel {
     id: string;
     name: string;
   };
+  branch?: {
+    id: string;
+    name: string;
+  };
   grade: number;
   educationLevel: EducationLevel;
   tutors: TutorModel[];
