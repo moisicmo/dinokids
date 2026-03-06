@@ -123,6 +123,11 @@ export const useAuthStore = () => {
   };
 
   const setBranchSelect = (branch: BranchModel) => {
+    if (branch == null) {
+      localStorage.removeItem('branchSelect');
+      dispatch(setBranch({ branch: null as any }));
+      return;
+    }
     localStorage.setItem('branchSelect', JSON.stringify(branch));
     dispatch(setBranch({ branch }));
   };

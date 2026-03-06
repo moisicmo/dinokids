@@ -1,4 +1,5 @@
 import type { DebtModel } from "./debt.response";
+import type { BranchModel } from "./branch.response";
 
 
 interface inscriptionData {
@@ -6,6 +7,18 @@ interface inscriptionData {
   count: number;
 }
 
+interface BranchDashboardData {
+  branch: BranchModel;
+  metrics: {
+    totalBranches: number;
+    totalStudents: number;
+    totalTeachers: number;
+    totalDebts: number;
+    totalPayments: number;
+  };
+  inscriptionsData: inscriptionData[];
+  debts: DebtModel[];
+}
 
 export interface DashboardModel {
   debts: DebtModel[];
@@ -17,6 +30,7 @@ export interface DashboardModel {
     totalStudents: number;
     totalTeachers: number;
   };
+  allBranchesData?: BranchDashboardData[];
 }
 
 export const initDashboardModel:DashboardModel = {
@@ -28,5 +42,6 @@ export const initDashboardModel:DashboardModel = {
     totalPayments: 0,
     totalStudents: 0,
     totalTeachers: 0,
-  }
+  },
+  allBranchesData: [],
 }

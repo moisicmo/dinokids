@@ -20,7 +20,22 @@ export const useDashboardStore = () => {
 
   }
 
+  const getAllBranchesData = async () => {
+
+    try {
+      const { data } = await coffeApi.get(`/${baseUrl}/all`);
+      console.log(data);
+      const payload: DashboardModel = { ...data, allBranchesData: data };
+      console.log(payload);
+      return payload;
+    } catch (error) {
+      throw handleError(error);
+    }
+
+  }
+
   return {
     getData,
+    getAllBranchesData,
   }
 }

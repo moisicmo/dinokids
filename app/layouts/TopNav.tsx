@@ -43,6 +43,11 @@ export const TopNav = (props: Props) => {
 
           <Select
             onValueChange={(value) => {
+              if (value === 'all') {
+                setBranchSelect(null as any);
+                window.location.reload();
+                return;
+              }
               const branch = branchesUser.find(b => b.id === value);
               if (branch) {
                 setBranchSelect(branch);
@@ -55,6 +60,7 @@ export const TopNav = (props: Props) => {
             </SelectTrigger>
 
             <SelectContent>
+              <SelectItem value="all">Todos los branches</SelectItem>
               {branchesUser.map(branch => (
                 <SelectItem key={branch.id} value={branch.id}>
                   {branch.name}

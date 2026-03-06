@@ -20,7 +20,7 @@ export const SideNav = (props: Props) => {
     isLargeScreen,
   } = props;
   const { pathname } = useLocation();
-  const { user, roleUser } = useAuthStore();
+  const { user, roleUser, branchSelect } = useAuthStore();
   const menuItems = useMenu();
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({});
   const toggleMenu = (title: string) => {
@@ -29,6 +29,11 @@ export const SideNav = (props: Props) => {
       [title]: !prev[title],
     }));
   };
+
+  // Filtrar menú para mostrar solo Dashboard cuando no hay branch seleccionado
+  const filteredMenuItems = !branchSelect
+    ? menuItems.filter(item => item.path === '/admin/dashboard')
+    : menuItems;
 
 
   const content = (
@@ -42,7 +47,7 @@ export const SideNav = (props: Props) => {
       <span className="block text-sm text-gray-700">{roleUser?.name}</span>
     </div>
         <ul className="w-full space-y-2">
-          {menuItems.map((item) => {
+          {filteredMenuItems.map((item) => {
             // ITEM SIMPLE
             if (item.path) {
               return (
