@@ -56,7 +56,7 @@ const Login = () => {
               name="email"
               value={email}
               type="email"
-              label="usuario"
+              label="Correo"
               onChange={onInputChange}
               error={!!emailValid && formSubmitted}
               helperText={formSubmitted ? emailValid : ''}
