@@ -1,8 +1,8 @@
 import { Menu, ShoppingCart } from 'lucide-react';
-import { useAuthStore, useCartStore, usePopover } from '@/hooks';
+import { useAuthStore, useBranchStore, useCartStore, usePopover } from '@/hooks';
 import noimage from '@/assets/images/profile.png';
 import { AccountPopover } from './account.popover';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Profile } from './profile';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
@@ -18,9 +18,19 @@ export const TopNav = (props: Props) => {
   } = props;
   const accountPopover = usePopover();
 
-  const { branchesUser, branchSelect, setBranchSelect } = useAuthStore();
+  const { branchesUser, branchSelect, setBranchSelect, roleUser } = useAuthStore();
+  const { getAllBranches } = useBranchStore();
   const { cart } = useCartStore();
-  const [dialogProfile, setdialogProfile] = useState<boolean>(false)
+  const [dialogProfile, setdialogProfile] = useState<boolean>(false);
+  const [allBranches, setAllBranches] = useState<{ id: string; name: string }[]>([]);
+
+  const isSuperAdmin = roleUser?.name === 'Super Administrador';
+
+  useEffect(() => {
+    if (isSuperAdmin) {
+      getAllBranches().then(setAllBranches).catch(() => {});
+    }
+  }, [isSuperAdmin]);
 
   return (
 <>
@@ -48,20 +58,21 @@ export const TopNav = (props: Props) => {
                 window.location.reload();
                 return;
               }
-              const branch = branchesUser.find(b => b.id === value);
+              const list = isSuperAdmin ? allBranches : branchesUser;
+              const branch = list.find(b => b.id === value);
               if (branch) {
-                setBranchSelect(branch);
+                setBranchSelect(branch as any);
                 window.location.reload();
               }
             }}
           >
-            <SelectTrigger >
+            <SelectTrigger>
               <SelectValue placeholder={branchSelect?.name || "Seleccionar sucursal"} />
             </SelectTrigger>
 
             <SelectContent>
-              <SelectItem value="all">Todos los branches</SelectItem>
-              {branchesUser.map(branch => (
+              {isSuperAdmin && <SelectItem value="all">Todas las sucursales</SelectItem>}
+              {(isSuperAdmin ? allBranches : branchesUser).map(branch => (
                 <SelectItem key={branch.id} value={branch.id}>
                   {branch.name}
                 </SelectItem>

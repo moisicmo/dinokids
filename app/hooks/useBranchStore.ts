@@ -10,6 +10,15 @@ export const useBranchStore = () => {
   const { showSuccess, showWarning, showError } = useAlertStore();
   const baseUrl = 'branch';
 
+  const getAllBranches = async (): Promise<{ id: string; name: string }[]> => {
+    try {
+      const { data } = await coffeApi.get('/branch/all');
+      return data;
+    } catch (error) {
+      throw handleError(error);
+    }
+  };
+
   const getBranches = async (page: number = 1, limit: number = 10, keys: string = '') => {
 
     try {
@@ -71,6 +80,7 @@ export const useBranchStore = () => {
     //* Propiedades
     dataBranch,
     //* Métodos
+    getAllBranches,
     getBranches,
     createBranch,
     updateBranch,
