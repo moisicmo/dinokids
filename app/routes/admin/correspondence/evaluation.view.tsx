@@ -6,6 +6,7 @@ import { CorrespondenceTable } from './correspondence.table';
 import type { Question } from '.';
 import { TypeAction, TypeSubject, type AdminSentTransmissionModel, type DocumentTransmissionModel, type StudentModel, type SentTransmissionModel } from '@/models';
 import { Button } from '@/components';
+import { Eye } from 'lucide-react';
 import { SessionTrackingModal, WeeklyPlanningModal, EvaluationPlanningModal, DocumentEditor } from '@/routes/admin/student';
 
 const ChildInfoPanel = ({ childInfo }: { childInfo: Question[] }) => (
@@ -23,7 +24,7 @@ const ChildInfoPanel = ({ childInfo }: { childInfo: Question[] }) => (
 );
 
 const EvaluationView = () => {
-  const { dataCorrespondence, dataSent, dataAllSent, getCorrespondencees, getSentCorrespondences, getAllSentCorrespondences } = useCorrespondenceStore();
+  const { dataCorrespondence, dataSent, dataAllSent, getCorrespondencees, getSentCorrespondences, getAllSentCorrespondences, getCorrespondenceById } = useCorrespondenceStore();
   const { hasPermission } = usePermissionStore();
   const { getStudentById, updateStudent } = useStudentStore();
 
@@ -48,6 +49,15 @@ const EvaluationView = () => {
       setter(student);
     } catch {
       // no student linked yet
+    }
+  };
+
+  const openSentEvaluation = async (id: string) => {
+    try {
+      const doc = await getCorrespondenceById(id);
+      setViewEvaluation(doc);
+    } catch {
+      // error already handled in store
     }
   };
 
@@ -148,12 +158,21 @@ const EvaluationView = () => {
                             Para: {item.receiver.role?.name} — {item.receiver.name} {item.receiver.lastName}
                           </span>
                         </div>
-                        <span className="text-gray-400 text-xs shrink-0 ml-4">
-                          {new Date(item.createdAt).toLocaleString('es-PE', {
-                            day: '2-digit', month: '2-digit', year: 'numeric',
-                            hour: '2-digit', minute: '2-digit',
-                          })}
-                        </span>
+                        <div className="flex items-center gap-3 shrink-0 ml-4">
+                          <span className="text-gray-400 text-xs">
+                            {new Date(item.createdAt).toLocaleString('es-PE', {
+                              day: '2-digit', month: '2-digit', year: 'numeric',
+                              hour: '2-digit', minute: '2-digit',
+                            })}
+                          </span>
+                          <button
+                            onClick={() => openSentEvaluation(item.id)}
+                            title="Ver evaluación"
+                            className="p-1 rounded hover:bg-gray-100 transition"
+                          >
+                            <Eye className="w-4 h-4 text-blue-500" />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -202,12 +221,21 @@ const EvaluationView = () => {
                             Para: {item.receiver.role?.name} — {item.receiver.name} {item.receiver.lastName}
                           </span>
                         </div>
-                        <span className="text-gray-400 text-xs shrink-0 ml-4">
-                          {new Date(item.createdAt).toLocaleString('es-PE', {
-                            day: '2-digit', month: '2-digit', year: 'numeric',
-                            hour: '2-digit', minute: '2-digit',
-                          })}
-                        </span>
+                        <div className="flex items-center gap-3 shrink-0 ml-4">
+                          <span className="text-gray-400 text-xs">
+                            {new Date(item.createdAt).toLocaleString('es-PE', {
+                              day: '2-digit', month: '2-digit', year: 'numeric',
+                              hour: '2-digit', minute: '2-digit',
+                            })}
+                          </span>
+                          <button
+                            onClick={() => openSentEvaluation(item.id)}
+                            title="Ver evaluación"
+                            className="p-1 rounded hover:bg-gray-100 transition"
+                          >
+                            <Eye className="w-4 h-4 text-blue-500" />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}

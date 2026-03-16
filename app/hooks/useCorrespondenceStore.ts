@@ -54,6 +54,15 @@ export const useCorrespondenceStore = () => {
     }
   }
 
+  const getCorrespondenceById = async (id: string): Promise<DocumentTransmissionModel> => {
+    try {
+      const { data } = await coffeApi.get(`/${baseUrl}/${id}`);
+      return data;
+    } catch (error) {
+      throw handleError(error);
+    }
+  }
+
   const createCorrespondence = async (body: CorrespondenceRequest) => {
     try {
       requirePermission(TypeAction.create, TypeSubject.correspondence);
@@ -75,6 +84,7 @@ export const useCorrespondenceStore = () => {
     getCorrespondencees,
     getSentCorrespondences,
     getAllSentCorrespondences,
+    getCorrespondenceById,
     createCorrespondence,
   }
 }
