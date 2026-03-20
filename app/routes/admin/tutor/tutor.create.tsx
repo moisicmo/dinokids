@@ -1,7 +1,7 @@
 
 import { useEffect, useState, type FormEvent } from 'react';
 import { useForm } from '@/hooks';
-import { Button, UserFormFields } from '@/components';
+import { Button, DrawerCustom, UserFormFields } from '@/components';
 import { formTutorInit, formTutorValidations, type TutorModel, type TutorRequest } from '@/models';
 
 interface Props {
@@ -9,6 +9,7 @@ interface Props {
   item: TutorModel | null;
   onCreate: (body: TutorRequest) => void;
   onUpdate: (id: string, body: TutorRequest) => void;
+  variant?: 'modal' | 'drawer';
 }
 
 export const TutorCreate = (props: Props) => {
@@ -17,6 +18,7 @@ export const TutorCreate = (props: Props) => {
     item,
     onCreate,
     onUpdate,
+    variant = 'modal',
   } = props;
 
   const {
@@ -75,38 +77,52 @@ export const TutorCreate = (props: Props) => {
 
 
 
+  const formContent = (
+    <form onSubmit={sendSubmit} className="space-y-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <UserFormFields
+          user={user}
+          userValid={userValid}
+          formSubmitted={formSubmitted}
+          onInputChange={onInputChange}
+          onValueChange={onValueChange}
+        />
+      </div>
+      <div className="flex justify-end gap-2 pt-2">
+        <Button
+          onClick={() => {
+            onResetForm();
+            handleClose();
+          }}
+        >
+          Cancelar
+        </Button>
+        <Button type='submit'>
+          {item ? 'Editar' : 'Crear'}
+        </Button>
+      </div>
+    </form>
+  );
+
+  if (variant === 'drawer') {
+    return (
+      <DrawerCustom
+        open={true}
+        onClose={handleClose}
+        title={item ? `Editar ${item.user.name}` : 'Nuevo Tutor'}
+      >
+        {formContent}
+      </DrawerCustom>
+    );
+  }
+
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6">
         <h2 className="text-xl font-bold mb-4">
           {item ? `Editar ${item.user.name}` : 'Nuevo Tutor'}
         </h2>
-        <form onSubmit={sendSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <UserFormFields
-              user={user}
-              userValid={userValid}
-              formSubmitted={formSubmitted}
-              onInputChange={onInputChange}
-              onValueChange={onValueChange}
-            />
-          </div>
-          <div className="flex justify-end gap-2 pt-2">
-            <Button
-              onClick={() => {
-                onResetForm();
-                handleClose();
-              }}
-            >
-              Cancelar
-            </Button>
-            <Button
-              type='submit'
-            >
-              {item ? 'Editar' : 'Crear'}
-            </Button>
-          </div>
-        </form>
+        {formContent}
       </div>
     </div>
   );

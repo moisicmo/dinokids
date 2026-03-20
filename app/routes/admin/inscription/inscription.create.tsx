@@ -113,7 +113,7 @@ export const InscriptionCreate = (props: Props) => {
   return (
     <>
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-      <div className={`bg-white rounded-lg w-max  p-6 h-[60 vh] overflow-y-auto`}>
+      <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6">
         <h2 className="text-xl font-bold mb-4">
           {item ? 'Editar inscripción' : 'Nueva Inscripción'}
         </h2>
@@ -158,23 +158,27 @@ export const InscriptionCreate = (props: Props) => {
             }
             {
               step === 3 &&
-              <div className="space-y-4">
-                <InputCustom
-                  name="inscriptionPrice"
-                  value={inscriptionPrice}
-                  label="Precio de la inscripción"
-                  onChange={onInputChange}
-                  error={!!inscriptionPriceValid && formSubmitted}
-                  helperText={formSubmitted ? inscriptionPriceValid : ''}
-                />
-                <InputCustom
-                  name="monthPrice"
-                  value={monthPrice}
-                  label="Precio de la mensualidad"
-                  onChange={onInputChange}
-                  error={!!monthPriceValid && formSubmitted}
-                  helperText={formSubmitted ? monthPriceValid : ''}
-                />
+              <div className="flex gap-4 w-full">
+                <div className="flex-1">
+                  <InputCustom
+                    name="inscriptionPrice"
+                    value={inscriptionPrice}
+                    label="Precio de la inscripción"
+                    onChange={onInputChange}
+                    error={!!inscriptionPriceValid && formSubmitted}
+                    helperText={formSubmitted ? inscriptionPriceValid : ''}
+                  />
+                </div>
+                <div className="flex-1">
+                  <InputCustom
+                    name="monthPrice"
+                    value={monthPrice}
+                    label="Precio de la mensualidad"
+                    onChange={onInputChange}
+                    error={!!monthPriceValid && formSubmitted}
+                    helperText={formSubmitted ? monthPriceValid : ''}
+                  />
+                </div>
               </div>
             }
           </div>
@@ -231,6 +235,7 @@ export const InscriptionCreate = (props: Props) => {
       item={null}
       onCreate={createStudent}
       onUpdate={async () => {}}
+      variant="drawer"
     />
     </>
   );

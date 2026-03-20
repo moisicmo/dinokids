@@ -1,4 +1,5 @@
 export * from './sidenav.custom';
+export * from './drawer.custom';
 export * from './input.custom';
 export * from './action.buttons';
 export * from './date.custom';
