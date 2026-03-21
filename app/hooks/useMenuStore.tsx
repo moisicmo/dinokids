@@ -21,6 +21,7 @@ import {
   UserCog as Users,
   School,
   DollarSign,
+  FileCode2 as PdfTemplateIcon,
 } from 'lucide-react';
 
 interface MenuItem {
@@ -179,6 +180,15 @@ export const useMenu = (): MenuItem[] => {
       group: adminItems,
     });
   }
+  // Plantillas PDF
+  if (hasPermission(TypeAction.manage, TypeSubject.pdfTemplate)) {
+    menuItems.push({
+      path: '/admin/pdf-template',
+      title: 'Plantillas PDF',
+      icon: <PdfTemplateIcon size={18} />,
+    });
+  }
+
   // Evaluaciones
   if (hasPermission(TypeAction.manage, TypeSubject.correspondence)) {
     menuItems.push({

@@ -28,3 +28,4 @@ export * from './usePaymentStore';
 export * from './useDashboardStore';
 export * from './useAttendanceStore';
 export * from './useCorrespondenceStore';
+export * from './usePdfTemplateStore';

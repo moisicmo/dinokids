@@ -25,6 +25,7 @@ export * from './request/update-password.request';
 export * from './request/forgot-password.request';
 export * from './request/attendance.request';
 export * from './request/correspondence.request';
+export * from './request/pdf-template.request';
 
 // RESPONSE
 export * from './response/response';
@@ -52,6 +53,7 @@ export * from './response/invoice.response';
 export * from './response/dashboard.response';
 export * from './response/attendance.response';
 export * from './response/correspondence.response';
+export * from './response/pdf-template.response';
 
 export * from './pagination';
 
