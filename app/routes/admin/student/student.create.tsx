@@ -57,35 +57,35 @@ export const StudentCreate = (props: Props) => {
 
     if (item == null) {
       await onCreate({
-        numberDocument: user.numberDocument.trim() == ''? null :user.numberDocument.trim(),
+        numberDocument: user.numberDocument?.trim() || null,
         typeDocument: 'DNI',
         name: user.name.trim(),
         lastName: user.lastName.trim(),
-        email: user.email.trim() == ''? null: user.email.trim(),
+        email: user.email?.trim() || null,
         phone: [],
         birthdate,
         gender,
-        school: school.name.trim(),
-        grade: parseInt(grade),
+        school: school.name?.trim() || null,
+        grade: grade != null ? parseInt(grade) : null,
         educationLevel,
         tutorIds: tutors.map((tutor: TutorModel) => tutor.userId),
-        numberCard: user.numberCard.trim() == ''? null: user.numberCard.trim(),
+        numberCard: user.numberCard?.trim() || null,
       });
     } else {
       await onUpdate(item.userId, {
-        numberDocument: user.numberDocument.trim() == ''? null :user.numberDocument.trim(),
+        numberDocument: user.numberDocument?.trim() || null,
         typeDocument: 'DNI',
         name: user.name.trim(),
         lastName: user.lastName.trim(),
-        email: user.email.trim() == ''? null: user.email.trim(),
+        email: user.email?.trim() || null,
         phone: [],
         birthdate,
         gender,
-        school: school.name.trim(),
-        grade: parseInt(grade),
+        school: school.name?.trim() || null,
+        grade: grade != null ? parseInt(grade) : null,
         educationLevel,
         tutorIds: tutors.map((tutor: TutorModel) => tutor.userId),
-        numberCard: user.numberCard.trim() == ''? null: user.numberCard.trim(),
+        numberCard: user.numberCard?.trim() || null,
       });
     }
 
@@ -109,15 +109,15 @@ export const StudentCreate = (props: Props) => {
   maxBirthdate.setFullYear(maxBirthdate.getFullYear() - 2);
 
   const genderOptions: ValueSelect[] = Object.entries(Gender).map(
-    ([key, value]) => ({
-      id: key,
+    ([, value]) => ({
+      id: value,
       value,
     })
   );
 
   const educationLevelOptions: ValueSelect[] = Object.entries(EducationLevel).map(
-    ([key, value]) => ({
-      id: key,
+    ([, value]) => ({
+      id: value,
       value,
     })
   );

@@ -1,6 +1,8 @@
 import { coffeApi } from '@/services';
-import { useAlertStore, useErrorStore, usePermissionStore } from '.';
+import { useAlertStore, useAuthStore, useErrorStore, usePermissionStore } from '.';
 import { InitBaseResponse, TypeAction, TypeSubject, type BaseResponse, type BranchModel, type BranchRequest } from '@/models';
+import { useDispatch } from 'react-redux';
+import { setBranch, setBranchesUser } from '@/store';
 import { useState } from 'react';
 
 export const useBranchStore = () => {
@@ -8,6 +10,8 @@ export const useBranchStore = () => {
   const { handleError } = useErrorStore();
   const { requirePermission } = usePermissionStore();
   const { showSuccess, showWarning, showError } = useAlertStore();
+  const { branchesUser, branchSelect } = useAuthStore();
+  const dispatch = useDispatch();
   const baseUrl = 'branch';
 
   const getAllBranches = async (): Promise<{ id: string; name: string }[]> => {
@@ -37,13 +41,14 @@ export const useBranchStore = () => {
 
   }
 
-  const createBranch = async (body: BranchRequest) => {
+  const createBranch = async (body: BranchRequest): Promise<BranchModel> => {
     try {
       requirePermission(TypeAction.create, TypeSubject.branch);
       const { data } = await coffeApi.post(`/${baseUrl}/`, body);
       console.log(data)
       getBranches();
       showSuccess('Sucursal creado correctamente');
+      return data;
     } catch (error: any) {
       throw handleError(error);
     }
@@ -68,6 +73,18 @@ export const useBranchStore = () => {
       if (result.isConfirmed) {
         await coffeApi.delete(`/${baseUrl}/${id}`);
         getBranches();
+
+        // Sync branch selector: remove deleted branch from user's list
+        const updatedBranches = branchesUser.filter(b => b.id !== id);
+        dispatch(setBranchesUser({ branches: updatedBranches }));
+        localStorage.setItem('branches', JSON.stringify(updatedBranches));
+
+        // If the deleted branch was selected, clear it
+        if (branchSelect?.id === id) {
+          dispatch(setBranch({ branch: null }));
+          localStorage.removeItem('branchSelect');
+        }
+
         showSuccess('Sucursal eliminado correctamente');
       } else {
         showError('Cancelado', 'La sucursal esta a salvo :)');

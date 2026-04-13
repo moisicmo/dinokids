@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { coffeApi } from '@/services';
-import { onLogin, onLogout, setBranch, setBranchesUser, setRoleUser, setUserProfile } from '@/store';
+import { onLogin, onLogout, setBranch, setBranchesUser, setRoleUser, setUserProfile, setUserId } from '@/store';
 import { useAppSelector, useErrorStore } from '.';
 import type { AuthModel, AuthRequest, BranchModel, ValidatePinRequest, UpdateProfileRequest, UpdatePasswordRequest, ForgotPasswordRequest } from '@/models';
 import { useState } from 'react';
@@ -11,18 +11,23 @@ export interface validateEmail {
   email: string;
 }
 
-const decodeTokenProfile = (token: string): { name: string; lastName: string; email: string } => {
+const decodeTokenProfile = (token: string): { name: string; lastName: string; email: string; userId: string } => {
   try {
     const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
-    return { name: payload.name ?? '', lastName: payload.lastName ?? '', email: payload.email ?? '' };
+    return {
+      name: payload.name ?? '',
+      lastName: payload.lastName ?? '',
+      email: payload.email ?? '',
+      userId: payload.sub ?? payload.id ?? payload.userId ?? '',
+    };
   } catch {
-    return { name: '', lastName: '', email: '' };
+    return { name: '', lastName: '', email: '', userId: '' };
   }
 };
 
 
 export const useAuthStore = () => {
-  const { status, user, userProfile, roleUser, branchesUser, branchSelect } = useAppSelector(state => state.auth);
+  const { status, user, userId, userProfile, roleUser, branchesUser, branchSelect } = useAppSelector(state => state.auth);
   const [showValidateEmail, setShowValidateEmail] = useState<validateEmail | null>(null);
 
   const dispatch = useDispatch();
@@ -33,12 +38,15 @@ export const useAuthStore = () => {
       const { data }: { data: AuthModel } = await coffeApi.post('/auth', body);
       const user = `${data.name} ${data.lastName}`;
       const role = data.role;
+      const userIdStr = String(data.id);
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', user);
+      localStorage.setItem('userId', userIdStr);
       localStorage.setItem('role', JSON.stringify(role));
       localStorage.setItem('branches', JSON.stringify(data.branches));
       localStorage.setItem('branchSelect', JSON.stringify(data.branches[0]));
       dispatch(onLogin(user));
+      dispatch(setUserId(userIdStr));
       dispatch(setUserProfile({ name: data.name, lastName: data.lastName, email: data.email ?? '' }));
       dispatch(setRoleUser({ role }));
       dispatch(setBranchesUser({ branches: data.branches }));
@@ -67,8 +75,12 @@ export const useAuthStore = () => {
     const token = localStorage.getItem('token');
     if (token) {
       const user = localStorage.getItem('user');
+      const profile = decodeTokenProfile(token);
       dispatch(onLogin(user));
-      dispatch(setUserProfile(decodeTokenProfile(token)));
+      dispatch(setUserProfile(profile));
+      // userId – prefer localStorage fallback, use decoded sub as backup
+      const storedUserId = localStorage.getItem('userId') ?? profile.userId;
+      if (storedUserId) dispatch(setUserId(storedUserId));
       // rol
       const role = localStorage.getItem('role');
       if (role != null){
@@ -137,6 +149,7 @@ export const useAuthStore = () => {
     //* Propiedades
     status,
     user,
+    userId,
     userProfile,
     roleUser,
     showValidateEmail,

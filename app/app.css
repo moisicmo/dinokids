@@ -89,29 +89,29 @@
   --color-tertiary-700: #184a6f;
   --color-tertiary-800: #0e334e;
   --color-tertiary-900: #051d2f;
-  /* color primary */
-  --color-primary: #ac1380;
-  --color-primary-100: #fce9f5;
-  --color-primary-200: #f5c1e1;
-  --color-primary-300: #ee99cc;
-  --color-primary-400: #e771b8;
-  --color-primary-500: #ac1380;
-  --color-primary-600: #90116c;
-  --color-primary-700: #740e58;
-  --color-primary-800: #580b44;
-  --color-primary-900: #3c082f;
+  /* color primary — Pantone 2405 CP */
+  --color-primary: #B0008E;
+  --color-primary-100: #fce3f4;
+  --color-primary-200: #f5b3e3;
+  --color-primary-300: #ee83d2;
+  --color-primary-400: #d400aa;
+  --color-primary-500: #B0008E;
+  --color-primary-600: #8e0072;
+  --color-primary-700: #6c0057;
+  --color-primary-800: #4a003b;
+  --color-primary-900: #280020;
 
-  /* color secondary */
-  --color-secondary: #6ca636;
-  --color-secondary-100: #edf7e9;
-  --color-secondary-200: #cce9c2;
-  --color-secondary-300: #aadb9b;
-  --color-secondary-400: #89cd74;
-  --color-secondary-500: #6ca636;
-  --color-secondary-600: #598a2c;
-  --color-secondary-700: #466d23;
-  --color-secondary-800: #32511a;
-  --color-secondary-900: #1f3510;
+  /* color secondary — Pantone 7737 CP */
+  --color-secondary: #6BA539;
+  --color-secondary-100: #eef6e5;
+  --color-secondary-200: #cde8ab;
+  --color-secondary-300: #acd971;
+  --color-secondary-400: #89c64e;
+  --color-secondary-500: #6BA539;
+  --color-secondary-600: #54842d;
+  --color-secondary-700: #3e6321;
+  --color-secondary-800: #294215;
+  --color-secondary-900: #13210a;
 
   /* color info */
   --color-info: #06AED4;
@@ -226,9 +226,8 @@ body {
 :root {
 
   
-  --primary: #ac1380;
-  --secondary: #6ca636;
-  --tertiary: #2e7db8;
+  --primary: #B0008E;
+  --secondary: #6BA539;
 
   --radius: 0.625rem;
   --background: oklch(1 0 0);

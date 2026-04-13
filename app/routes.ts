@@ -27,6 +27,8 @@ export default [
       ...prefix("report", [
         route("inscription", "routes/admin/report/report-inscription.view.tsx"),
         route("debt", "routes/admin/report/report-debt.view.tsx"),
+        route("attendance", "routes/admin/report/report-attendance.view.tsx"),
+        route("financial", "routes/admin/report/report-financial.view.tsx"),
       ]),
       route("pdf-template", "routes/admin/pdf-template/pdf-template.view.tsx"),
     ]),

@@ -14,120 +14,114 @@ interface Props {
 }
 
 export const SideNav = (props: Props) => {
-  const {
-    open,
-    onClose,
-    isLargeScreen,
-  } = props;
+  const { open, onClose, isLargeScreen } = props;
   const { pathname } = useLocation();
   const { user, roleUser, branchSelect } = useAuthStore();
   const menuItems = useMenu();
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({});
+
   const toggleMenu = (title: string) => {
-    setExpandedMenus((prev) => ({
-      ...prev,
-      [title]: !prev[title],
-    }));
+    setExpandedMenus((prev) => ({ ...prev, [title]: !prev[title] }));
   };
 
-  // Filtrar menú para mostrar solo Dashboard cuando no hay branch seleccionado
   const filteredMenuItems = !branchSelect
-    ? menuItems.filter(item => item.path === '/admin/dashboard')
+    ? menuItems.filter((item) => item.path === '/admin/dashboard')
     : menuItems;
 
-
   const content = (
-<nav className="w-[210px] h-full px-2 py-4 shadow-md overflow-y-auto">
-  <div className="flex flex-col items-center">
-    <img src={logo} alt="Logo" className="w-24 mb-4" />
+    <nav className="w-[220px] h-full flex flex-col overflow-hidden">
 
-    {/* Contenedor solo para texto */}
-    <div className="w-full text-left px-2">
-      <span className="block text-sm text-gray-700">{`${user}`}</span>
-      <span className="block text-sm text-gray-700">{roleUser?.name}</span>
-    </div>
-        <ul className="w-full space-y-2">
-          {filteredMenuItems.map((item) => {
-            // ITEM SIMPLE
-            if (item.path) {
-              return (
+      {/* ── Header limpio ── */}
+      <div className="flex flex-col items-center px-4 pt-5 pb-4 border-b border-gray-100">
+        <img src={logo} alt="Logo" className="w-20 mb-3" />
+        <p className="font-semibold text-sm text-gray-800 leading-tight text-center">{user as string}</p>
+        {roleUser?.name && (
+          <span
+            className="mt-1.5 text-[10px] font-medium px-2.5 py-0.5 rounded-full text-white"
+            style={{ backgroundColor: '#6BA539' }}
+          >
+            {roleUser.name}
+          </span>
+        )}
+      </div>
+
+      {/* ── Navegación ── */}
+      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5 bg-white">
+        {filteredMenuItems.map((item) => {
+          if (item.path) {
+            return (
+              <SideNavCustom
+                key={item.title}
+                title={item.title}
+                icon={item.icon}
+                path={item.path}
+                active={pathname === item.path}
+              />
+            );
+          }
+
+          if (item.group) {
+            const isExpanded = expandedMenus[item.title];
+            const isActive = item.group.some((sub) => sub.path === pathname);
+
+            return (
+              <div key={item.title} className="space-y-0.5">
                 <SideNavCustom
-                  key={item.title}
                   title={item.title}
                   icon={item.icon}
-                  path={item.path}
-                  active={pathname === item.path}
+                  active={isActive}
+                  onClick={() => toggleMenu(item.title)}
+                  rightIcon={
+                    <ChevronRight
+                      className={cn('h-3.5 w-3.5 transition-transform duration-200', isExpanded && 'rotate-90')}
+                    />
+                  }
                 />
-              );
-            }
-
-            // ITEM CON SUBMENÚ
-            if (item.group) {
-              const isExpanded = expandedMenus[item.title];
-              const isActive = item.group.some(
-                (sub) => sub.path === pathname
-              );
-
-              return (
-                <div key={item.title} className="space-y-1">
-                  <SideNavCustom
-                    title={item.title}
-                    icon={item.icon}
-                    active={isActive}
-                    onClick={() => toggleMenu(item.title)}
-                    rightIcon={
-                      <ChevronRight
-                        className={cn(
-                          'h-4 w-4 transition-transform',
-                          isExpanded && 'rotate-90'
-                        )}
+                {isExpanded && (
+                  <div className="ml-5 pl-3 border-l border-gray-100 space-y-0.5">
+                    {item.group.map((sub) => (
+                      <SideNavCustom
+                        key={sub.title}
+                        title={sub.title}
+                        path={sub.path}
+                        active={pathname === sub.path}
                       />
-                    }
-                  />
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          }
 
-                  {isExpanded && (
-                    <div className="ml-6 space-y-1">
-                      {item.group.map((sub) => (
-                        <SideNavCustom
-                          key={sub.title}
-                          title={sub.title}
-                          path={sub.path}
-                          active={pathname === sub.path}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            }
+          return null;
+        })}
+      </div>
 
-            return null;
-          })}
-        </ul>
+      {/* ── Footer ── */}
+      <div className="px-4 py-3 border-t border-gray-100 bg-white">
+        <p className="text-[10px] text-gray-400 text-center">DinoKids © {new Date().getFullYear()}</p>
       </div>
     </nav>
   );
 
-  // 👉 Sidebar permanente en pantallas grandes
   if (isLargeScreen) {
     return (
-      <aside className="h-screen fixed top-0 left-0 bg-white z-40">
+      <aside className="h-screen fixed top-0 left-0 shadow-sm z-40 bg-white border-r border-gray-100">
         {content}
       </aside>
-
     );
   }
 
-  // 👉 Sidebar móvil deslizante con overlay
   return (
     <>
       {!isLargeScreen && open && (
-        <div className="fixed inset-0 z-40 bg-black/60" onClick={onClose}></div>
+        <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" onClick={onClose} />
       )}
-
       <aside
-        className={`fixed top-0 left-0 h-full z-50 bg-white w-[210px] transform ${open ? 'translate-x-0' : '-translate-x-full'
-          } transition-transform duration-300`}
+        className={cn(
+          'fixed top-0 left-0 h-full z-50 w-[220px] bg-white shadow-xl transition-transform duration-300',
+          open ? 'translate-x-0' : '-translate-x-full'
+        )}
       >
         {content}
       </aside>

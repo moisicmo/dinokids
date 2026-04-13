@@ -12,6 +12,7 @@ export const authSlice = createSlice({
   initialState: {
     status: 'checking',
     user: {},
+    userId: null as string | null,
     userProfile: { name: '', lastName: '', email: '' } as UserProfile,
     roleUser: null as RoleModel | null,
     branchesUser: [] as BranchModel[],
@@ -25,10 +26,14 @@ export const authSlice = createSlice({
     onLogout: (state) => {
       state.status = 'not-authenticated';
       state.user = {};
+      state.userId = null;
       state.userProfile = { name: '', lastName: '', email: '' };
     },
     setUserProfile: (state, { payload }: { payload: UserProfile }) => {
       state.userProfile = payload;
+    },
+    setUserId: (state, { payload }: { payload: string }) => {
+      state.userId = payload;
     },
     setRoleUser: (state, { payload }) => {
       state.roleUser = payload.role;
@@ -44,4 +49,4 @@ export const authSlice = createSlice({
 
 
 // Action creators are generated for each case reducer function
-export const { onLogin, onLogout, setUserProfile, setRoleUser, setBranchesUser, setBranch } = authSlice.actions;
+export const { onLogin, onLogout, setUserProfile, setUserId, setRoleUser, setBranchesUser, setBranch } = authSlice.actions;

@@ -10,7 +10,7 @@ const AdminLayout = () => {
   const [openNav, setOpenNav] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
 
-  const SIDENAV_WIDTH = 210;
+  const SIDENAV_WIDTH = 220;
   const [isLargeScreen, setIsLargeScreen] = useState(false);
 
 
@@ -48,8 +48,11 @@ const AdminLayout = () => {
 
           {/* Contenido principal */}
           <main
-            className="flex-1 p-3 overflow-y-auto"
-            style={{ paddingLeft: isLargeScreen ? `${SIDENAV_WIDTH}px` : undefined }}
+            className="flex-1 overflow-y-auto"
+            style={{
+              padding: '24px',
+              paddingLeft: isLargeScreen ? `${SIDENAV_WIDTH + 24}px` : '24px',
+            }}
           >
             <Outlet />
           </main>

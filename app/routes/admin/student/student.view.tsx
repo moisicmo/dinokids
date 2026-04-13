@@ -5,7 +5,7 @@ import { EvaluationPlanningModal, SessionTrackingModal, StudentCreate, StudentTa
 import { usePermissionStore, useStudentStore } from '@/hooks';
 
 const studentView = () => {
-  const { dataStudent, getStudents, createStudent, updateStudent, deleteStudent } = useStudentStore();
+  const { dataStudent, getStudents, createStudent, updateStudent, deleteStudent, getStudentById } = useStudentStore();
 
   const [openDialog, setOpenDialog] = useState(false);
   const [itemEdit, setItemEdit] = useState<StudentModel | null>(null);
@@ -37,8 +37,9 @@ const studentView = () => {
 
       {/* Tabla de student */}
       <StudentTable
-        handleEdit={(v) => {
-          setItemEdit(v);
+        handleEdit={async (v) => {
+          const full = await getStudentById(v.userId);
+          setItemEdit(full);
           handleDialog(true);
         }}
         dataStudent={dataStudent}
