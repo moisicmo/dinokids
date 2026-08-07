@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router';
 import { TypeAction, TypeSubject, type BranchModel } from '@/models';
 import { BranchCreate, BranchTable } from '.';
 import { Button } from '@/components';
-import { useBranchStore, usePermissionStore } from '@/hooks';
-import Swal from 'sweetalert2';
+import { useAlertStore, useBranchStore, usePermissionStore } from '@/hooks';
 
 const branchView = () => {
   const { dataBranch, getBranches, createBranch, updateBranch, deleteBranch } = useBranchStore();
+  const { showDesition } = useAlertStore();
   const navigate = useNavigate();
 
   const [openDialog, setOpenDialog] = useState(false);
@@ -22,15 +22,11 @@ const branchView = () => {
   const handleCreate = async (body: Parameters<typeof createBranch>[0]) => {
     await createBranch(body);
     handleDialog(false);
-    const result = await Swal.fire({
-      title: '¿Asignar sucursal a un usuario?',
-      text: 'La sucursal fue creada. ¿Deseas ir a Staffs para asignarla a un usuario?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Ir a Staffs',
-      cancelButtonText: 'No por ahora',
-      confirmButtonColor: '#B0008E',
-    });
+    const result = await showDesition(
+      '¿Asignar sucursal a un usuario?',
+      'La sucursal fue creada. ¿Deseas ir a Staffs para asignarla a un usuario?',
+      'Ir a Staffs',
+    );
     if (result.isConfirmed) navigate('/admin/staff');
   };
 
@@ -38,7 +34,7 @@ const branchView = () => {
     <>
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-gray-800">Sucursales</h2>
+        <h2 className="text-xl font-semibold text-foreground">Sucursales</h2>
         {
           hasPermission(TypeAction.create, TypeSubject.branch) &&
           <Button

@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface Props {
   total: number;
@@ -27,38 +28,42 @@ export const PaginationControls = (props: Props) => {
       <div className="flex items-center space-x-6">
         {/* Dropdown de cantidad */}
         <div className="flex items-center space-x-2">
-          <span>Filas por página:</span>
-          <select
-            value={limit}
-            onChange={(e) => onRowsPerPageChange(Number(e.target.value))}
-            className="bg-transparent border-none focus:outline-none"
+          <span className="text-foreground">Filas por página:</span>
+          <Select
+            value={String(limit)}
+            onValueChange={(val) => onRowsPerPageChange(Number(val))}
           >
-            {[5, 10, 25].map((n) => (
-              <option key={n} value={n} className="text-black">
-                {n}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger className="w-auto border-none bg-transparent shadow-none">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {[5, 10, 25].map((n) => (
+                <SelectItem key={n} value={String(n)}>
+                  {n}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Rango */}
-        <>
+        <span className="text-foreground">
           {from}–{to} de {total}
-        </>
+        </span>
 
         {/* Botones de navegación */}
         <div className="flex items-center space-x-2">
           <button
             onClick={() => onPageChange(page - 1)}
             disabled={page <= 1}
-            className="disabled:text-gray-500 hover:text-gray-300 disabled:cursor-not-allowed"
+            className="text-foreground disabled:text-muted-foreground hover:text-primary disabled:cursor-not-allowed"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
             onClick={() => onPageChange(page + 1)}
             disabled={page >= totalPages}
-            className="disabled:text-gray-500 hover:text-gray-300 disabled:cursor-not-allowed"
+            className="text-foreground disabled:text-muted-foreground hover:text-primary disabled:cursor-not-allowed"
           >
             <ChevronRight className="w-5 h-5" />
           </button>

@@ -1,5 +1,6 @@
 import { Range, getTrackBackground } from 'react-range';
 import { useState } from 'react';
+import { Label } from '@/components/ui/label';
 
 interface SliderCustomProps {
   label: string;
@@ -34,7 +35,7 @@ export const SliderCustom = ({
 
   return (
     <div className="w-full px-4">
-      <label className="block mb-2 text-sm font-medium text-gray-700">{label}</label>
+      <Label className="block mb-2">{label}</Label>
       <Range
         values={localValues}
         step={step}
@@ -71,7 +72,7 @@ export const SliderCustom = ({
             <div
               key={key}
               {...restProps}
-              className="h-5 w-5 rounded-full bg-white border border-white shadow-md flex items-center justify-center"
+              className="h-5 w-5 rounded-full bg-background border border-border shadow-md flex items-center justify-center"
             >
               <div
                 className="w-1 h-4"
@@ -82,11 +83,11 @@ export const SliderCustom = ({
         }}
 
       />
-      <div className="mt-2 text-sm text-gray-600">
+      <div className="mt-2 text-sm text-muted-foreground">
         Rango seleccionado: <strong>{localValues[0]}</strong> a <strong>{localValues[1]}</strong>
       </div>
       {error && (
-        <p className="text-red-600 text-sm mt-1">{helperText}</p>
+        <p className="text-destructive text-sm mt-1">{helperText}</p>
       )}
     </div>
   );

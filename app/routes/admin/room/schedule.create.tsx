@@ -79,7 +79,7 @@ export const ScheduleForm = ({
               <button
                 type="button"
                 onClick={() => handleRemove(idx)}
-                className="absolute top-2 right-2 text-error w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-100 transition cursor-pointer z-10"
+                className="absolute top-2 right-2 text-error w-8 h-8 flex items-center justify-center rounded-full hover:bg-error-100 transition cursor-pointer z-10"
               >
                 <Trash2 size={18} />
               </button>
@@ -90,7 +90,7 @@ export const ScheduleForm = ({
                   className="w-4 h-4 rounded-full border"
                   style={{ backgroundColor: schedule.color }}
                 />
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-muted-foreground">
                   Horario {idx + 1}
                 </span>
               </div>
@@ -172,7 +172,7 @@ export const ScheduleForm = ({
         </div>
 
         {formSubmitted && schedulesValid && (
-          <p className="text-sm text-red-600 font-medium">{schedulesValid}</p>
+          <p className="text-sm text-error-600 font-medium">{schedulesValid}</p>
         )}
       </div>
 

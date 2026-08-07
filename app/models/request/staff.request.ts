@@ -4,12 +4,14 @@ import { formUserInit, formUserValidations, type BranchModel, type FormUserModel
 export interface StaffRequest extends UserRequest {
   roleId: string;
   brancheIds: string[];
+  superStaff?: boolean;
 }
 
 export interface FormStaffModel {
   user: FormUserModel,
   role: RoleModel | null;
   branches: BranchModel[];
+  superStaff: boolean;
 }
 export const formStaffInit: FormStaffModel = {
   user: {
@@ -21,6 +23,7 @@ export const formStaffInit: FormStaffModel = {
   },
   role: null,
   branches: [],
+  superStaff: false,
 };
 
 export interface FormStaffValidations {

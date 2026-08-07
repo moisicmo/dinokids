@@ -20,7 +20,7 @@ const staffView = () => {
     <>
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-gray-800">Staffs</h2>
+        <h2 className="text-xl font-semibold text-foreground">Staffs</h2>
         {
           hasPermission(TypeAction.create, TypeSubject.staff) &&
           <Button

@@ -108,7 +108,7 @@ export const ForgotPassword = ({ handleClose }: Props) => {
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl w-full max-w-sm shadow-xl overflow-hidden">
+      <div className="bg-card rounded-2xl w-full max-w-sm shadow-xl overflow-hidden">
 
         {/* ── Paso 3: Éxito ── */}
         {step === 3 && (
@@ -116,8 +116,8 @@ export const ForgotPassword = ({ handleClose }: Props) => {
             <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#eef6e5' }}>
               <CheckCircle2 className="w-8 h-8" style={{ color: '#6BA539' }} />
             </div>
-            <h2 className="text-xl font-bold text-gray-900 mb-2">¡Contraseña restablecida!</h2>
-            <p className="text-sm text-gray-500 mb-6">
+            <h2 className="text-xl font-bold text-foreground mb-2">¡Contraseña restablecida!</h2>
+            <p className="text-sm text-muted-foreground mb-6">
               Tu contraseña fue actualizada correctamente. Ya puedes iniciar sesión.
             </p>
             <Button
@@ -136,8 +136,8 @@ export const ForgotPassword = ({ handleClose }: Props) => {
             <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: '#fce3f4' }}>
               <KeyRound className="w-6 h-6" style={{ color: '#B0008E' }} />
             </div>
-            <h2 className="text-xl font-bold text-gray-900">Recuperar contraseña</h2>
-            <p className="text-sm text-gray-500 mt-1 mb-5">
+            <h2 className="text-xl font-bold text-foreground">Recuperar contraseña</h2>
+            <p className="text-sm text-muted-foreground mt-1 mb-5">
               Ingresa tu correo y te enviaremos un código de verificación.
             </p>
             <form onSubmit={handleEmailSubmit} className="space-y-4">
@@ -152,12 +152,12 @@ export const ForgotPassword = ({ handleClose }: Props) => {
                 helperText={emailSubmitted ? (emailValid ?? '') : ''}
               />
               {apiError && (
-                <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3">
-                  <p className="text-sm text-red-600">{apiError}</p>
+                <div className="bg-error-100 border border-error-200 rounded-lg px-4 py-3">
+                  <p className="text-sm text-error-600">{apiError}</p>
                 </div>
               )}
               <div className="flex gap-3 pt-1">
-                <Button type="button" onClick={handleClose} className="flex-1 bg-gray-100 text-gray-700 hover:bg-gray-200 font-medium h-11">
+                <Button type="button" onClick={handleClose} className="flex-1 bg-muted text-foreground hover:bg-muted font-medium h-11">
                   Cancelar
                 </Button>
                 <Button type="submit" className="flex-1 text-white font-semibold h-11" style={{ backgroundColor: '#B0008E' }}>
@@ -174,14 +174,14 @@ export const ForgotPassword = ({ handleClose }: Props) => {
             <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: '#fce3f4' }}>
               <KeyRound className="w-6 h-6" style={{ color: '#B0008E' }} />
             </div>
-            <h2 className="text-xl font-bold text-gray-900">Ingresa el código</h2>
-            <p className="text-sm text-gray-500 mt-1 mb-5">
+            <h2 className="text-xl font-bold text-foreground">Ingresa el código</h2>
+            <p className="text-sm text-muted-foreground mt-1 mb-5">
               Enviamos un código de 6 dígitos a{' '}
-              <span className="font-medium text-gray-700">{maskedEmail}</span>
+              <span className="font-medium text-foreground">{maskedEmail}</span>
             </p>
             <form onSubmit={handlePinSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Código de verificación</label>
+                <label className="block text-sm font-medium text-foreground mb-2">Código de verificación</label>
                 <OtpCustom
                   length={6}
                   name="pin"
@@ -217,7 +217,7 @@ export const ForgotPassword = ({ handleClose }: Props) => {
                 error={!!passwordValid && pinSubmitted}
                 helperText={pinSubmitted ? (passwordValid ?? '') : ''}
                 endAdornment={
-                  <button type="button" onClick={() => setShowPassword(p => !p)} className="text-gray-400 hover:text-gray-600">
+                  <button type="button" onClick={() => setShowPassword(p => !p)} className="text-muted-foreground hover:text-muted-foreground">
                     {showPassword ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                   </button>
                 }
@@ -234,20 +234,20 @@ export const ForgotPassword = ({ handleClose }: Props) => {
                   ? password !== confirmPassword ? 'Las contraseñas no coinciden' : (confirmPasswordValid ?? '')
                   : ''}
                 endAdornment={
-                  <button type="button" onClick={() => setShowConfirm(p => !p)} className="text-gray-400 hover:text-gray-600">
+                  <button type="button" onClick={() => setShowConfirm(p => !p)} className="text-muted-foreground hover:text-muted-foreground">
                     {showConfirm ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                   </button>
                 }
               />
 
               {apiError && (
-                <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3">
-                  <p className="text-sm text-red-600">{apiError}</p>
+                <div className="bg-error-100 border border-error-200 rounded-lg px-4 py-3">
+                  <p className="text-sm text-error-600">{apiError}</p>
                 </div>
               )}
 
               <div className="flex gap-3 pt-1">
-                <Button type="button" onClick={() => { setApiError(null); setStep(1); }} className="flex-1 bg-gray-100 text-gray-700 hover:bg-gray-200 font-medium h-11">
+                <Button type="button" onClick={() => { setApiError(null); setStep(1); }} className="flex-1 bg-muted text-foreground hover:bg-muted font-medium h-11">
                   Atrás
                 </Button>
                 <Button type="submit" className="flex-1 text-white font-semibold h-11" style={{ backgroundColor: '#B0008E' }}>

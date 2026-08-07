@@ -26,6 +26,7 @@ export const SpecialtyCreate = (props: Props) => {
     estimatedSessionCost,
     onInputChange,
     onResetForm,
+    onDecimalChange,
     isFormValid,
     nameValid,
     numberSessionsValid,
@@ -74,7 +75,7 @@ export const SpecialtyCreate = (props: Props) => {
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
+      <div className="bg-card rounded-lg w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-bold mb-4">
           {item ? 'Editar Especialidad' : 'Nueva Especialidad'}
         </h2>
@@ -92,17 +93,17 @@ export const SpecialtyCreate = (props: Props) => {
             name="numberSessions"
             value={numberSessions}
             label="Número de sesiones"
-            onChange={onInputChange}
             error={!!numberSessionsValid && formSubmitted}
             helperText={formSubmitted ? numberSessionsValid : ''}
+            {...onDecimalChange('numberSessions', 0)}
           />
           <InputCustom
             name="estimatedSessionCost"
             value={estimatedSessionCost}
             label="Costo estimado por sesión"
-            onChange={onInputChange}
             error={!!estimatedSessionCostValid && formSubmitted}
             helperText={formSubmitted ? estimatedSessionCostValid : ''}
+            {...onDecimalChange('estimatedSessionCost', 0)}
           />
 
           <div className="flex justify-end gap-2 pt-2">
@@ -111,7 +112,7 @@ export const SpecialtyCreate = (props: Props) => {
                 onResetForm();
                 handleClose();
               }}
-              color='bg-gray-400'
+              color='bg-muted'
             >Cancelar</Button>
             <Button
               type='submit'

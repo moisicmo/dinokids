@@ -57,7 +57,7 @@ export const SpecialtyTable = (props: Props) => {
             <TableHead>Nombre</TableHead>
             <TableHead>Número de sesiones</TableHead>
             <TableHead>Costo estimado por sesión</TableHead>
-            <TableHead className="sticky right-0 z-10 bg-white">Acciones</TableHead>
+            <TableHead className="sticky right-0 z-10 bg-card">Acciones</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -66,7 +66,7 @@ export const SpecialtyTable = (props: Props) => {
               <TableCell>{branchSpecialty.specialty.name}</TableCell>
               <TableCell>{branchSpecialty.numberSessions}</TableCell>
               <TableCell>{branchSpecialty.estimatedSessionCost} Bs.</TableCell>
-              <TableCell className="sticky right-0 z-10 bg-white">
+              <TableCell className="sticky right-0 z-10 bg-card">
                 <ActionButtons
                   item={branchSpecialty}
                   onEdit={hasPermission(TypeAction.update, TypeSubject.specialty) ? handleEdit : undefined}

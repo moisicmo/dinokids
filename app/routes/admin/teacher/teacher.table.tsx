@@ -63,7 +63,7 @@ export const TeacherTable = (props: Props) => {
             <TableHead>Dirección</TableHead>
             <TableHead>Estado académico</TableHead>
             <TableHead>Fecha de inicio</TableHead>
-            <TableHead className="sticky right-0 z-10 bg-white">Acciones</TableHead>
+            <TableHead className="sticky right-0 z-10 bg-card">Acciones</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -79,7 +79,7 @@ export const TeacherTable = (props: Props) => {
                 {format(new Date(item.startJob), 'dd-MMMM-yyyy', { locale: es })}
 
               </TableCell>
-              <TableCell className="sticky right-0 z-10 bg-white">
+              <TableCell className="sticky right-0 z-10 bg-card">
                 <ActionButtons
                   item={item}
                   onEdit={hasPermission(TypeAction.update, TypeSubject.teacher) ? handleEdit : undefined}

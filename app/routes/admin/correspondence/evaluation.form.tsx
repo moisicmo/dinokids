@@ -10,6 +10,7 @@ import {
 } from "@/hooks";
 import type { Evaluation, Question } from "./model";
 import { BodyForm } from "./body.form";
+import type { TypeAction, TypeSubject } from "@/models";
 
 interface Props {
   evaluationInit: Evaluation[];
@@ -17,7 +18,8 @@ interface Props {
   readOnly?: boolean;
   title: string;
   childInfo?: Question[];
-  sendToRole?: string;
+  sendToAction?: TypeAction;
+  sendToSubject?: TypeSubject;
   studentUserId?: string;
   sourceDocumentId?: string;
 }
@@ -27,7 +29,8 @@ const EvaluationForm = ({
   readOnly = false,
   title,
   childInfo,
-  sendToRole,
+  sendToAction,
+  sendToSubject,
   studentUserId,
   sourceDocumentId,
 }: Props) => {
@@ -65,7 +68,7 @@ const EvaluationForm = ({
   const { formState, onValueChange } = useForm(initialForm);
 
   const { createCorrespondence } = useCorrespondenceStore();
-  const { dataUser, getByRole } = useUserStore();
+  const { dataUser, getByPermission } = useUserStore();
 
   const [receiver, setReceiver] = useState<{
     id: string;
@@ -73,9 +76,9 @@ const EvaluationForm = ({
   } | null>(null);
 
   useEffect(() => {
-    if (readOnly || !sendToRole) return;
-    getByRole(sendToRole);
-  }, [readOnly, sendToRole]);
+    if (readOnly || !sendToAction || !sendToSubject) return;
+    getByPermission(sendToAction, sendToSubject);
+  }, [readOnly, sendToAction, sendToSubject]);
 
   const finish = async () => {
     if (!receiver) {
@@ -131,10 +134,10 @@ const EvaluationForm = ({
   }, [step]);
 
   return (
-    <div className="max-w-4xl mx-auto h-[85vh] flex flex-col bg-white rounded-lg overflow-hidden">
+    <div className="max-w-4xl mx-auto h-[85vh] flex flex-col bg-card rounded-lg overflow-hidden">
 
       {/* HEADER */}
-      <div className="sticky top-0 z-20 bg-white border-b px-6 pt-6 pb-4">
+      <div className="sticky top-0 z-20 bg-card border-b px-6 pt-6 pb-4">
         {onBack && (
           <Button variant="outline" onClick={onBack} className="mb-4">
             ← Volver
@@ -146,19 +149,19 @@ const EvaluationForm = ({
         </h1>
 
         {readOnly && (
-          <div className="mt-2 text-sm bg-blue-50 border border-blue-200 text-blue-700 px-4 py-2 rounded">
+          <div className="mt-2 text-sm bg-info-100 border border-info-200 text-info-700 px-4 py-2 rounded">
             Modo solo lectura — esta evaluación no puede modificarse
           </div>
         )}
       </div>
 
       {/* PROGRESS */}
-      <div className="sticky top-[96px] z-10 bg-white px-6 py-4">
+      <div className="sticky top-[96px] z-10 bg-card px-6 py-4">
         <div className="flex justify-between text-sm mb-1">
           <span>{section.title}</span>
           <span>{step + 1} / {evaluationInit.length}</span>
         </div>
-        <div className="h-2 bg-gray-200 rounded">
+        <div className="h-2 bg-muted rounded">
           <div
             className="h-2 bg-purple-600 rounded transition-all"
             style={{ width: `${progress}%` }}
@@ -181,7 +184,7 @@ const EvaluationForm = ({
       </div>
 
       {/* FOOTER */}
-      <div className="sticky bottom-0 z-20 bg-white border-t px-6 flex justify-between items-center">
+      <div className="sticky bottom-0 z-20 bg-card border-t px-6 flex justify-between items-center">
         <div>
           {step > 0 && (
             <Button variant="outline" onClick={prev}>

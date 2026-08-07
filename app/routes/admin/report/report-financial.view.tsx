@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { usePermissionStore, useReportStore } from "@/hooks";
-import { usePrintStore } from "@/hooks/usePrint";
+import { usePrintStore } from "@/hooks";
 import { useState } from "react";
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -55,8 +55,8 @@ const ReportFinancial = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold text-gray-900">Reporte Financiero</h2>
-        <p className="text-sm text-gray-500 mt-0.5">Registro de pagos realizados por rango de fechas</p>
+        <h2 className="text-xl font-semibold text-foreground">Reporte Financiero</h2>
+        <p className="text-sm text-muted-foreground mt-0.5">Registro de pagos realizados por rango de fechas</p>
       </div>
 
       {/* Filtros */}
@@ -64,21 +64,21 @@ const ReportFinancial = () => {
         <CardContent className="p-5">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Fecha Inicial</label>
+              <label className="block text-sm font-medium text-foreground mb-1.5">Fecha Inicial</label>
               <input
                 type="date"
                 value={startDate}
                 onChange={(e) => { setStartDate(e.target.value); setPreviewData(null); }}
-                className="border border-gray-200 rounded-lg px-3 py-2 w-full text-sm focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary"
+                className="border border-border rounded-lg px-3 py-2 w-full text-sm focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Fecha Final</label>
+              <label className="block text-sm font-medium text-foreground mb-1.5">Fecha Final</label>
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => { setEndDate(e.target.value); setPreviewData(null); }}
-                className="border border-gray-200 rounded-lg px-3 py-2 w-full text-sm focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary"
+                className="border border-border rounded-lg px-3 py-2 w-full text-sm focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary"
               />
             </div>
             {canGenerate && (
@@ -116,7 +116,7 @@ const ReportFinancial = () => {
                 <TrendingUp className="w-5 h-5" style={{ color: '#6BA539' }} />
               </div>
               <div>
-                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Total Cobrado</p>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Total Cobrado</p>
                 <p className="text-xl font-bold" style={{ color: '#6BA539' }}>
                   Bs {summary.totalPagado.toFixed(2)}
                 </p>
@@ -127,17 +127,17 @@ const ReportFinancial = () => {
 
           <Card className="border-0 shadow-sm overflow-hidden">
             <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-red-50">
-                <TrendingDown className="w-5 h-5 text-red-500" />
+              <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-error-100">
+                <TrendingDown className="w-5 h-5 text-error-500" />
               </div>
               <div>
-                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Saldo Pendiente</p>
-                <p className="text-xl font-bold text-red-500">
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Saldo Pendiente</p>
+                <p className="text-xl font-bold text-error-500">
                   Bs {summary.totalDeuda.toFixed(2)}
                 </p>
               </div>
             </CardContent>
-            <div className="h-1 bg-red-400" />
+            <div className="h-1 bg-error-400" />
           </Card>
 
           <Card className="border-0 shadow-sm overflow-hidden">
@@ -146,7 +146,7 @@ const ReportFinancial = () => {
                 <DollarSign className="w-5 h-5" style={{ color: '#B0008E' }} />
               </div>
               <div>
-                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">N° Transacciones</p>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">N° Transacciones</p>
                 <p className="text-xl font-bold" style={{ color: '#B0008E' }}>
                   {summary.cantidad}
                 </p>
@@ -161,36 +161,36 @@ const ReportFinancial = () => {
       {previewData !== null && (
         <Card className="border-0 shadow-sm">
           <CardContent className="p-5 space-y-3">
-            <h3 className="text-base font-semibold text-gray-800">
+            <h3 className="text-base font-semibold text-foreground">
               Vista Previa
-              <span className="ml-2 text-sm font-normal text-gray-400">
+              <span className="ml-2 text-sm font-normal text-muted-foreground">
                 {previewData.length} registro{previewData.length !== 1 ? 's' : ''}
               </span>
             </h3>
 
-            <div className="rounded-lg overflow-hidden border border-gray-100">
+            <div className="rounded-lg overflow-hidden border border-border">
               <Table>
                 <TableHeader>
-                  <TableRow className="bg-gray-50 hover:bg-gray-50">
-                    <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Estudiante</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Monto Pagado (Bs)</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Saldo Restante (Bs)</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Método</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Referencia</TableHead>
-                    <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Fecha</TableHead>
+                  <TableRow className="bg-muted hover:bg-muted">
+                    <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Estudiante</TableHead>
+                    <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Monto Pagado (Bs)</TableHead>
+                    <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Saldo Restante (Bs)</TableHead>
+                    <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Método</TableHead>
+                    <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Referencia</TableHead>
+                    <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Fecha</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {previewData.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center text-gray-400 py-10">
+                      <TableCell colSpan={6} className="text-center text-muted-foreground py-10">
                         No hay pagos en el rango seleccionado.
                       </TableCell>
                     </TableRow>
                   ) : (
                     previewData.map((payment, i) => (
-                      <TableRow key={payment.id ?? i} className="hover:bg-gray-50/50">
-                        <TableCell className="text-sm font-medium text-gray-800">
+                      <TableRow key={payment.id ?? i} className="hover:bg-muted/50">
+                        <TableCell className="text-sm font-medium text-foreground">
                           {`${payment.debt?.inscription?.student?.user?.name ?? ''} ${payment.debt?.inscription?.student?.user?.lastName ?? ''}`.trim()
                             || payment.debt?.inscription?.booking?.name
                             || '—'}
@@ -201,19 +201,19 @@ const ReportFinancial = () => {
                           </span>
                         </TableCell>
                         <TableCell>
-                          <span className={`text-sm font-semibold ${(payment.debt?.remainingBalance ?? 0) > 0 ? 'text-red-500' : 'text-gray-400'}`}>
+                          <span className={`text-sm font-semibold ${(payment.debt?.remainingBalance ?? 0) > 0 ? 'text-error-500' : 'text-muted-foreground'}`}>
                             {Number(payment.debt?.remainingBalance ?? 0).toFixed(2)}
                           </span>
                         </TableCell>
                         <TableCell>
                           {payment.payMethod ? (
-                            <Badge variant="outline" className="text-[11px] bg-gray-50 text-gray-600 border-gray-200">
+                            <Badge variant="outline" className="text-[11px] bg-muted text-muted-foreground border-border">
                               {payment.payMethod}
                             </Badge>
                           ) : '—'}
                         </TableCell>
-                        <TableCell className="text-sm text-gray-500">{payment.reference ?? '—'}</TableCell>
-                        <TableCell className="text-sm text-gray-500">
+                        <TableCell className="text-sm text-muted-foreground">{payment.reference ?? '—'}</TableCell>
+                        <TableCell className="text-sm text-muted-foreground">
                           {payment.createdAt
                             ? format(new Date(payment.createdAt), 'dd/MM/yyyy HH:mm', { locale: es })
                             : '—'}

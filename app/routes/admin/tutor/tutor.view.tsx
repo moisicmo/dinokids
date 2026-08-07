@@ -19,7 +19,7 @@ const teacherView = () => {
     <>
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-gray-800">Tutores</h2>
+        <h2 className="text-xl font-semibold text-foreground">Tutores</h2>
         {
           hasPermission(TypeAction.create, TypeSubject.tutor) && <Button
             onClick={() => handleDialog(true)}

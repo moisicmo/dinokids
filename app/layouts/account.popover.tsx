@@ -51,7 +51,7 @@ export const AccountPopover = ({
   return (
     <div
       ref={popoverRef}
-      className="absolute z-50 w-56 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+      className="absolute z-50 w-56 rounded-md bg-card shadow-lg ring-1 ring-border"
       style={{
         top: `${top}px`,
         left: `${left}px`,
@@ -60,19 +60,19 @@ export const AccountPopover = ({
       }}
     >
       <div className="py-3 px-4">
-        <p className="text-xs font-semibold text-gray-500 uppercase">Cuenta</p>
+        <p className="text-xs font-semibold text-muted-foreground uppercase">Cuenta</p>
         {user && (
-          <p className="text-sm text-gray-700">{`${user}`}</p>
+          <p className="text-sm text-foreground">{`${user}`}</p>
         )}
       </div>
-      <div className="border-t border-gray-200" />
+      <div className="border-t border-border" />
       <div className="py-1 px-2 space-y-1">
         <button
           onClick={() => {
             onTapSettings();
             onClose();
           }}
-          className="w-full text-left px-3 py-2 rounded-md text-sm hover:bg-gray-100"
+          className="w-full text-left px-3 py-2 rounded-md text-sm hover:bg-muted"
         >
           Configuraciones
         </button>
@@ -82,7 +82,7 @@ export const AccountPopover = ({
             navigate('/');
             onClose();
           }}
-          className="w-full text-left px-3 py-2 rounded-md text-sm text-red-600 hover:bg-gray-100"
+          className="w-full text-left px-3 py-2 rounded-md text-sm text-error-600 hover:bg-muted"
         >
           Salir Sesión
         </button>

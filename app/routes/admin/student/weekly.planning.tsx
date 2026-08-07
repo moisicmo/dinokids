@@ -242,10 +242,10 @@ export const WeeklyPlanningModal = ({
 
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
-      case 'adquirido': return 'bg-green-100 text-green-800';
-      case 'en-proceso': return 'bg-yellow-100 text-yellow-800';
-      case 'no-adquirido': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'adquirido': return 'bg-secondary-100 text-secondary-800';
+      case 'en-proceso': return 'bg-warning-100 text-warning-800';
+      case 'no-adquirido': return 'bg-error-100 text-error-800';
+      default: return 'bg-muted text-foreground';
     }
   };
 
@@ -296,13 +296,13 @@ export const WeeklyPlanningModal = ({
                     return (
                       <TableRow
                         key={weekIndex}
-                        className={week.completed ? 'bg-green-50/30' : ''}
+                        className={week.completed ? 'bg-secondary-100/30' : ''}
                       >
                         {/* Número de semana */}
                         <TableCell className="align-top">
                           <div className="flex flex-col items-center gap-2">
                             <Badge variant={week.completed ? "default" : "outline"}
-                              className={`${week.completed ? 'bg-green-100 text-green-800 hover:bg-green-100' : ''}`}>
+                              className={`${week.completed ? 'bg-secondary-100 text-secondary-800 hover:bg-secondary-100' : ''}`}>
                               Semana {week.weekNumber}
                             </Badge>
                           </div>
@@ -322,7 +322,7 @@ export const WeeklyPlanningModal = ({
                               className="min-h-[80px]"
                             />
                             {week.completed && (
-                              <Badge variant="outline" className="bg-green-50 text-green-700">
+                              <Badge variant="outline" className="bg-secondary-100 text-secondary-700">
                                 Completada
                               </Badge>
                             )}
@@ -471,7 +471,7 @@ export const WeeklyPlanningModal = ({
                                             variant="ghost"
                                             size="sm"
                                             onClick={() => removeObjectiveFromWeek(weekIndex, objIndex)}
-                                            className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                                            className="text-error-500 hover:text-error-700 hover:bg-error-100"
                                           >
                                             <Trash2 className="h-4 w-4 mr-1" />
                                             Eliminar Objetivo

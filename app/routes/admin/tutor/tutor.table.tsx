@@ -61,7 +61,7 @@ export const TutorTable = (props: Props) => {
             <TableHead>Correo</TableHead>
             <TableHead>Teléfono</TableHead>
             <TableHead>Dirección</TableHead>
-            <TableHead className="sticky right-0 z-10 bg-white">Acciones</TableHead>
+            <TableHead className="sticky right-0 z-10 bg-card">Acciones</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -73,7 +73,7 @@ export const TutorTable = (props: Props) => {
               <TableCell>{item.user.email}</TableCell>
               <TableCell>{`${item.user.phone?.map(e => e)}`}</TableCell>
               <TableCell>{`${item.user.address?.city} ${item.user.address?.zone}/${item.user.address?.detail}`}</TableCell>
-              <TableCell className="sticky right-0 z-10 bg-white">
+              <TableCell className="sticky right-0 z-10 bg-card">
                 <ActionButtons
                   item={item}
                   onEdit={hasPermission(TypeAction.update, TypeSubject.tutor) ? handleEdit : undefined}

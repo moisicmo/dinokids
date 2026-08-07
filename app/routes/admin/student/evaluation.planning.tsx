@@ -115,7 +115,7 @@ export const EvaluationPlanningModal = ({
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg w-full max-w-6xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-card rounded-lg w-full max-w-6xl max-h-[90vh] overflow-y-auto">
         <form onSubmit={sendSubmit} className="p-6 space-y-4">
 
           {evaluations.map((evaluation: any, index: number) => (
@@ -304,12 +304,12 @@ export const EvaluationPlanningModal = ({
 
           {/* Botones finales */}
           <div className="flex justify-end gap-2">
-            <Button type="button" color="bg-blue-500" onClick={addEvaluation}>
+            <Button type="button" color="bg-info-1000" onClick={addEvaluation}>
               + Agregar Evaluación
             </Button>
             <Button
               type="button"
-              color="bg-gray-400"
+              color="bg-muted"
               onClick={() => {
                 onResetForm();
                 onClose();

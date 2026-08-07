@@ -20,7 +20,7 @@ const specialtyView = () => {
     <>
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-gray-800">Especialidades</h2>
+        <h2 className="text-xl font-semibold text-foreground">Especialidades</h2>
         {
           hasPermission(TypeAction.create, TypeSubject.specialty) &&
           <Button

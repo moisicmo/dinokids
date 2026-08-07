@@ -62,17 +62,16 @@ export const RoleCreate = (props: Props) => {
     }
   }, [item]);
 
-  if (!open) return null;
-
   useEffect(() => {
     getPermissions();
   }, [])
 
+  if (!open) return null;
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
       {/* Modal responsive - más grande en desktop */}
-      <div className="bg-white rounded-lg w-full max-w-4xl h-[60vh] flex flex-col">
+      <div className="bg-card rounded-lg w-full max-w-4xl h-[60vh] flex flex-col">
         <div className="p-6  flex-shrink-0">
 
           <h2 className="text-xl font-bold mb-4">
@@ -110,7 +109,7 @@ export const RoleCreate = (props: Props) => {
                   onResetForm();
                   handleClose();
                 }}
-                color='bg-gray-400'
+                color='bg-muted'
               >
                 Cancelar
               </Button>

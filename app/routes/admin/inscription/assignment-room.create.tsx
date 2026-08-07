@@ -95,7 +95,7 @@ export const AssignmentRoomForm = (props: Props) => {
               <div key={idx} className="border rounded-md overflow-hidden">
                 {/* Header clickable */}
                 <div
-                  className="flex justify-between items-center px-4 py-2 bg-gray-100 cursor-pointer hover:bg-gray-200 transition"
+                  className="flex justify-between items-center px-4 py-2 bg-muted cursor-pointer hover:bg-muted transition"
                   onClick={() => setActiveIndex(isOpen ? null : idx)}
                 >
                   <span className="font-medium">
@@ -106,7 +106,7 @@ export const AssignmentRoomForm = (props: Props) => {
                     <button
                       type="button"
                       onClick={() => handleRemove(idx)}
-                      className="text-error w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-100 transition cursor-pointer z-10"
+                      className="text-error w-8 h-8 flex items-center justify-center rounded-full hover:bg-error-100 transition cursor-pointer z-10"
                     >
                       <Trash2 size={18} />
                     </button>
@@ -182,12 +182,12 @@ export const AssignmentRoomForm = (props: Props) => {
                         }
                       />
                       {formSubmitted && assignmentRoom.assignmentSchedules.length === 0 && (
-                        <p className="text-sm text-red-600 font-medium">
+                        <p className="text-sm text-error-600 font-medium">
                           Debes seleccionar al menos un horario en el calendario
                         </p>
                       )}
 
-                      <ul className="text-sm list-disc list-inside text-gray-600 space-y-1">
+                      <ul className="text-sm list-disc list-inside text-muted-foreground space-y-1">
                         {assignmentRoom.assignmentSchedules.map((as) => {
                           const schedule = assignmentRoom.room?.schedules?.find(s => s.id === as.schedule.id);
                           console.log(schedule)
@@ -203,7 +203,7 @@ export const AssignmentRoomForm = (props: Props) => {
                       </ul>
                     </div>
                     {/* Calendario */}
-                    <div className={`flex-1 border ${formSubmitted && assignmentRoom.assignmentSchedules.length === 0 ? 'border-red-500' : 'border-transparent'}`}>
+                    <div className={`flex-1 border ${formSubmitted && assignmentRoom.assignmentSchedules.length === 0 ? 'border-error-500' : 'border-transparent'}`}>
                       <ScheduleCustom
                         schedules={assignmentRoom.room?.schedules ?? []}
                         selectedSchedules={assignmentRoom.assignmentSchedules ?? []}
@@ -244,7 +244,7 @@ export const AssignmentRoomForm = (props: Props) => {
 
         </div>
         {formSubmitted && assignmentRoomsValid && (
-          <p className="text-sm text-red-600 font-medium">
+          <p className="text-sm text-error-600 font-medium">
             {assignmentRoomsValid}
           </p>
         )}

@@ -16,7 +16,7 @@ export const PaymentTable = (props: Props) => {
   const { getPayMethod } = useEnums();
   return (
     <>
-      <p className="text-sm text-gray-900">Pagos:</p>
+      <p className="text-sm text-foreground">Pagos:</p>
       <Table className='mb-3'>
         <TableHeader>
           <TableRow>

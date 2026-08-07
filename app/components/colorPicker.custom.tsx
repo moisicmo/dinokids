@@ -1,4 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Check, Palette } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -46,11 +48,7 @@ export const ColorPickerCustom = ({
 
   return (
     <div className="grid w-full gap-1.5">
-      {label && (
-        <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-          {label}
-        </label>
-      )}
+      {label && <Label>{label}</Label>}
 
       <Popover>
         <PopoverTrigger asChild>
@@ -59,7 +57,7 @@ export const ColorPickerCustom = ({
             variant="outline"
             className={cn(
               "w-full justify-start text-left font-normal h-10",
-              error && "border-red-500",
+              error && "border-destructive",
               !value && "text-muted-foreground"
             )}
           >
@@ -110,23 +108,23 @@ export const ColorPickerCustom = ({
           </div>
           
           {/* Opción personalizada */}
-          <div className="mt-4 pt-4 border-t">
-            <label className="block text-sm font-medium mb-2">
+          <div className="mt-4 pt-4 border-t border-border">
+            <Label className="block mb-2">
               Color personalizado
-            </label>
+            </Label>
             <div className="flex gap-2">
               <input
                 type="color"
                 value={value || "#3B82F6"}
                 onChange={(e) => onChange(e.target.value)}
-                className="w-10 h-10 cursor-pointer rounded border"
+                className="w-10 h-10 cursor-pointer rounded border border-input"
               />
-              <input
+              <Input
                 type="text"
                 value={value || ""}
                 onChange={(e) => onChange(e.target.value)}
                 placeholder="#3B82F6"
-                className="flex-1 h-10 px-3 rounded border text-sm"
+                className="flex-1 h-10"
               />
             </div>
           </div>
@@ -134,7 +132,7 @@ export const ColorPickerCustom = ({
       </Popover>
 
       {helperText && (
-        <p className={cn("text-sm", error ? "text-red-600" : "text-muted-foreground")}>
+        <p className={cn("text-sm", error ? "text-destructive" : "text-muted-foreground")}>
           {helperText}
         </p>
       )}

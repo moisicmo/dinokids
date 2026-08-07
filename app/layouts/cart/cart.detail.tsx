@@ -1,8 +1,10 @@
-import { InputCustom } from "@/components"
+import { InputCustom, SelectCustom, type ValueSelect } from "@/components"
 import { Button } from "@/components/ui/button";
 import { useCartStore, useForm, usePaymentStore } from "@/hooks";
-import { formCartInit, formCartValidations, type CartRequest } from "@/models";
+import { PayMethod, formCartInit, formCartValidations, type CartRequest } from "@/models";
 import { useState, type FormEvent } from "react";
+
+const payMethodOptions: ValueSelect[] = Object.entries(PayMethod).map(([key, value]) => ({ id: key, value }));
 
 export const CartDetail = () => {
 
@@ -14,11 +16,14 @@ export const CartDetail = () => {
   const {
     buyerNit,
     buyerName,
+    payMethod,
     onInputChange,
+    onValueChange,
     isFormValid,
     onResetForm,
     buyerNitValid,
-    buyerNameValid
+    buyerNameValid,
+    payMethodValid,
   } = useForm(formCartInit, formCartValidations);
 
   const sendSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -29,6 +34,7 @@ export const CartDetail = () => {
     const request: CartRequest = {
       buyerNit: buyerNit.trim(),
       buyerName: buyerName.trim(),
+      payMethod: payMethod as PayMethod,
       payments: cart.map(cart => ({
         debtId: cart.debt.id,
         amount: cart.amount,
@@ -64,6 +70,18 @@ export const CartDetail = () => {
           onChange={onInputChange}
           error={!!buyerNameValid && formSubmitted}
           helperText={formSubmitted ? buyerNameValid : ""}
+        />
+        <SelectCustom
+          label="Método de pago"
+          options={payMethodOptions}
+          selected={payMethod ? payMethodOptions.find((opt) => opt.id === payMethod) ?? null : null}
+          onSelect={(value) => {
+            if (value && !Array.isArray(value)) {
+              onValueChange('payMethod', value.id as PayMethod);
+            }
+          }}
+          error={!!payMethodValid && formSubmitted}
+          helperText={formSubmitted ? payMethodValid : ''}
         />
         <Button
           type="submit"

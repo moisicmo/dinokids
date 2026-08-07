@@ -28,6 +28,7 @@ export const BookingCreate = (props: Props) => {
     onResetForm,
     isFormValid,
     onArrayChange,
+    onDecimalChange,
     bookingValid,
     assignmentRoomsValid,
   } = useForm(item ?? formBookingInscriptionInit, formBookingValidations);
@@ -95,7 +96,7 @@ export const BookingCreate = (props: Props) => {
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div className={`bg-white rounded-lg ${step === 2 ? 'max-w-5xl' : 'max-w-lg'} p-6 max-h-[90vh] overflow-y-auto`}>
+      <div className={`bg-card rounded-lg ${step === 2 ? 'max-w-5xl' : 'max-w-lg'} p-6 max-h-[90vh] overflow-y-auto`}>
         <h2 className="text-xl font-bold mb-4">
           {item ? 'Editar Reserva' : 'Nueva Reserva'}
         </h2>
@@ -134,17 +135,17 @@ export const BookingCreate = (props: Props) => {
                   name="booking.amount"
                   value={booking.amount}
                   label="Monto"
-                  onChange={onInputChange}
                   error={!!bookingValid?.amountValid && formSubmitted}
                   helperText={formSubmitted ? bookingValid?.amountValid : ''}
+                  {...onDecimalChange('booking.amount')}
                 />
                 <InputCustom
                   name="booking.days"
                   value={booking.days}
                   label="Cantidad de dias"
-                  onChange={onInputChange}
                   error={!!bookingValid?.daysValid && formSubmitted}
                   helperText={formSubmitted ? bookingValid?.daysValid : ''}
+                  {...onDecimalChange('booking.days', 0)}
                 />
               </div>
             }
@@ -169,7 +170,7 @@ export const BookingCreate = (props: Props) => {
                   setStep(step - 1);
                 }
               }}
-              color='bg-gray-400'
+              color='bg-muted'
             >{step === 1 ? 'Cancelar' : 'Atrás'}</Button>
 
             {step === 1 && (

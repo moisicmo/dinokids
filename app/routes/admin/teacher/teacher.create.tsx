@@ -1,5 +1,5 @@
-import { useEffect, useState, type FormEvent } from 'react';
-import { useForm, useBranchStore, useAuthStore } from '@/hooks';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useForm, useBranchStore, useRoleStore } from '@/hooks';
 import { Button, DateTimePickerCustom, InputCustom, SelectCustom, UserFormFields, type ValueSelect } from '@/components';
 import { type BranchModel, type TeacherModel, formTeacherInit, formTeacherValidations, AcademicStatus, type TeacherRequest } from '@/models';
 
@@ -20,12 +20,18 @@ export const TeacherCreate = (props: Props) => {
     onUpdate,
   } = props;
 
+  const initialForm = useMemo(
+    () => (item ? { ...item, role: item.user.role ?? null } : formTeacherInit),
+    [item],
+  );
+
   const {
     user,
     major,
     academicStatus,
     startJob,
     branches,
+    role,
     onInputChange,
     onResetForm,
     isFormValid,
@@ -35,10 +41,17 @@ export const TeacherCreate = (props: Props) => {
     academicStatusValid,
     startJobValid,
     branchesValid,
-  } = useForm(item ?? formTeacherInit, formTeacherValidations);
+    roleValid,
+  } = useForm(initialForm, formTeacherValidations);
 
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const { branchesUser } = useAuthStore();
+  const { dataBranch, getBranches } = useBranchStore();
+  const { dataRole, getRoles } = useRoleStore();
+
+  useEffect(() => {
+    getRoles();
+    getBranches();
+  }, []);
 
   const sendSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -61,6 +74,7 @@ export const TeacherCreate = (props: Props) => {
         startJob,
         brancheIds: branches.map((branch: BranchModel) => branch.id),
         numberCard: user.numberCard.trim() == '' ? null : user.numberCard.trim(),
+        roleId: role?.id ?? '',
       });
     } else {
       await onUpdate(item.userId, {
@@ -78,6 +92,7 @@ export const TeacherCreate = (props: Props) => {
         startJob,
         brancheIds: branches.map((branch: BranchModel) => branch.id),
         numberCard: user.numberCard.trim() == '' ? null : user.numberCard.trim(),
+        roleId: role?.id ?? '',
       });
     }
 
@@ -101,7 +116,7 @@ export const TeacherCreate = (props: Props) => {
   );
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
+      <div className="bg-card rounded-lg w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-bold mb-4">
           {item ? `Editar ${item.user.name}` : 'Nuevo Profesor'}
         </h2>
@@ -110,11 +125,11 @@ export const TeacherCreate = (props: Props) => {
           <SelectCustom
             multiple
             label="Sucursales"
-            options={branchesUser?.map((branch) => ({ id: branch.id, value: branch.name })) ?? []}
+            options={dataBranch.data?.map((branch) => ({ id: branch.id, value: branch.name })) ?? []}
             selected={branches.map((s: BranchModel) => ({ id: s.id, value: s.name }))}
             onSelect={(values) => {
               if (Array.isArray(values)) {
-                const select = branchesUser?.filter((r) =>
+                const select = dataBranch.data?.filter((r) =>
                   values.some((v) => v.id === r.id)
                 ) ?? [];
                 onValueChange('branches', select);
@@ -122,6 +137,19 @@ export const TeacherCreate = (props: Props) => {
             }}
             error={!!branchesValid && formSubmitted}
             helperText={formSubmitted ? branchesValid : ''}
+          />
+          <SelectCustom
+            label="Rol"
+            options={dataRole.data?.map((r) => ({ id: r.id, value: r.name })) ?? []}
+            selected={role ? { id: role.id, value: role.name } : null}
+            onSelect={(value) => {
+              if (value && !Array.isArray(value)) {
+                const selectedRole = dataRole.data?.find((r) => r.id === value.id);
+                onValueChange('role', selectedRole);
+              }
+            }}
+            error={!!roleValid && formSubmitted}
+            helperText={formSubmitted ? roleValid : ''}
           />
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <UserFormFields

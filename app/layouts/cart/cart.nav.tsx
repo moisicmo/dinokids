@@ -36,7 +36,7 @@ export const CartDrawer = (props: Props) => {
 
       {/* Drawer lateral */}
       <div
-        className={`fixed top-0 right-0 h-full w-72 bg-white backdrop-blur-md shadow-lg transform transition-transform duration-300 z-50 ${open ? "translate-x-0" : "translate-x-full"
+        className={`fixed top-0 right-0 h-full w-72 bg-card backdrop-blur-md shadow-lg transform transition-transform duration-300 z-50 ${open ? "translate-x-0" : "translate-x-full"
           }`}
       >
         <div className="p-4 h-full overflow-y-auto">{children}</div>

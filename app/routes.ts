@@ -21,6 +21,9 @@ export default [
       route("teacher", "routes/admin/teacher/teacher.view.tsx"),
       route("tutor", "routes/admin/tutor/tutor.view.tsx"),
       route("payment", "routes/admin/payment/payment.view.tsx"),
+      route("debt", "routes/admin/debt/debt.view.tsx"),
+      route("cash-movement", "routes/admin/cash-movement/cash-movement.view.tsx"),
+      route("cash-box", "routes/admin/cash-box/cash-box.view.tsx"),
       ...prefix("correspondence", [
         route("evaluation", "routes/admin/correspondence/evaluation.view.tsx"),
       ]),

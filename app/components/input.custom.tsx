@@ -10,7 +10,9 @@ interface Props {
   name: string;
   value: any;
   onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   type?: string;
+  inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
   label?: string;
   placeholder?: string;
   endAdornment?: ReactNode;
@@ -27,7 +29,9 @@ export const InputCustom = ({
   name,
   value,
   onChange,
+  onBlur,
   type = "text",
+  inputMode,
   label,
   placeholder,
   endAdornment,
@@ -46,8 +50,9 @@ export const InputCustom = ({
       value={value}
       disabled={disabled}
       onChange={onChange}
+      onBlur={onBlur}
       placeholder={placeholder}
-      className={cn("pr-10", error && "border-red-500", className)}
+      className={cn("pr-10", error && "border-destructive", className)}
       rows={4}
     />
   ) : (
@@ -56,11 +61,13 @@ export const InputCustom = ({
       ref={ref}
       name={name}
       type={type}
+      inputMode={inputMode}
       value={value}
       disabled={disabled}
       onChange={onChange}
+      onBlur={onBlur}
       placeholder={placeholder}
-      className={cn("pr-10", error && "border-red-500", className)}
+      className={cn("pr-10", error && "border-destructive", className)}
       autoComplete="off"
       onKeyDown={(e) => {
         if (e.key === "Enter") {
@@ -78,14 +85,14 @@ export const InputCustom = ({
       <div className="relative">
         {baseInput}
         {endAdornment && (
-          <div className="absolute inset-y-0 right-3 flex items-center text-gray-500">
+          <div className="absolute inset-y-0 right-3 flex items-center text-muted-foreground">
             {endAdornment}
           </div>
         )}
       </div>
 
       {helperText && (
-        <p className={cn("text-sm", error ? "text-red-600" : "text-muted-foreground")}>
+        <p className={cn("text-sm", error ? "text-destructive" : "text-muted-foreground")}>
           {helperText}
         </p>
       )}

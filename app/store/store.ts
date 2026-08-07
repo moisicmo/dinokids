@@ -3,6 +3,7 @@ import {
   authSlice,
   cartSlice,
   debtSlice,
+  printSlice,
 } from '.';
 
 export const store = configureStore({
@@ -10,6 +11,7 @@ export const store = configureStore({
     auth: authSlice.reducer,
     Debts: debtSlice.reducer,
     carts:cartSlice.reducer,
+    print: printSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

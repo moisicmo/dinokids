@@ -20,14 +20,14 @@ export const DrawerCustom = ({ open, onClose, title, children }: Props) => {
       />
 
       {/* Panel */}
-      <div className="absolute right-0 top-0 h-full w-full max-w-xl bg-white shadow-2xl flex flex-col">
+      <div className="absolute right-0 top-0 h-full w-full max-w-xl bg-card shadow-2xl flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b">
-          <h2 className="text-xl font-bold">{title}</h2>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+          <h2 className="text-xl font-bold text-foreground">{title}</h2>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md p-1 hover:bg-gray-100 transition-colors"
+            className="rounded-md p-1 hover:bg-accent transition-colors text-foreground"
           >
             <XIcon className="size-5" />
           </button>

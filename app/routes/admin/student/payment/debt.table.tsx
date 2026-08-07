@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import type { DebtModel, FormPaymentModel } from "@/models";
-import { useDebtStore, useEnums } from "@/hooks";
+import { TypeAction, TypeSubject, type DebtModel, type FormPaymentModel } from "@/models";
+import { useDebtStore, useEnums, usePermissionStore } from "@/hooks";
 import { CalendarClock } from "lucide-react";
 import { ActionButtons, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components";
 import { format } from 'date-fns';
@@ -19,6 +19,7 @@ export const DebtTable = (props: Props) => {
 
   const { dataDebtByStudent, getDebtsByStudent } = useDebtStore();
   const { getTypeDebt, getTypeDebtClass } = useEnums();
+  const { hasPermission } = usePermissionStore();
   const [Debt, setDebt] = useState<FormPaymentModel | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
@@ -39,7 +40,7 @@ export const DebtTable = (props: Props) => {
 
   return (
     <>
-      <p className="text-sm text-gray-900">Deudas:</p>
+      <p className="text-sm text-foreground">Deudas:</p>
       {dataDebtByStudent.total > 0 ? (
         <Table className='mb-3'>
           <TableHeader>
@@ -50,7 +51,7 @@ export const DebtTable = (props: Props) => {
               <TableHead>Asignación</TableHead>
               <TableHead>Fécha creado</TableHead>
               <TableHead>Fécha de vencimiento</TableHead>
-              <TableHead className="sticky right-0 z-10 bg-white">Acciones</TableHead>
+              <TableHead className="sticky right-0 z-10 bg-card">Acciones</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -68,10 +69,10 @@ export const DebtTable = (props: Props) => {
                     {debt.inscription.assignmentRooms.map((assignmentRoom) => (
                       <div
                         key={assignmentRoom.id}
-                        className="border border-gray-200 rounded-md px-3 py-1 shadow-sm bg-gray-50"
+                        className="border border-border rounded-md px-3 py-1 shadow-sm bg-muted"
                       >
-                        <p className="font-semibold text-sm text-gray-800 flex items-center gap-1">
-                          <CalendarClock className="w-4 h-4 text-gray-500" />
+                        <p className="font-semibold text-sm text-foreground flex items-center gap-1">
+                          <CalendarClock className="w-4 h-4 text-muted-foreground" />
                           {`${assignmentRoom.room.branch.name} - ${assignmentRoom.room.name} - ${assignmentRoom.room.specialty.name}`}
                         </p>
                       </div>
@@ -83,19 +84,23 @@ export const DebtTable = (props: Props) => {
                   <TableCell>
                     {debt.dueDate ? format(new Date(debt.dueDate), 'dd-MMMM-yyyy', { locale: es }) : '—'}
                   </TableCell>
-                  <TableCell className="sticky right-0 z-10 bg-white">
+                  <TableCell className="sticky right-0 z-10 bg-card">
                     <ActionButtons
                       item={debt}
                       onSelect={() => handleSelect(debt)}
                       isSelected={expandedId === debt.id}
-                      onPayment={() => {
-                        const request: FormPaymentModel = {
-                          debt,
-                          amount: debt.remainingBalance,
-                          dueDate: null,
-                        };
-                        setDebt(request);
-                      }}
+                      onPayment={
+                        hasPermission(TypeAction.create, TypeSubject.payment)
+                          ? () => {
+                            const request: FormPaymentModel = {
+                              debt,
+                              amount: debt.remainingBalance,
+                              dueDate: null,
+                            };
+                            setDebt(request);
+                          }
+                          : undefined
+                      }
                       isPopoverOpen={Debt?.debt.id == debt.id}
                     >
                       {Debt && (
@@ -106,7 +111,7 @@ export const DebtTable = (props: Props) => {
                   </TableCell>
                 </TableRow>
                 {expandedId === debt.id && (
-                  <TableRow className="bg-gray-50">
+                  <TableRow className="bg-muted">
                     <TableCell colSpan={7} className="p-0">
                       <PaymentTable payments={debt.payments} />
                     </TableCell>
@@ -117,7 +122,7 @@ export const DebtTable = (props: Props) => {
           </TableBody>
         </Table>
       ) : (
-        <p className="text-sm text-gray-500">Sin deudas registradas.</p>
+        <p className="text-sm text-muted-foreground">Sin deudas registradas.</p>
       )}
     </>
   )

@@ -138,7 +138,7 @@ export default function AttendanceView() {
           {/* Niño */}
           <Card className="flex flex-col items-center justify-center h-56">
             <CardContent className="flex flex-col items-center justify-center">
-              <div className="w-32 h-32 bg-gray-200 rounded-xl mb-2" />
+              <div className="w-32 h-32 bg-muted rounded-xl mb-2" />
               <p className="font-semibold text-tertiary">Foto del Niño</p>
               <p className="text-tertiary font-semibold mt-2">
                 {dataAttendance.user.name} {dataAttendance.user.lastName}
@@ -149,7 +149,7 @@ export default function AttendanceView() {
           {/* Tutor */}
           <Card className="flex flex-col items-center justify-center h-56">
             <CardContent className="flex flex-col items-center justify-center">
-              <div className="w-32 h-32 bg-gray-200 rounded-xl mb-2" />
+              <div className="w-32 h-32 bg-muted rounded-xl mb-2" />
               <p className="font-semibold text-tertiary">Foto del Tutor</p>
               <p className="text-tertiary font-semibold mt-2">
                 {student?.tutors[0]?.user.name} {student?.tutors[0]?.user.lastName}
@@ -162,33 +162,33 @@ export default function AttendanceView() {
             inscription.assignmentRooms.map((assignmentRoom) => (
               <Card
                 key={assignmentRoom.id}
-                className="p-5 bg-white rounded-2xl shadow-sm border border-gray-100"
+                className="p-5 bg-card rounded-2xl shadow-sm border border-border"
               >
                 <div className="space-y-2 text-sm md:text-base">
                   <div>
                     <p className="text-tertiary font-semibold mb-0.5">Nombre de la Psicopedagoga</p>
-                    <p className="text-gray-700">
+                    <p className="text-foreground">
                       {assignmentRoom.room.teacher.user.name}{" "}
                       {assignmentRoom.room.teacher.user.lastName}
                     </p>
                   </div>
                   <div>
                     <p className="text-tertiary font-semibold mb-0.5">Nombre de la sala</p>
-                    <p className="text-gray-700">{assignmentRoom.room.name}</p>
+                    <p className="text-foreground">{assignmentRoom.room.name}</p>
                   </div>
                   <div>
                     <p className="text-tertiary font-semibold mb-0.5">Horario</p>
-                    <p className="text-gray-700 flex flex-wrap gap-1">
+                    <p className="text-foreground flex flex-wrap gap-1">
                       {assignmentRoom.assignmentSchedules.map((a) => a.day).join(", ")}
                     </p>
-                    <p className="text-gray-500 text-sm">
+                    <p className="text-muted-foreground text-sm">
                       {format(new Date(assignmentRoom.assignmentSchedules[0]?.schedule.start), 'HH:mm', { locale: es })} –{" "}
                       {format(new Date(assignmentRoom.assignmentSchedules[0]?.schedule.end), 'HH:mm', { locale: es })}
                     </p>
                   </div>
                   <div>
                     <p className="text-tertiary font-semibold mb-0.5">Programa</p>
-                    <p className="text-gray-700">{assignmentRoom.room.specialty.name}</p>
+                    <p className="text-foreground">{assignmentRoom.room.specialty.name}</p>
                   </div>
                 </div>
               </Card>
@@ -210,16 +210,16 @@ export default function AttendanceView() {
               {
                 title: "Permisos",
                 value: sessionsJustified,
-                color: "text-yellow-500",
+                color: "text-warning-500",
                 progress: (sessionsJustified / allSessions.length) * 100,
-                icon: <FileWarning className="text-yellow-500 w-6 h-6" />,
-                barColor: "bg-yellow-400",
-                barbgColor: "bg-yellow-100",
+                icon: <FileWarning className="text-warning-500 w-6 h-6" />,
+                barColor: "bg-warning-400",
+                barbgColor: "bg-warning-100",
               },
               {
                 title: "Faltas",
                 value: sessionsAbsent,
-                color: "text-red-500",
+                color: "text-error-500",
                 progress: (sessionsAbsent / allSessions.length) * 100,
                 icon: <Clock className="text-primary w-6 h-6" />,
                 barColor: "bg-primary-500",
@@ -228,16 +228,16 @@ export default function AttendanceView() {
               {
                 title: "Sesiones que faltan",
                 value: sessionsPending,
-                color: "text-orange-500",
+                color: "text-info-500",
                 progress: (1 - sessionsPending / allSessions.length) * 100,
-                icon: <GraduationCap className="text-orange-500 w-6 h-6" />,
-                barColor: "bg-orange-400",
-                barbgColor: "bg-orange-100",
+                icon: <GraduationCap className="text-info-500 w-6 h-6" />,
+                barColor: "bg-info-400",
+                barbgColor: "bg-info-100",
               },
               {
                 title: "Mensualidad",
                 value: `${totalMonthBalance} Bs`,
-                color: "text-green-600",
+                color: "text-secondary-600",
                 icon: <DollarSign className="text-secondary w-6 h-6" />,
                 barColor: "bg-secondary",
                 permission: () => hasPermission(TypeAction.read, TypeSubject.debt),
@@ -245,7 +245,7 @@ export default function AttendanceView() {
               {
                 title: "Estado de la Cuenta",
                 value: `Debe: ${totalBalance} Bs`,
-                color: "text-green-600",
+                color: "text-secondary-600",
                 icon: <ClipboardCheck className="text-secondary w-6 h-6" />,
                 barColor: "bg-secondary",
                 permission: () => hasPermission(TypeAction.read, TypeSubject.debt),
@@ -255,17 +255,17 @@ export default function AttendanceView() {
               .map((c, i) => (
                 <Card
                   key={i}
-                  className="text-center p-4 rounded-2xl bg-white shadow-sm border border-gray-100 flex flex-col items-center justify-between"
+                  className="text-center p-4 rounded-2xl bg-card shadow-sm border border-border flex flex-col items-center justify-between"
                 >
                   <CardContent className="flex flex-col items-center justify-center w-full p-0">
-                    <div className="flex items-center justify-center w-10 h-10 mb-2 bg-gray-50 rounded-4xl">
+                    <div className="flex items-center justify-center w-10 h-10 mb-2 bg-muted rounded-4xl">
                       {c.icon}
                     </div>
-                    <p className="font-semibold text-sm text-gray-600">{c.title}</p>
-                    <p className="text-3xl font-bold mt-1 text-gray-600">{c.value}</p>
+                    <p className="font-semibold text-sm text-muted-foreground">{c.title}</p>
+                    <p className="text-3xl font-bold mt-1 text-muted-foreground">{c.value}</p>
                     {c.barbgColor && (
                       <div className="w-full mt-3">
-                        <div className="flex justify-between text-[10px] text-gray-400">
+                        <div className="flex justify-between text-[10px] text-muted-foreground">
                           <span>Progreso</span>
                           <span>{c.progress}%</span>
                         </div>
@@ -283,7 +283,7 @@ export default function AttendanceView() {
 
           {/* Contador */}
           <div className="md:col-span-3 flex justify-center mt-4">
-            <p className="text-gray-700 text-sm">
+            <p className="text-foreground text-sm">
               Retornando al lector en{" "}
               <span className="text-primary font-bold">{countdown}</span>{" "}
               segundos...
@@ -297,14 +297,14 @@ export default function AttendanceView() {
           <div className="w-full max-w-lg">
             <div className="flex gap-2">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                   placeholder="Buscar por nombre, apellido o N° de documento..."
-                  className="w-full pl-9 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full pl-9 pr-4 py-2.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
               </div>
               <button
@@ -323,38 +323,38 @@ export default function AttendanceView() {
           {showSearchResults && (
             <div className="w-full max-w-lg">
               {isSearching ? (
-                <p className="text-sm text-gray-500 text-center py-4">Buscando...</p>
+                <p className="text-sm text-muted-foreground text-center py-4">Buscando...</p>
               ) : searchResults.length === 0 ? (
-                <p className="text-sm text-gray-500 text-center py-4">
+                <p className="text-sm text-muted-foreground text-center py-4">
                   No se encontraron estudiantes
                 </p>
               ) : (
-                <div className="border border-gray-200 rounded-lg overflow-hidden divide-y divide-gray-100">
+                <div className="border border-border rounded-lg overflow-hidden divide-y divide-border">
                   {searchResults.map((result: AttendanceSearchResult) => (
                     <div
                       key={result.userId}
-                      className="flex items-center justify-between px-4 py-3 bg-white hover:bg-gray-50 transition-colors"
+                      className="flex items-center justify-between px-4 py-3 bg-card hover:bg-muted transition-colors"
                     >
                       <div className="flex flex-col gap-0.5">
-                        <p className="font-semibold text-gray-800">
+                        <p className="font-semibold text-foreground">
                           {result.user.name} {result.user.lastName}
                         </p>
-                        <div className="flex items-center gap-3 text-xs text-gray-500">
+                        <div className="flex items-center gap-3 text-xs text-muted-foreground">
                           <span>
-                            <span className="font-medium text-gray-600">CI:</span>{' '}
+                            <span className="font-medium text-muted-foreground">CI:</span>{' '}
                             {result.user.numberDocument ?? '—'}
                           </span>
                           <span>
-                            <span className="font-medium text-gray-600">Tarjeta:</span>{' '}
+                            <span className="font-medium text-muted-foreground">Tarjeta:</span>{' '}
                             {result.user.numberCard ?? '—'}
                           </span>
                         </div>
                         {result.tutors.length > 0 && (
-                          <p className="text-xs text-gray-400">
-                            <span className="font-medium text-gray-500">Tutor:</span>{' '}
+                          <p className="text-xs text-muted-foreground">
+                            <span className="font-medium text-muted-foreground">Tutor:</span>{' '}
                             {result.tutors[0].user.name} {result.tutors[0].user.lastName}
                             {result.tutors[0].user.numberDocument
-                              ? <span className="ml-1">· <span className="font-medium text-gray-500">CI:</span> {result.tutors[0].user.numberDocument}</span>
+                              ? <span className="ml-1">· <span className="font-medium text-muted-foreground">CI:</span> {result.tutors[0].user.numberDocument}</span>
                               : ''}
                           </p>
                         )}

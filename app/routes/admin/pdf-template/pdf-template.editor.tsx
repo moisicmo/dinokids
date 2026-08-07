@@ -133,19 +133,19 @@ export const PdfTemplateEditor = ({ template, onClose, onSaved }: Props) => {
     }
   };
 
-  const btnBase = 'p-1.5 rounded hover:bg-gray-200 transition-colors';
-  const btnActive = 'bg-gray-300';
+  const btnBase = 'p-1.5 rounded hover:bg-muted transition-colors';
+  const btnActive = 'bg-muted';
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-gray-100">
+    <div className="fixed inset-0 z-50 flex flex-col bg-muted">
       {/* ── Top bar ── */}
-      <div className="flex items-center justify-between bg-white border-b px-4 py-2 shadow-sm gap-2">
+      <div className="flex items-center justify-between bg-card border-b px-4 py-2 shadow-sm gap-2">
         <div className="flex items-center gap-2 min-w-0">
           <button onClick={onClose} className={btnBase} title="Cerrar">
             <X size={16} />
           </button>
-          <span className="font-semibold text-sm text-gray-700 truncate">{template.name}</span>
-          <span className="text-xs text-gray-400 hidden md:block">— Tipo: {template.type}</span>
+          <span className="font-semibold text-sm text-foreground truncate">{template.name}</span>
+          <span className="text-xs text-muted-foreground hidden md:block">— Tipo: {template.type}</span>
         </div>
 
         <div className="flex items-center gap-1 flex-wrap">
@@ -155,7 +155,7 @@ export const PdfTemplateEditor = ({ template, onClose, onSaved }: Props) => {
           <button className={`${btnBase} ${activeFormats.underline ? btnActive : ''}`} onMouseDown={e => { e.preventDefault(); cmd('underline'); }} title="Subrayado"><Underline size={15} /></button>
           <button className={`${btnBase} ${activeFormats.strikeThrough ? btnActive : ''}`} onMouseDown={e => { e.preventDefault(); cmd('strikeThrough'); }} title="Tachado"><Strikethrough size={15} /></button>
 
-          <div className="w-px h-5 bg-gray-300 mx-1" />
+          <div className="w-px h-5 bg-muted mx-1" />
 
           {/* Alignment */}
           <button className={btnBase} onMouseDown={e => { e.preventDefault(); cmd('justifyLeft'); }} title="Izquierda"><AlignLeft size={15} /></button>
@@ -163,32 +163,32 @@ export const PdfTemplateEditor = ({ template, onClose, onSaved }: Props) => {
           <button className={btnBase} onMouseDown={e => { e.preventDefault(); cmd('justifyRight'); }} title="Derecha"><AlignRight size={15} /></button>
           <button className={btnBase} onMouseDown={e => { e.preventDefault(); cmd('justifyFull'); }} title="Justificado"><AlignJustify size={15} /></button>
 
-          <div className="w-px h-5 bg-gray-300 mx-1" />
+          <div className="w-px h-5 bg-muted mx-1" />
 
           {/* Lists */}
           <button className={btnBase} onMouseDown={e => { e.preventDefault(); cmd('insertUnorderedList'); }} title="Lista"><List size={15} /></button>
           <button className={btnBase} onMouseDown={e => { e.preventDefault(); cmd('insertOrderedList'); }} title="Lista numerada"><ListOrdered size={15} /></button>
 
-          <div className="w-px h-5 bg-gray-300 mx-1" />
+          <div className="w-px h-5 bg-muted mx-1" />
 
           {/* Insert */}
           <button className={btnBase} onMouseDown={e => { e.preventDefault(); handleInsertTable(); }} title="Tabla"><Table2 size={15} /></button>
           <button className={btnBase} onMouseDown={e => { e.preventDefault(); handleInsertLink(); }} title="Enlace"><Link2 size={15} /></button>
 
-          <div className="w-px h-5 bg-gray-300 mx-1" />
+          <div className="w-px h-5 bg-muted mx-1" />
 
           {/* History */}
           <button className={btnBase} onMouseDown={e => { e.preventDefault(); cmd('undo'); }} title="Deshacer"><Undo2 size={15} /></button>
           <button className={btnBase} onMouseDown={e => { e.preventDefault(); cmd('redo'); }} title="Rehacer"><Redo2 size={15} /></button>
 
-          <div className="w-px h-5 bg-gray-300 mx-1" />
+          <div className="w-px h-5 bg-muted mx-1" />
 
           {/* Zoom */}
           <button className={btnBase} onClick={() => setZoom(z => Math.max(50, z - 10))} title="Alejar"><ZoomOut size={15} /></button>
           <span className="text-xs w-10 text-center">{zoom}%</span>
           <button className={btnBase} onClick={() => setZoom(z => Math.min(200, z + 10))} title="Acercar"><ZoomIn size={15} /></button>
 
-          <div className="w-px h-5 bg-gray-300 mx-1" />
+          <div className="w-px h-5 bg-muted mx-1" />
 
           {/* Variables panel toggle */}
           <button
@@ -202,7 +202,7 @@ export const PdfTemplateEditor = ({ template, onClose, onSaved }: Props) => {
 
           {/* Preview */}
           <button
-            className={`${btnBase} flex items-center gap-1 text-xs px-2 text-blue-600`}
+            className={`${btnBase} flex items-center gap-1 text-xs px-2 text-info-600`}
             onClick={handlePreview}
             disabled={previewing}
             title="Vista previa PDF"
@@ -222,7 +222,7 @@ export const PdfTemplateEditor = ({ template, onClose, onSaved }: Props) => {
       {/* ── Body ── */}
       <div className="flex flex-1 overflow-hidden">
         {/* Editor area */}
-        <div className="flex-1 overflow-auto bg-gray-200 flex justify-center py-6 px-4">
+        <div className="flex-1 overflow-auto bg-muted flex justify-center py-6 px-4">
           <div
             style={{
               transform: `scale(${zoom / 100})`,
@@ -250,21 +250,21 @@ export const PdfTemplateEditor = ({ template, onClose, onSaved }: Props) => {
 
         {/* Variables panel */}
         {showVars && (
-          <div className="w-56 bg-white border-l overflow-y-auto flex-shrink-0">
+          <div className="w-56 bg-card border-l overflow-y-auto flex-shrink-0">
             <div className="px-3 py-3 border-b">
-              <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Variables disponibles</p>
-              <p className="text-xs text-gray-400 mt-1">Haz clic para insertar en el cursor</p>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Variables disponibles</p>
+              <p className="text-xs text-muted-foreground mt-1">Haz clic para insertar en el cursor</p>
             </div>
             <div className="p-2 space-y-1">
               {TEMPLATE_VARIABLES.map(v => (
                 <button
                   key={v.key}
                   onClick={() => insertVariable(v.key)}
-                  className="w-full text-left px-2 py-1.5 text-xs rounded hover:bg-blue-50 hover:text-blue-700 border border-transparent hover:border-blue-200 transition-colors"
+                  className="w-full text-left px-2 py-1.5 text-xs rounded hover:bg-info-100 hover:text-info-700 border border-transparent hover:border-info-200 transition-colors"
                   title={`Insertar {{${v.key}}}`}
                 >
                   <span className="font-medium">{v.label}</span>
-                  <span className="block text-gray-400 font-mono text-[10px]">{`{{${v.key}}}`}</span>
+                  <span className="block text-muted-foreground font-mono text-[10px]">{`{{${v.key}}}`}</span>
                 </button>
               ))}
             </div>

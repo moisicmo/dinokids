@@ -14,7 +14,15 @@ export interface EvaluationCatalogItem {
   schema: Evaluation[];
   action: TypeAction;
   subject: TypeSubject;
-  sendToRole: string;
+  /**
+   * A quién se envía este documento: se resuelve por CAPACIDAD (permiso
+   * action+subject), no por nombre de rol. Cualquier rol que tenga ese
+   * permiso (p.ej. si el superadmin crea "Evaluador Senior" con los mismos
+   * permisos que "Evaluador") aparece como destinatario válido, sin tocar
+   * este catálogo.
+   */
+  sendToAction: TypeAction;
+  sendToSubject: TypeSubject;
 }
 
 export const evaluationCatalog: EvaluationCatalogItem[] = [
@@ -25,7 +33,10 @@ export const evaluationCatalog: EvaluationCatalogItem[] = [
     schema: evaluationInit,
     action: TypeAction.create,
     subject: TypeSubject.evaluationInit,
-    sendToRole: 'Evaluador',
+    // Marcador de "capacidad de evaluador": solo el rol Evaluador (seed) tiene
+    // create sobre evaluationKinder — igual que sobre los otros 4 protocolos.
+    sendToAction: TypeAction.create,
+    sendToSubject: TypeSubject.evaluationKinder,
   },
   {
     id: 'conductual',
@@ -34,7 +45,10 @@ export const evaluationCatalog: EvaluationCatalogItem[] = [
     schema: evaluationCondoctual,
     action: TypeAction.create,
     subject: TypeSubject.evaluationCondoctual,
-    sendToRole: 'Profesor',
+    // Marcador de "capacidad de profesor": solo el rol Profesor (seed) tiene
+    // create sobre weeklyPlanning.
+    sendToAction: TypeAction.create,
+    sendToSubject: TypeSubject.weeklyPlanning,
   },
   {
     id: 'kinder',
@@ -43,7 +57,8 @@ export const evaluationCatalog: EvaluationCatalogItem[] = [
     schema: evaluationKinder,
     action: TypeAction.create,
     subject: TypeSubject.evaluationKinder,
-    sendToRole: 'Profesor',
+    sendToAction: TypeAction.create,
+    sendToSubject: TypeSubject.weeklyPlanning,
   },
   {
     id: 'primaria-1-3',
@@ -52,7 +67,8 @@ export const evaluationCatalog: EvaluationCatalogItem[] = [
     schema: evaluation123Primaria,
     action: TypeAction.create,
     subject: TypeSubject.evaluation123Primaria,
-    sendToRole: 'Profesor',
+    sendToAction: TypeAction.create,
+    sendToSubject: TypeSubject.weeklyPlanning,
   },
   {
     id: 'primaria-4-6',
@@ -61,7 +77,8 @@ export const evaluationCatalog: EvaluationCatalogItem[] = [
     schema: evaluation456Primaria,
     action: TypeAction.create,
     subject: TypeSubject.evaluation456Primaria,
-    sendToRole: 'Profesor',
+    sendToAction: TypeAction.create,
+    sendToSubject: TypeSubject.weeklyPlanning,
   },
   {
     id: 'secundaria-1-3',
@@ -70,6 +87,7 @@ export const evaluationCatalog: EvaluationCatalogItem[] = [
     schema: evaluation123Secundaria,
     action: TypeAction.create,
     subject: TypeSubject.evaluation123Secundaria,
-    sendToRole: 'Profesor',
+    sendToAction: TypeAction.create,
+    sendToSubject: TypeSubject.weeklyPlanning,
   },
 ];

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Swal from 'sweetalert2';
+import { showLoadingOverlay, hideLoadingOverlay } from '@/store/alertUI';
 import { getEnvVariables } from '../helpers';
 
 const { VITE_HOST_BACKEND } = getEnvVariables();
@@ -19,12 +19,7 @@ const createAxiosInstance = (baseURL: string) => {
     if (branchSelect) request.headers.set('branch-select', JSON.parse(branchSelect).id);
 
     if (MUTATION_METHODS.has(request.method?.toLowerCase() ?? '')) {
-      Swal.fire({
-        title: 'Procesando...',
-        allowOutsideClick: false,
-        showConfirmButton: false,
-        didOpen: () => Swal.showLoading(),
-      });
+      showLoadingOverlay('Procesando...');
     }
 
     return request;
@@ -34,13 +29,13 @@ const createAxiosInstance = (baseURL: string) => {
   instance.interceptors.response.use(
     (response) => {
       if (MUTATION_METHODS.has(response.config.method?.toLowerCase() ?? '')) {
-        Swal.close();
+        hideLoadingOverlay();
       }
       return response;
     },
     (error) => {
       if (MUTATION_METHODS.has(error.config?.method?.toLowerCase() ?? '')) {
-        Swal.close();
+        hideLoadingOverlay();
       }
       return Promise.reject(error);
     }

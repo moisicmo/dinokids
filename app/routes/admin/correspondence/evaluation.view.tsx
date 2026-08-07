@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { evaluationCatalog } from './evaluations/catalog';
 import EvaluationForm from './evaluation.form';
-import { useCorrespondenceStore, usePermissionStore, useAuthStore, useStudentStore } from '@/hooks';
+import { useCorrespondenceStore, usePermissionStore, useStudentStore } from '@/hooks';
 import { CorrespondenceTable } from './correspondence.table';
 import type { Question } from '.';
 import { TypeAction, TypeSubject, type AdminSentTransmissionModel, type DocumentTransmissionModel, type StudentModel, type SentTransmissionModel } from '@/models';
@@ -10,13 +10,13 @@ import { Eye } from 'lucide-react';
 import { SessionTrackingModal, WeeklyPlanningModal, EvaluationPlanningModal, DocumentEditor } from '@/routes/admin/student';
 
 const ChildInfoPanel = ({ childInfo }: { childInfo: Question[] }) => (
-  <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-4">
-    <h4 className="text-sm font-semibold text-blue-700 mb-3">Datos del estudiante</h4>
+  <div className="bg-info-100 border border-info-200 rounded-xl p-4 mb-4">
+    <h4 className="text-sm font-semibold text-info-700 mb-3">Datos del estudiante</h4>
     <div className="grid grid-cols-2 gap-x-6 gap-y-1">
       {childInfo.filter((q) => !['Celular del Tutor', 'CI Tutor', 'CI Estudiante', 'Email del Tutor'].includes(q.question)).map((q) => (
         <div key={q.question} className="text-sm">
-          <span className="text-gray-500">{q.question}: </span>
-          <span className="font-medium text-gray-800">{q.answer ?? '—'}</span>
+          <span className="text-muted-foreground">{q.question}: </span>
+          <span className="font-medium text-foreground">{q.answer ?? '—'}</span>
         </div>
       ))}
     </div>
@@ -31,7 +31,6 @@ const EvaluationView = () => {
   const [selectedEvaluation, setSelectedEvaluation] = useState<null | typeof evaluationCatalog[0]>(null);
   const [viewEvaluation, setViewEvaluation] = useState<DocumentTransmissionModel | null>(null);
   const [selectedContinuation, setSelectedContinuation] = useState<null | typeof evaluationCatalog[0]>(null);
-  const { roleUser } = useAuthStore();
 
   const [sessionTracking, setSessionTracking] = useState<StudentModel | null>(null);
   const [weeklyPlanning, setWeeklyPlanning] = useState<StudentModel | null>(null);
@@ -84,7 +83,8 @@ const EvaluationView = () => {
         evaluationInit={selectedEvaluation.schema}
         onBack={() => { setSelectedEvaluation(null); getSentCorrespondences(); }}
         title={selectedEvaluation.title}
-        sendToRole={selectedEvaluation.sendToRole}
+        sendToAction={selectedEvaluation.sendToAction}
+        sendToSubject={selectedEvaluation.sendToSubject}
       />
     );
   }
@@ -93,7 +93,7 @@ const EvaluationView = () => {
     <>
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-gray-800">Evaluaciones</h2>
+        <h2 className="text-xl font-semibold text-foreground">Evaluaciones</h2>
         {
           hasPermission(TypeAction.create, TypeSubject.evaluationInit) &&
           <Button
@@ -131,35 +131,35 @@ const EvaluationView = () => {
 
         return (
           <div className="mt-6">
-            <h3 className="text-sm font-semibold text-gray-600 mb-3">Historial de envíos</h3>
+            <h3 className="text-sm font-semibold text-muted-foreground mb-3">Historial de envíos</h3>
             <div className="flex flex-col gap-3">
               {Object.entries(groups).map(([key, group]) => (
-                <div key={key} className="border border-gray-200 rounded-xl overflow-hidden">
+                <div key={key} className="border border-border rounded-xl overflow-hidden">
                   {/* Header del estudiante */}
-                  <div className="bg-blue-50 px-4 py-2 flex items-center gap-2">
-                    <span className="text-sm font-semibold text-blue-700">
+                  <div className="bg-info-100 px-4 py-2 flex items-center gap-2">
+                    <span className="text-sm font-semibold text-info-700">
                       {group.name} {group.lastName}
                     </span>
-                    <span className="text-xs text-blue-400">· {group.items.length} evaluación{group.items.length !== 1 ? 'es' : ''}</span>
+                    <span className="text-xs text-info-400">· {group.items.length} evaluación{group.items.length !== 1 ? 'es' : ''}</span>
                   </div>
                   {/* Flujo de evaluaciones (cronológico) */}
                   {[...group.items].reverse().map((item, idx) => (
-                    <div key={item.id} className="flex items-center gap-3 px-4 py-2 border-t border-gray-100 bg-white text-sm">
+                    <div key={item.id} className="flex items-center gap-3 px-4 py-2 border-t border-border bg-card text-sm">
                       {/* Indicador de paso */}
                       <div className="flex flex-col items-center shrink-0">
-                        <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-600 text-xs flex items-center justify-center font-semibold">
+                        <span className="w-5 h-5 rounded-full bg-info-100 text-info-600 text-xs flex items-center justify-center font-semibold">
                           {idx + 1}
                         </span>
                       </div>
                       <div className="flex-1 flex justify-between items-start">
                         <div className="flex flex-col gap-0.5">
-                          <span className="font-medium text-gray-700">{item.document.type}</span>
-                          <span className="text-gray-400 text-xs">
+                          <span className="font-medium text-foreground">{item.document.type}</span>
+                          <span className="text-muted-foreground text-xs">
                             Para: {item.receiver.role?.name} — {item.receiver.name} {item.receiver.lastName}
                           </span>
                         </div>
                         <div className="flex items-center gap-3 shrink-0 ml-4">
-                          <span className="text-gray-400 text-xs">
+                          <span className="text-muted-foreground text-xs">
                             {new Date(item.createdAt).toLocaleString('es-PE', {
                               day: '2-digit', month: '2-digit', year: 'numeric',
                               hour: '2-digit', minute: '2-digit',
@@ -168,9 +168,9 @@ const EvaluationView = () => {
                           <button
                             onClick={() => openSentEvaluation(item.id)}
                             title="Ver evaluación"
-                            className="p-1 rounded hover:bg-gray-100 transition"
+                            className="p-1 rounded hover:bg-muted transition"
                           >
-                            <Eye className="w-4 h-4 text-blue-500" />
+                            <Eye className="w-4 h-4 text-info-500" />
                           </button>
                         </div>
                       </div>
@@ -195,10 +195,10 @@ const EvaluationView = () => {
 
         return (
           <div className="mt-6">
-            <h3 className="text-sm font-semibold text-gray-600 mb-3">Historial global de envíos</h3>
+            <h3 className="text-sm font-semibold text-muted-foreground mb-3">Historial global de envíos</h3>
             <div className="flex flex-col gap-3">
               {Object.entries(groups).map(([key, group]) => (
-                <div key={key} className="border border-gray-200 rounded-xl overflow-hidden">
+                <div key={key} className="border border-border rounded-xl overflow-hidden">
                   <div className="bg-purple-50 px-4 py-2 flex items-center gap-2">
                     <span className="text-sm font-semibold text-purple-700">
                       {group.name} {group.lastName}
@@ -206,7 +206,7 @@ const EvaluationView = () => {
                     <span className="text-xs text-purple-400">· {group.items.length} evaluación{group.items.length !== 1 ? 'es' : ''}</span>
                   </div>
                   {[...group.items].reverse().map((item, idx) => (
-                    <div key={item.id} className="flex items-center gap-3 px-4 py-2 border-t border-gray-100 bg-white text-sm">
+                    <div key={item.id} className="flex items-center gap-3 px-4 py-2 border-t border-border bg-card text-sm">
                       <div className="flex flex-col items-center shrink-0">
                         <span className="w-5 h-5 rounded-full bg-purple-100 text-purple-600 text-xs flex items-center justify-center font-semibold">
                           {idx + 1}
@@ -214,15 +214,15 @@ const EvaluationView = () => {
                       </div>
                       <div className="flex-1 flex justify-between items-start">
                         <div className="flex flex-col gap-0.5">
-                          <span className="font-medium text-gray-700">{item.document.type}</span>
-                          <span className="text-gray-400 text-xs">
+                          <span className="font-medium text-foreground">{item.document.type}</span>
+                          <span className="text-muted-foreground text-xs">
                             De: {item.sender.role?.name} — {item.sender.name} {item.sender.lastName}
                             {' · '}
                             Para: {item.receiver.role?.name} — {item.receiver.name} {item.receiver.lastName}
                           </span>
                         </div>
                         <div className="flex items-center gap-3 shrink-0 ml-4">
-                          <span className="text-gray-400 text-xs">
+                          <span className="text-muted-foreground text-xs">
                             {new Date(item.createdAt).toLocaleString('es-PE', {
                               day: '2-digit', month: '2-digit', year: 'numeric',
                               hour: '2-digit', minute: '2-digit',
@@ -231,9 +231,9 @@ const EvaluationView = () => {
                           <button
                             onClick={() => openSentEvaluation(item.id)}
                             title="Ver evaluación"
-                            className="p-1 rounded hover:bg-gray-100 transition"
+                            className="p-1 rounded hover:bg-muted transition"
                           >
-                            <Eye className="w-4 h-4 text-blue-500" />
+                            <Eye className="w-4 h-4 text-info-500" />
                           </button>
                         </div>
                       </div>
@@ -248,7 +248,7 @@ const EvaluationView = () => {
 
       {viewEvaluation && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto p-2">
+          <div className="bg-card rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto p-2">
             {(viewEvaluation.document.data as any[])[0]?.type === 'html' ? (
               <div className="px-10 py-8" style={{ fontFamily: 'Arial, sans-serif', fontSize: '12pt', lineHeight: '1.5' }}>
                 <div
@@ -259,8 +259,9 @@ const EvaluationView = () => {
               (() => {
                 const docChildInfo = viewEvaluation.document.childInfo;
 
-                // evaluator flow
-                if (roleUser?.name === 'Evaluador') {
+                // evaluator flow — capacidad de evaluador, no nombre de rol
+                // (mismo marcador que catalog.ts: create sobre evaluationKinder)
+                if (hasPermission(TypeAction.create, TypeSubject.evaluationKinder)) {
                   // Botón 👁 → solo ver la evaluación recibida (readonly)
                   if (!selectedContinuation) {
                     return (
@@ -291,7 +292,8 @@ const EvaluationView = () => {
                         }}
                         title={selectedContinuation.title}
                         childInfo={docChildInfo}
-                        sendToRole={selectedContinuation.sendToRole}
+                        sendToAction={selectedContinuation.sendToAction}
+                        sendToSubject={selectedContinuation.sendToSubject}
                         studentUserId={viewEvaluation.document.studentUserId}
                         sourceDocumentId={viewEvaluation.document.id}
                       />

@@ -20,7 +20,7 @@ const roleView = () => {
     <>
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-gray-800">Roles</h2>
+        <h2 className="text-xl font-semibold text-foreground">Roles</h2>
         {
           hasPermission(TypeAction.create, TypeSubject.role) &&
           <Button

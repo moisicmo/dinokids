@@ -100,13 +100,13 @@ export const PdfTemplateCreate = ({ onClose, onCreated }: Props) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
+      <div className="bg-card rounded-xl shadow-xl w-full max-w-md p-6">
         <h3 className="text-lg font-semibold mb-4">Nueva plantilla PDF</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+            <label className="block text-sm font-medium text-foreground mb-1">Nombre</label>
             <input
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-info-500"
               value={name}
               onChange={e => setName(e.target.value)}
               placeholder="Ej: Contrato estándar 2026"
@@ -114,9 +114,9 @@ export const PdfTemplateCreate = ({ onClose, onCreated }: Props) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de documento</label>
+            <label className="block text-sm font-medium text-foreground mb-1">Tipo de documento</label>
             <select
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-info-500"
               value={type}
               onChange={e => setType(e.target.value)}
             >
@@ -133,11 +133,11 @@ export const PdfTemplateCreate = ({ onClose, onCreated }: Props) => {
               onChange={e => setIsDefault(e.target.checked)}
               className="rounded"
             />
-            <label htmlFor="isDefault" className="text-sm text-gray-700">
+            <label htmlFor="isDefault" className="text-sm text-foreground">
               Establecer como plantilla predeterminada
             </label>
           </div>
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-muted-foreground">
             {type === 'inscription'
               ? 'Se cargará el contrato de inscripción actual como punto de partida.'
               : 'Se iniciará con una plantilla en blanco.'}

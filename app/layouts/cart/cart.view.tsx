@@ -22,7 +22,7 @@ export const CartView = ({ onClose }: Props) => {
 
         <div className="flex-1 overflow-y-auto px-2">
           {cart.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-center text-gray-500 py-10">
+            <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground py-10">
               <ShoppingCart size={52} />
               <p className="text-lg font-semibold">Tu carrito está vacío</p>
               <p className="text-sm">Agrega elementos para comenzar a cobrar.</p>

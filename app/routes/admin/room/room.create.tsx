@@ -103,8 +103,6 @@ export const RoomCreate = (props: Props) => {
     }
   }, [item]);
 
-  if (!open) return null;
-
   useEffect(() => {
     getTeachers();
     if (item) {
@@ -116,9 +114,11 @@ export const RoomCreate = (props: Props) => {
     getSpecialties();
   }, [])
 
+  if (!open) return null;
+
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div className={`bg-white rounded-lg ${step === 2 ? 'max-w-5xl' : 'max-w-lg'} p-6 max-h-[90vh] overflow-y-auto`}>
+      <div className={`bg-card rounded-lg ${step === 2 ? 'max-w-5xl' : 'max-w-lg'} p-6 max-h-[90vh] overflow-y-auto`}>
         <h2 className="text-xl font-bold mb-4">
           {item ? `Editar ${item.name}` : 'Nueva Aula'}
         </h2>
@@ -212,7 +212,7 @@ export const RoomCreate = (props: Props) => {
                   setStep(step - 1);
                 }
               }}
-              color='bg-gray-400'
+              color='bg-muted'
             >{step === 1 ? 'Cancelar' : 'Atrás'}</Button>
 
             {step === 1 && (

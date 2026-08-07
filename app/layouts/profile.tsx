@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import { useAuthStore } from '@/hooks';
-import { useAlertStore } from '@/hooks/useAlert';
-import { useForm } from '@/hooks/useForm';
+import { useAuthStore, useAlertStore, useForm } from '@/hooks';
 import { Button, InputCustom } from '@/components';
 import {
   formUpdateProfileValidations,
@@ -71,19 +69,19 @@ export const Profile = ({ handleClose }: Props) => {
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
+      <div className="bg-card rounded-lg w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-bold mb-4">Configuraciones</h2>
 
         {/* Tabs */}
         <div className="flex border-b mb-5">
           <button
-            className={`px-4 py-2 text-sm font-medium ${activeTab === 'datos' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+            className={`px-4 py-2 text-sm font-medium ${activeTab === 'datos' ? 'border-b-2 border-info-600 text-info-600' : 'text-muted-foreground hover:text-foreground'}`}
             onClick={() => setActiveTab('datos')}
           >
             Datos básicos
           </button>
           <button
-            className={`px-4 py-2 text-sm font-medium ${activeTab === 'password' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+            className={`px-4 py-2 text-sm font-medium ${activeTab === 'password' ? 'border-b-2 border-info-600 text-info-600' : 'text-muted-foreground hover:text-foreground'}`}
             onClick={() => setActiveTab('password')}
           >
             Cambiar contraseña
@@ -119,7 +117,7 @@ export const Profile = ({ handleClose }: Props) => {
               helperText={profileSubmitted ? emailValid : ''}
             />
             <div className="flex justify-end gap-2 pt-2">
-              <Button onClick={handleClose} color="bg-gray-400" type="button">
+              <Button onClick={handleClose} color="bg-muted" type="button">
                 Cancelar
               </Button>
               <Button type="submit">Guardar</Button>
@@ -158,7 +156,7 @@ export const Profile = ({ handleClose }: Props) => {
               helperText={passwordSubmitted ? confirmPasswordValid : ''}
             />
             <div className="flex justify-end gap-2 pt-2">
-              <Button onClick={handleClose} color="bg-gray-400" type="button">
+              <Button onClick={handleClose} color="bg-muted" type="button">
                 Cancelar
               </Button>
               <Button type="submit">Actualizar</Button>

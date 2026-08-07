@@ -87,15 +87,15 @@ export const ValidateEmail = ({ handleClose, showValidateEmail }: Props) => {
   if (success) {
     return (
       <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-2xl w-full max-w-sm p-8 text-center shadow-xl">
+        <div className="bg-card rounded-2xl w-full max-w-sm p-8 text-center shadow-xl">
           <div
             className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
             style={{ backgroundColor: '#eef6e5' }}
           >
             <CheckCircle2 className="w-8 h-8" style={{ color: '#6BA539' }} />
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">¡Cuenta verificada!</h2>
-          <p className="text-sm text-gray-500 mb-6">
+          <h2 className="text-xl font-bold text-foreground mb-2">¡Cuenta verificada!</h2>
+          <p className="text-sm text-muted-foreground mb-6">
             Tu cuenta fue activada y tu contraseña configurada correctamente.
             Ya puedes iniciar sesión.
           </p>
@@ -114,7 +114,7 @@ export const ValidateEmail = ({ handleClose, showValidateEmail }: Props) => {
   /* ── OTP form ── */
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl w-full max-w-sm shadow-xl overflow-hidden">
+      <div className="bg-card rounded-2xl w-full max-w-sm shadow-xl overflow-hidden">
 
         {/* Header */}
         <div className="px-7 pt-7 pb-5">
@@ -124,10 +124,10 @@ export const ValidateEmail = ({ handleClose, showValidateEmail }: Props) => {
           >
             <MailCheck className="w-6 h-6" style={{ color: '#B0008E' }} />
           </div>
-          <h2 className="text-xl font-bold text-gray-900">Verifica tu cuenta</h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <h2 className="text-xl font-bold text-foreground">Verifica tu cuenta</h2>
+          <p className="text-sm text-muted-foreground mt-1">
             Enviamos un código de 6 dígitos a{' '}
-            <span className="font-medium text-gray-700">{maskedEmail}</span>.
+            <span className="font-medium text-foreground">{maskedEmail}</span>.
             Ingrésalo para activar tu cuenta y crear tu contraseña.
           </p>
         </div>
@@ -137,7 +137,7 @@ export const ValidateEmail = ({ handleClose, showValidateEmail }: Props) => {
 
           {/* OTP */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Código de verificación</label>
+            <label className="block text-sm font-medium text-foreground mb-2">Código de verificación</label>
             <OtpCustom
               length={6}
               name="pin"
@@ -175,7 +175,7 @@ export const ValidateEmail = ({ handleClose, showValidateEmail }: Props) => {
             error={!!passwordValid && formSubmitted}
             helperText={formSubmitted ? (passwordValid ?? '') : ''}
             endAdornment={
-              <button type="button" onClick={() => setShowPassword(p => !p)} className="text-gray-400 hover:text-gray-600">
+              <button type="button" onClick={() => setShowPassword(p => !p)} className="text-muted-foreground hover:text-muted-foreground">
                 {showPassword ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
               </button>
             }
@@ -196,7 +196,7 @@ export const ValidateEmail = ({ handleClose, showValidateEmail }: Props) => {
                 : (confirmPasswordValid ?? '')
               : ''}
             endAdornment={
-              <button type="button" onClick={() => setShowConfirm(p => !p)} className="text-gray-400 hover:text-gray-600">
+              <button type="button" onClick={() => setShowConfirm(p => !p)} className="text-muted-foreground hover:text-muted-foreground">
                 {showConfirm ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
               </button>
             }
@@ -204,8 +204,8 @@ export const ValidateEmail = ({ handleClose, showValidateEmail }: Props) => {
 
           {/* API error */}
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3">
-              <p className="text-sm text-red-600">{error}</p>
+            <div className="bg-error-100 border border-error-200 rounded-lg px-4 py-3">
+              <p className="text-sm text-error-600">{error}</p>
             </div>
           )}
 
@@ -214,7 +214,7 @@ export const ValidateEmail = ({ handleClose, showValidateEmail }: Props) => {
             <Button
               type="button"
               onClick={() => { onResetForm(); handleClose(); }}
-              className="flex-1 bg-gray-100 text-gray-700 hover:bg-gray-200 font-medium h-11"
+              className="flex-1 bg-muted text-foreground hover:bg-muted font-medium h-11"
             >
               Cancelar
             </Button>

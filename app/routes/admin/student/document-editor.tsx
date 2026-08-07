@@ -79,10 +79,10 @@ const generateTemplate = (student: StudentModel): string => {
 
 const MenuDropdown = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <li className="relative group">
-    <button className="px-3 py-1.5 text-sm hover:bg-gray-200 rounded-sm select-none">
+    <button className="px-3 py-1.5 text-sm hover:bg-muted rounded-sm select-none">
       {label}
     </button>
-    <ul className="absolute hidden group-hover:block bg-white border border-gray-200 shadow-lg z-50 min-w-[200px] py-1 left-0 top-full">
+    <ul className="absolute hidden group-hover:block bg-card border border-border shadow-lg z-50 min-w-[200px] py-1 left-0 top-full">
       {children}
     </ul>
   </li>
@@ -99,7 +99,7 @@ const MenuItem = ({
 }) => (
   <li>
     <button
-      className="w-full flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-gray-100 text-left"
+      className="w-full flex items-center gap-2 px-3 py-1.5 text-sm hover:bg-muted text-left"
       onMouseDown={(e) => { e.preventDefault(); onClick(); }}
     >
       {icon}
@@ -317,27 +317,27 @@ export const DocumentEditor = ({
   const tbtn = (active = false) =>
     `p-1.5 rounded transition-colors cursor-pointer ${
       active
-        ? 'bg-blue-100 text-blue-700'
-        : 'hover:bg-gray-100 text-gray-700'
+        ? 'bg-info-100 text-info-700'
+        : 'hover:bg-muted text-foreground'
     }`;
 
   const initials = `${student.user.name?.[0] ?? ''}${student.user.lastName?.[0] ?? ''}`.toUpperCase();
 
   const SaveIndicator = () => {
-    if (saveStatus === 'saving') return <span className="text-xs text-gray-400 flex items-center gap-1"><Cloud className="w-3.5 h-3.5 animate-pulse" /> Guardando...</span>;
-    if (saveStatus === 'saved') return <span className="text-xs text-green-600 flex items-center gap-1"><Cloud className="w-3.5 h-3.5" /> Guardado</span>;
-    if (saveStatus === 'offline') return <span className="text-xs text-red-500 flex items-center gap-1"><CloudOff className="w-3.5 h-3.5" /> Sin conexión</span>;
+    if (saveStatus === 'saving') return <span className="text-xs text-muted-foreground flex items-center gap-1"><Cloud className="w-3.5 h-3.5 animate-pulse" /> Guardando...</span>;
+    if (saveStatus === 'saved') return <span className="text-xs text-secondary-600 flex items-center gap-1"><Cloud className="w-3.5 h-3.5" /> Guardado</span>;
+    if (saveStatus === 'offline') return <span className="text-xs text-error-500 flex items-center gap-1"><CloudOff className="w-3.5 h-3.5" /> Sin conexión</span>;
     return null;
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-white">
+    <div className="fixed inset-0 z-50 flex flex-col bg-card">
 
       {/* ── Title bar ── */}
-      <div className="bg-white border-b border-gray-300 px-4 py-2 flex items-center gap-3 shadow-sm">
-        <FileText className="w-5 h-5 text-blue-500 flex-shrink-0" />
+      <div className="bg-card border-b border-border px-4 py-2 flex items-center gap-3 shadow-sm">
+        <FileText className="w-5 h-5 text-info-500 flex-shrink-0" />
         <input
-          className="flex-1 text-sm font-medium border-none outline-none focus:bg-gray-50 rounded px-1 py-0.5"
+          className="flex-1 text-sm font-medium border-none outline-none focus:bg-muted rounded px-1 py-0.5"
           value={docTitle}
           onChange={(e) => setDocTitle(e.target.value)}
           placeholder="Título del documento"
@@ -345,7 +345,7 @@ export const DocumentEditor = ({
         <SaveIndicator />
         <button
           onClick={onClose}
-          className="p-1.5 hover:bg-gray-100 rounded text-gray-500 hover:text-gray-800"
+          className="p-1.5 hover:bg-muted rounded text-muted-foreground hover:text-foreground"
           title="Cerrar editor"
         >
           <X className="w-5 h-5" />
@@ -353,45 +353,45 @@ export const DocumentEditor = ({
       </div>
 
       {/* ── Menu bar ── */}
-      <nav className="bg-[#f1f3f4] border-b border-gray-300">
+      <nav className="bg-[#f1f3f4] border-b border-border">
         <ul className="flex text-sm px-2">
 
           <MenuDropdown label="Archivo">
-            <MenuItem icon={<Save className="w-4 h-4 text-gray-500" />} label="Guardar" onClick={handleSave} />
-            <MenuItem icon={<Printer className="w-4 h-4 text-gray-500" />} label="Imprimir" onClick={handlePrint} />
-            <MenuItem icon={<FileText className="w-4 h-4 text-gray-500" />} label="Configuración de página" onClick={() => setShowPageSettings(v => !v)} />
-            <MenuItem icon={<X className="w-4 h-4 text-gray-500" />} label="Cerrar" onClick={onClose} />
+            <MenuItem icon={<Save className="w-4 h-4 text-muted-foreground" />} label="Guardar" onClick={handleSave} />
+            <MenuItem icon={<Printer className="w-4 h-4 text-muted-foreground" />} label="Imprimir" onClick={handlePrint} />
+            <MenuItem icon={<FileText className="w-4 h-4 text-muted-foreground" />} label="Configuración de página" onClick={() => setShowPageSettings(v => !v)} />
+            <MenuItem icon={<X className="w-4 h-4 text-muted-foreground" />} label="Cerrar" onClick={onClose} />
           </MenuDropdown>
 
           <MenuDropdown label="Editar">
-            <MenuItem icon={<Undo2 className="w-4 h-4 text-gray-500" />} label="Deshacer" onClick={() => cmd('undo')} />
-            <MenuItem icon={<Redo2 className="w-4 h-4 text-gray-500" />} label="Rehacer" onClick={() => cmd('redo')} />
-            <MenuItem icon={<Scissors className="w-4 h-4 text-gray-500" />} label="Cortar" onClick={() => cmd('cut')} />
-            <MenuItem icon={<Copy className="w-4 h-4 text-gray-500" />} label="Copiar" onClick={() => cmd('copy')} />
-            <MenuItem icon={<Eraser className="w-4 h-4 text-gray-500" />} label="Quitar formato" onClick={() => cmd('removeFormat')} />
+            <MenuItem icon={<Undo2 className="w-4 h-4 text-muted-foreground" />} label="Deshacer" onClick={() => cmd('undo')} />
+            <MenuItem icon={<Redo2 className="w-4 h-4 text-muted-foreground" />} label="Rehacer" onClick={() => cmd('redo')} />
+            <MenuItem icon={<Scissors className="w-4 h-4 text-muted-foreground" />} label="Cortar" onClick={() => cmd('cut')} />
+            <MenuItem icon={<Copy className="w-4 h-4 text-muted-foreground" />} label="Copiar" onClick={() => cmd('copy')} />
+            <MenuItem icon={<Eraser className="w-4 h-4 text-muted-foreground" />} label="Quitar formato" onClick={() => cmd('removeFormat')} />
           </MenuDropdown>
 
           <MenuDropdown label="Insertar">
-            <MenuItem icon={<Image className="w-4 h-4 text-gray-500" />} label="Imagen" onClick={handleInsertImage} />
-            <MenuItem icon={<Link2 className="w-4 h-4 text-gray-500" />} label="Enlace" onClick={handleInsertLink} />
-            <MenuItem icon={<Table2 className="w-4 h-4 text-gray-500" />} label="Tabla" onClick={handleInsertTable} />
+            <MenuItem icon={<Image className="w-4 h-4 text-muted-foreground" />} label="Imagen" onClick={handleInsertImage} />
+            <MenuItem icon={<Link2 className="w-4 h-4 text-muted-foreground" />} label="Enlace" onClick={handleInsertLink} />
+            <MenuItem icon={<Table2 className="w-4 h-4 text-muted-foreground" />} label="Tabla" onClick={handleInsertTable} />
           </MenuDropdown>
 
           <MenuDropdown label="Formato">
-            <MenuItem icon={<Bold className="w-4 h-4 text-gray-500" />} label="Negrita" onClick={() => cmd('bold')} />
-            <MenuItem icon={<Italic className="w-4 h-4 text-gray-500" />} label="Cursiva" onClick={() => cmd('italic')} />
-            <MenuItem icon={<Underline className="w-4 h-4 text-gray-500" />} label="Subrayado" onClick={() => cmd('underline')} />
-            <MenuItem icon={<Strikethrough className="w-4 h-4 text-gray-500" />} label="Tachado" onClick={() => cmd('strikeThrough')} />
+            <MenuItem icon={<Bold className="w-4 h-4 text-muted-foreground" />} label="Negrita" onClick={() => cmd('bold')} />
+            <MenuItem icon={<Italic className="w-4 h-4 text-muted-foreground" />} label="Cursiva" onClick={() => cmd('italic')} />
+            <MenuItem icon={<Underline className="w-4 h-4 text-muted-foreground" />} label="Subrayado" onClick={() => cmd('underline')} />
+            <MenuItem icon={<Strikethrough className="w-4 h-4 text-muted-foreground" />} label="Tachado" onClick={() => cmd('strikeThrough')} />
           </MenuDropdown>
 
         </ul>
       </nav>
 
       {/* ── Toolbar ── */}
-      <div className="bg-white border-b border-gray-200 px-3 py-1 flex items-center gap-1 flex-wrap shadow-sm">
+      <div className="bg-card border-b border-border px-3 py-1 flex items-center gap-1 flex-wrap shadow-sm">
 
         {/* Zoom group */}
-        <div className="flex items-center gap-1 pr-2 mr-1 border-r border-gray-200">
+        <div className="flex items-center gap-1 pr-2 mr-1 border-r border-border">
           <button
             className={tbtn()}
             onMouseDown={(e) => { e.preventDefault(); setZoom(z => Math.max(50, z - 10)); }}
@@ -400,7 +400,7 @@ export const DocumentEditor = ({
             <ZoomOut className="w-4 h-4" />
           </button>
           <select
-            className="text-xs border border-gray-200 rounded px-1 py-0.5 bg-white"
+            className="text-xs border border-border rounded px-1 py-0.5 bg-card"
             value={zoom}
             onChange={(e) => setZoom(Number(e.target.value))}
           >
@@ -424,9 +424,9 @@ export const DocumentEditor = ({
         </div>
 
         {/* Text style selects */}
-        <div className="flex items-center gap-1 pr-2 mr-1 border-r border-gray-200">
+        <div className="flex items-center gap-1 pr-2 mr-1 border-r border-border">
           <select
-            className="text-xs border border-gray-200 rounded px-1 py-0.5 bg-white"
+            className="text-xs border border-border rounded px-1 py-0.5 bg-card"
             defaultValue="p"
             onChange={(e) => cmdArg('formatBlock', e.target.value)}
           >
@@ -436,7 +436,7 @@ export const DocumentEditor = ({
             <option value="h3">Encabezado 3</option>
           </select>
           <select
-            className="text-xs border border-gray-200 rounded px-1 py-0.5 bg-white"
+            className="text-xs border border-border rounded px-1 py-0.5 bg-card"
             defaultValue="Arial"
             onChange={(e) => cmdArg('fontName', e.target.value)}
           >
@@ -446,7 +446,7 @@ export const DocumentEditor = ({
             <option value="Times New Roman">Times New Roman</option>
           </select>
           <select
-            className="text-xs border border-gray-200 rounded px-1 py-0.5 bg-white"
+            className="text-xs border border-border rounded px-1 py-0.5 bg-card"
             defaultValue="3"
             onChange={(e) => cmdArg('fontSize', e.target.value)}
           >
@@ -461,7 +461,7 @@ export const DocumentEditor = ({
         </div>
 
         {/* Format toggles */}
-        <div className="flex items-center gap-1 pr-2 mr-1 border-r border-gray-200">
+        <div className="flex items-center gap-1 pr-2 mr-1 border-r border-border">
           <button className={tbtn(activeFormats.bold)} onMouseDown={(e) => { e.preventDefault(); cmd('bold'); }} title="Negrita (Ctrl+B)">
             <Bold className="w-4 h-4" />
           </button>
@@ -477,21 +477,21 @@ export const DocumentEditor = ({
           <input
             type="color"
             title="Color de texto"
-            className="w-6 h-6 rounded border border-gray-200 cursor-pointer"
+            className="w-6 h-6 rounded border border-border cursor-pointer"
             defaultValue="#000000"
             onChange={(e) => cmdArg('foreColor', e.target.value)}
           />
           <input
             type="color"
             title="Color de resaltado"
-            className="w-6 h-6 rounded border border-gray-200 cursor-pointer"
+            className="w-6 h-6 rounded border border-border cursor-pointer"
             defaultValue="#ffff00"
             onChange={(e) => cmdArg('hiliteColor', e.target.value)}
           />
         </div>
 
         {/* Insert elements */}
-        <div className="flex items-center gap-1 pr-2 mr-1 border-r border-gray-200">
+        <div className="flex items-center gap-1 pr-2 mr-1 border-r border-border">
           <button className={tbtn()} onMouseDown={(e) => { e.preventDefault(); handleInsertLink(); }} title="Insertar enlace">
             <Link2 className="w-4 h-4" />
           </button>
@@ -504,7 +504,7 @@ export const DocumentEditor = ({
         </div>
 
         {/* Alignment & lists */}
-        <div className="flex items-center gap-1 pr-2 mr-1 border-r border-gray-200">
+        <div className="flex items-center gap-1 pr-2 mr-1 border-r border-border">
           <button className={tbtn()} onMouseDown={(e) => { e.preventDefault(); cmd('justifyLeft'); }} title="Alinear izquierda">
             <AlignLeft className="w-4 h-4" />
           </button>
@@ -542,12 +542,12 @@ export const DocumentEditor = ({
 
       {/* ── Page settings panel ── */}
       {showPageSettings && (
-        <div className="bg-white border-b border-gray-200 px-4 py-3">
+        <div className="bg-card border-b border-border px-4 py-3">
           <div className="flex items-end gap-4 flex-wrap">
             <div>
-              <label className="block text-xs text-gray-500 mb-1">Tamaño</label>
+              <label className="block text-xs text-muted-foreground mb-1">Tamaño</label>
               <select
-                className="text-sm border border-gray-200 rounded px-2 py-1"
+                className="text-sm border border-border rounded px-2 py-1"
                 value={pageSize}
                 onChange={(e) => setPageSize(e.target.value as 'A4' | 'Carta' | 'Legal')}
               >
@@ -557,9 +557,9 @@ export const DocumentEditor = ({
               </select>
             </div>
             <div>
-              <label className="block text-xs text-gray-500 mb-1">Orientación</label>
+              <label className="block text-xs text-muted-foreground mb-1">Orientación</label>
               <select
-                className="text-sm border border-gray-200 rounded px-2 py-1"
+                className="text-sm border border-border rounded px-2 py-1"
                 value={pageOrientation}
                 onChange={(e) => setPageOrientation(e.target.value as 'portrait' | 'landscape')}
               >
@@ -568,7 +568,7 @@ export const DocumentEditor = ({
               </select>
             </div>
             <div>
-              <label className="block text-xs text-gray-500 mb-1">Márgenes (cm)</label>
+              <label className="block text-xs text-muted-foreground mb-1">Márgenes (cm)</label>
               <div className="flex gap-1">
                 {(['top', 'bottom', 'left', 'right'] as const).map((side) => (
                   <input
@@ -577,7 +577,7 @@ export const DocumentEditor = ({
                     step="0.1"
                     min="0"
                     placeholder={side === 'top' ? 'Sup' : side === 'bottom' ? 'Inf' : side === 'left' ? 'Izq' : 'Der'}
-                    className="w-16 text-xs border border-gray-200 rounded px-2 py-1"
+                    className="w-16 text-xs border border-border rounded px-2 py-1"
                     value={margins[side]}
                     onChange={(e) =>
                       setMargins(m => ({ ...m, [side]: parseFloat(e.target.value) || 0 }))
@@ -587,13 +587,13 @@ export const DocumentEditor = ({
               </div>
             </div>
             <button
-              className="bg-blue-600 text-white text-sm px-3 py-1.5 rounded hover:bg-blue-700"
+              className="bg-info-600 text-white text-sm px-3 py-1.5 rounded hover:bg-info-700"
               onClick={applyPageSettings}
             >
               Aplicar
             </button>
             <button
-              className="text-sm text-gray-500 px-3 py-1.5 rounded hover:bg-gray-100"
+              className="text-sm text-muted-foreground px-3 py-1.5 rounded hover:bg-muted"
               onClick={() => setShowPageSettings(false)}
             >
               Cancelar
@@ -613,7 +613,7 @@ export const DocumentEditor = ({
               contentEditable
               suppressContentEditableWarning
               onInput={handleInput}
-              className="bg-white shadow-lg outline-none"
+              className="bg-card shadow-lg outline-none"
               style={{
                 zoom: `${zoom}%`,
                 width: '21.59cm',
@@ -645,18 +645,18 @@ export const DocumentEditor = ({
             onClick={() => setShowSendModal(false)}
           >
             <div
-              className="bg-white rounded-xl shadow-2xl w-full max-w-md mx-6 p-6 flex flex-col gap-4"
+              className="bg-card rounded-xl shadow-2xl w-full max-w-md mx-6 p-6 flex flex-col gap-4"
               onClick={(e) => e.stopPropagation()}
             >
               <div>
-                <h3 className="text-base font-semibold text-gray-800">Enviar como correspondencia</h3>
-                <p className="text-sm text-gray-500 mt-0.5">
+                <h3 className="text-base font-semibold text-foreground">Enviar como correspondencia</h3>
+                <p className="text-sm text-muted-foreground mt-0.5">
                   El documento se enviará a la bandeja del destinatario. El borrador se limpiará al enviar.
                 </p>
               </div>
 
-              <div className="bg-gray-50 rounded-lg px-3 py-2 text-sm text-gray-600 border border-gray-100">
-                <span className="font-medium text-gray-400 text-xs uppercase tracking-wide">Documento</span>
+              <div className="bg-muted rounded-lg px-3 py-2 text-sm text-muted-foreground border border-border">
+                <span className="font-medium text-muted-foreground text-xs uppercase tracking-wide">Documento</span>
                 <p className="mt-0.5 truncate">{docTitle}</p>
               </div>
 
@@ -688,11 +688,11 @@ export const DocumentEditor = ({
         )}
 
         {/* ── Right sidebar ── */}
-        <div className="flex flex-shrink-0 bg-white border-l border-gray-200">
+        <div className="flex flex-shrink-0 bg-card border-l border-border">
           {/* Toggle tab */}
           <button
             onClick={() => setShowSidebar(v => !v)}
-            className="self-start mt-4 p-1.5 hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
+            className="self-start mt-4 p-1.5 hover:bg-muted text-muted-foreground hover:text-muted-foreground transition-colors"
             title={showSidebar ? 'Ocultar panel' : 'Mostrar panel'}
           >
             {showSidebar
@@ -711,53 +711,53 @@ export const DocumentEditor = ({
                     <span className="text-purple-700 font-semibold text-sm">{initials}</span>
                   </div>
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-gray-800 leading-tight truncate">
+                    <p className="text-sm font-semibold text-foreground leading-tight truncate">
                       {student.user.name} {student.user.lastName}
                     </p>
-                    <p className="text-xs text-gray-400">Código: {student.code}</p>
+                    <p className="text-xs text-muted-foreground">Código: {student.code}</p>
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-1.5 text-xs">
                   <div className="flex gap-2">
-                    <span className="text-gray-400 w-20 flex-shrink-0">Documento</span>
-                    <span className="text-gray-700 font-medium">{student.user.numberDocument}</span>
+                    <span className="text-muted-foreground w-20 flex-shrink-0">Documento</span>
+                    <span className="text-foreground font-medium">{student.user.numberDocument}</span>
                   </div>
                   <div className="flex gap-2">
-                    <span className="text-gray-400 w-20 flex-shrink-0">Correo</span>
-                    <span className="text-gray-700 font-medium truncate">{student.user.email}</span>
+                    <span className="text-muted-foreground w-20 flex-shrink-0">Correo</span>
+                    <span className="text-foreground font-medium truncate">{student.user.email}</span>
                   </div>
                   <div className="flex gap-2">
-                    <span className="text-gray-400 w-20 flex-shrink-0">Colegio</span>
-                    <span className="text-gray-700 font-medium">{student.school?.name ?? '—'}</span>
+                    <span className="text-muted-foreground w-20 flex-shrink-0">Colegio</span>
+                    <span className="text-foreground font-medium">{student.school?.name ?? '—'}</span>
                   </div>
                   <div className="flex gap-2">
-                    <span className="text-gray-400 w-20 flex-shrink-0">Grado</span>
-                    <span className="text-gray-700 font-medium">{student.grade}° {student.educationLevel}</span>
+                    <span className="text-muted-foreground w-20 flex-shrink-0">Grado</span>
+                    <span className="text-foreground font-medium">{student.grade}° {student.educationLevel}</span>
                   </div>
                 </div>
               </div>
 
-              <hr className="border-gray-100" />
+              <hr className="border-border" />
 
               {/* Tool buttons */}
               {(onSessionTracking || onWeeklyPlanning || onEvaluationPlanning) && (
                 <div className="flex flex-col gap-1">
-                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">
                     Herramientas
                   </p>
 
                   {onSessionTracking && (
                     <button
                       onClick={() => onSessionTracking(student)}
-                      className="flex items-center gap-3 px-2 py-2.5 rounded-lg hover:bg-green-50 text-left group transition-colors"
+                      className="flex items-center gap-3 px-2 py-2.5 rounded-lg hover:bg-secondary-100 text-left group transition-colors"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0 group-hover:bg-green-200 transition-colors">
-                        <Activity className="w-4 h-4 text-green-600" />
+                      <div className="w-8 h-8 rounded-lg bg-secondary-100 flex items-center justify-center flex-shrink-0 group-hover:bg-secondary-200 transition-colors">
+                        <Activity className="w-4 h-4 text-secondary-600" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-700">Seguimiento</p>
-                        <p className="text-xs text-gray-400">Sesiones del estudiante</p>
+                        <p className="text-sm font-medium text-foreground">Seguimiento</p>
+                        <p className="text-xs text-muted-foreground">Sesiones del estudiante</p>
                       </div>
                     </button>
                   )}
@@ -765,14 +765,14 @@ export const DocumentEditor = ({
                   {onWeeklyPlanning && (
                     <button
                       onClick={() => onWeeklyPlanning(student)}
-                      className="flex items-center gap-3 px-2 py-2.5 rounded-lg hover:bg-blue-50 text-left group transition-colors"
+                      className="flex items-center gap-3 px-2 py-2.5 rounded-lg hover:bg-info-100 text-left group transition-colors"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-200 transition-colors">
-                        <CalendarRange className="w-4 h-4 text-blue-600" />
+                      <div className="w-8 h-8 rounded-lg bg-info-100 flex items-center justify-center flex-shrink-0 group-hover:bg-info-200 transition-colors">
+                        <CalendarRange className="w-4 h-4 text-info-600" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-700">Plan. Semanal</p>
-                        <p className="text-xs text-gray-400">Planificación semanal</p>
+                        <p className="text-sm font-medium text-foreground">Plan. Semanal</p>
+                        <p className="text-xs text-muted-foreground">Planificación semanal</p>
                       </div>
                     </button>
                   )}
@@ -780,14 +780,14 @@ export const DocumentEditor = ({
                   {onEvaluationPlanning && (
                     <button
                       onClick={() => onEvaluationPlanning(student)}
-                      className="flex items-center gap-3 px-2 py-2.5 rounded-lg hover:bg-orange-50 text-left group transition-colors"
+                      className="flex items-center gap-3 px-2 py-2.5 rounded-lg hover:bg-warning-100 text-left group transition-colors"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center flex-shrink-0 group-hover:bg-orange-200 transition-colors">
-                        <ClipboardCheck className="w-4 h-4 text-orange-600" />
+                      <div className="w-8 h-8 rounded-lg bg-warning-100 flex items-center justify-center flex-shrink-0 group-hover:bg-warning-200 transition-colors">
+                        <ClipboardCheck className="w-4 h-4 text-warning-600" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-700">Evaluación</p>
-                        <p className="text-xs text-gray-400">Plan. de evaluación</p>
+                        <p className="text-sm font-medium text-foreground">Evaluación</p>
+                        <p className="text-xs text-muted-foreground">Plan. de evaluación</p>
                       </div>
                     </button>
                   )}

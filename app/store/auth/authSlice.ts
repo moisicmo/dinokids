@@ -17,6 +17,7 @@ export const authSlice = createSlice({
     roleUser: null as RoleModel | null,
     branchesUser: [] as BranchModel[],
     branchSelect: null as BranchModel | null,
+    isSuperAdmin: false,
   },
   reducers: {
     onLogin: (state, { payload }) => {
@@ -28,6 +29,10 @@ export const authSlice = createSlice({
       state.user = {};
       state.userId = null;
       state.userProfile = { name: '', lastName: '', email: '' };
+      state.isSuperAdmin = false;
+    },
+    setIsSuperAdmin: (state, { payload }: { payload: boolean }) => {
+      state.isSuperAdmin = payload;
     },
     setUserProfile: (state, { payload }: { payload: UserProfile }) => {
       state.userProfile = payload;
@@ -49,4 +54,4 @@ export const authSlice = createSlice({
 
 
 // Action creators are generated for each case reducer function
-export const { onLogin, onLogout, setUserProfile, setUserId, setRoleUser, setBranchesUser, setBranch } = authSlice.actions;
+export const { onLogin, onLogout, setUserProfile, setUserId, setRoleUser, setBranchesUser, setBranch, setIsSuperAdmin } = authSlice.actions;

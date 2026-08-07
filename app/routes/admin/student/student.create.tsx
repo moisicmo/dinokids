@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useForm, useTutorStore } from '@/hooks';
 import { Button, DateTimePickerCustom, DrawerCustom, InputCustom, SelectCustom, UserFormFields, type ValueSelect } from '@/components';
-import { type TutorModel, Gender, EducationLevel, formStudentValidations, formStudentInit, type StudentModel, type StudentRequest } from '@/models';
+import { type TutorModel, Gender, EducationLevel, StudentStatus, formStudentValidations, formStudentInit, type StudentModel, type StudentRequest } from '@/models';
 import { TutorCreate } from '../tutor/tutor.create';
 
 interface Props {
@@ -34,6 +34,7 @@ export const StudentCreate = (props: Props) => {
     grade,
     educationLevel,
     tutors,
+    status,
     onInputChange,
     onResetForm,
     isFormValid,
@@ -86,6 +87,7 @@ export const StudentCreate = (props: Props) => {
         educationLevel,
         tutorIds: tutors.map((tutor: TutorModel) => tutor.userId),
         numberCard: user.numberCard?.trim() || null,
+        status: status ?? undefined,
       });
     }
 
@@ -109,15 +111,22 @@ export const StudentCreate = (props: Props) => {
   maxBirthdate.setFullYear(maxBirthdate.getFullYear() - 2);
 
   const genderOptions: ValueSelect[] = Object.entries(Gender).map(
-    ([, value]) => ({
-      id: value,
+    ([key, value]) => ({
+      id: key,
       value,
     })
   );
 
   const educationLevelOptions: ValueSelect[] = Object.entries(EducationLevel).map(
-    ([, value]) => ({
-      id: value,
+    ([key, value]) => ({
+      id: key,
+      value,
+    })
+  );
+
+  const statusOptions: ValueSelect[] = Object.entries(StudentStatus).map(
+    ([key, value]) => ({
+      id: key,
       value,
     })
   );
@@ -216,6 +225,22 @@ export const StudentCreate = (props: Props) => {
           error={!!educationLevelValid && formSubmitted}
           helperText={formSubmitted ? educationLevelValid : ''}
         />
+        {item && (
+          <SelectCustom
+            label="Estado"
+            options={statusOptions}
+            selected={
+              status
+                ? statusOptions.find((opt) => opt.id === status) ?? null
+                : null
+            }
+            onSelect={(value) => {
+              if (value && !Array.isArray(value)) {
+                onValueChange('status', value.id as StudentStatus);
+              }
+            }}
+          />
+        )}
       </div>
 
       <div className="flex justify-end gap-2 pt-2">
@@ -224,7 +249,7 @@ export const StudentCreate = (props: Props) => {
             onResetForm();
             handleClose();
           }}
-          color='bg-gray-400'
+          color='bg-muted'
         >
           Cancelar
         </Button>
@@ -247,7 +272,7 @@ export const StudentCreate = (props: Props) => {
       </DrawerCustom>
     ) : (
       <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6">
+        <div className="bg-card rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6">
           <h2 className="text-xl font-bold mb-4">
             {item ? `Editar ${item.user.name}` : 'Nuevo Estudiante'}
           </h2>

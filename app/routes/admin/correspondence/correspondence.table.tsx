@@ -96,16 +96,16 @@ export const CorrespondenceTable = (props: Props) => {
                     <div>
                       <p className="font-medium text-sm">{String(childName)}</p>
                       {tutorName && (
-                        <p className="text-xs text-gray-500">Tutor: {String(tutorName)}</p>
+                        <p className="text-xs text-muted-foreground">Tutor: {String(tutorName)}</p>
                       )}
                     </div>
                   ) : (
-                    <span className="text-gray-400 text-sm italic">Sin datos</span>
+                    <span className="text-muted-foreground text-sm italic">Sin datos</span>
                   )}
                 </TableCell>
 
                 {/* Tipo de documento */}
-                <TableCell className="text-sm text-gray-600">
+                <TableCell className="text-sm text-muted-foreground">
                   {item.document.type}
                 </TableCell>
 
@@ -118,9 +118,9 @@ export const CorrespondenceTable = (props: Props) => {
                       <button
                         onClick={() => onView(item)}
                         title="Ver evaluación"
-                        className="p-1 rounded hover:bg-gray-100 transition"
+                        className="p-1 rounded hover:bg-muted transition"
                       >
-                        <Eye className="w-5 h-5 text-blue-500" />
+                        <Eye className="w-5 h-5 text-info-500" />
                       </button>
                     )}
 
@@ -148,7 +148,7 @@ export const CorrespondenceTable = (props: Props) => {
                           key={label}
                           onClick={() => cb(item)}
                           title={label}
-                          className="flex items-center gap-1 px-2 py-1 text-xs rounded bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 transition"
+                          className="flex items-center gap-1 px-2 py-1 text-xs rounded bg-secondary-100 text-secondary-700 border border-secondary-200 hover:bg-secondary-100 transition"
                         >
                           <Icon className="w-3.5 h-3.5" />
                           {label}

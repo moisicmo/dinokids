@@ -1,4 +1,4 @@
-import { EducationLevel, Gender, type FormUserModel, type FormUserValidations, type TutorModel, type UserRequest } from "..";
+import { EducationLevel, Gender, StudentStatus, type FormUserModel, type FormUserValidations, type TutorModel, type UserRequest } from "..";
 
 export interface StudentRequest extends UserRequest {
   birthdate: Date;
@@ -11,6 +11,8 @@ export interface StudentRequest extends UserRequest {
   sessionTrackings?: JSON;
   weeklyPlannings?: JSON;
   evaluationPlannings?: JSON;
+  // Solo aplica al editar — un estudiante nuevo siempre nace ACTIVO (ver student.create.tsx).
+  status?: StudentStatus;
 }
 
 export interface FormStudentModel {
@@ -23,6 +25,7 @@ export interface FormStudentModel {
   grade: number | null;
   educationLevel: EducationLevel | null;
   tutors: TutorModel[];
+  status: StudentStatus | null;
 }
 export const formStudentInit: FormStudentModel = {
   user: {
@@ -40,6 +43,7 @@ export const formStudentInit: FormStudentModel = {
   grade: null,
   educationLevel: null,
   tutors: [],
+  status: null,
 };
 
 export interface FormStudentValidations {

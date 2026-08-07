@@ -31,9 +31,9 @@ function getDebtStatus(dueDate?: Date): 'overdue' | 'soon' | 'current' {
 }
 
 const statusConfig = {
-  overdue: { label: 'Vencida',   className: 'bg-red-50 text-red-600 border-red-200' },
-  soon:    { label: 'Por vencer', className: 'bg-yellow-50 text-yellow-700 border-yellow-200' },
-  current: { label: 'Vigente',   className: 'bg-green-50 text-green-700 border-green-200' },
+  overdue: { label: 'Vencida',   className: 'bg-error-100 text-error-600 border-error-200' },
+  soon:    { label: 'Por vencer', className: 'bg-warning-100 text-warning-700 border-warning-200' },
+  current: { label: 'Vigente',   className: 'bg-secondary-100 text-secondary-700 border-secondary-200' },
 };
 
 function studentName(debt: DashboardModel['debts'][0]): string {
@@ -66,9 +66,9 @@ function MetricCard({ label, value, icon, color, bgColor, sub }: MetricCardProps
             <span style={{ color }}>{icon}</span>
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-xs text-gray-500 mb-0.5 font-medium uppercase tracking-wide">{label}</p>
-            <p className="text-2xl font-bold text-gray-900">{value ?? <span className="text-gray-300 text-lg">—</span>}</p>
-            {sub && <p className="text-xs text-gray-400 mt-0.5">{sub}</p>}
+            <p className="text-xs text-muted-foreground mb-0.5 font-medium uppercase tracking-wide">{label}</p>
+            <p className="text-2xl font-bold text-foreground">{value ?? <span className="text-muted-foreground text-lg">—</span>}</p>
+            {sub && <p className="text-xs text-muted-foreground mt-0.5">{sub}</p>}
           </div>
         </div>
         <div className="h-1 w-full" style={{ backgroundColor: color }} />
@@ -81,17 +81,17 @@ function MetricCard({ label, value, icon, color, bgColor, sub }: MetricCardProps
 
 function TrendChip({ pct }: { pct: number }) {
   if (Math.abs(pct) < 1) return (
-    <span className="inline-flex items-center gap-0.5 text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
+    <span className="inline-flex items-center gap-0.5 text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
       <Minus className="w-3 h-3" /> Sin cambio
     </span>
   );
   if (pct > 0) return (
-    <span className="inline-flex items-center gap-0.5 text-xs text-green-700 bg-green-50 px-2 py-0.5 rounded-full">
+    <span className="inline-flex items-center gap-0.5 text-xs text-secondary-700 bg-secondary-100 px-2 py-0.5 rounded-full">
       <TrendingUp className="w-3 h-3" /> +{pct.toFixed(0)}% vs mes anterior
     </span>
   );
   return (
-    <span className="inline-flex items-center gap-0.5 text-xs text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
+    <span className="inline-flex items-center gap-0.5 text-xs text-error-600 bg-error-100 px-2 py-0.5 rounded-full">
       <TrendingDown className="w-3 h-3" /> {pct.toFixed(0)}% vs mes anterior
     </span>
   );
@@ -109,26 +109,26 @@ function AlertBanners({ debts }: { debts: DashboardModel['debts'] }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
       {overdue.length > 0 && (
-        <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-xl p-4">
-          <AlertTriangle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+        <div className="flex items-start gap-3 bg-error-100 border border-error-200 rounded-xl p-4">
+          <AlertTriangle className="w-5 h-5 text-error-500 shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm font-semibold text-red-700">
+            <p className="text-sm font-semibold text-error-700">
               {overdue.length} deuda{overdue.length > 1 ? 's' : ''} vencida{overdue.length > 1 ? 's' : ''}
             </p>
-            <p className="text-xs text-red-500 mt-0.5">
+            <p className="text-xs text-error-500 mt-0.5">
               Bs {overdueAmount.toFixed(2)} pendientes de cobro urgente
             </p>
           </div>
         </div>
       )}
       {soon.length > 0 && (
-        <div className="flex items-start gap-3 bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-          <Clock className="w-5 h-5 text-yellow-600 shrink-0 mt-0.5" />
+        <div className="flex items-start gap-3 bg-warning-100 border border-warning-200 rounded-xl p-4">
+          <Clock className="w-5 h-5 text-warning-600 shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm font-semibold text-yellow-700">
+            <p className="text-sm font-semibold text-warning-700">
               {soon.length} deuda{soon.length > 1 ? 's' : ''} por vencer esta semana
             </p>
-            <p className="text-xs text-yellow-600 mt-0.5">Contactar a los responsables antes del vencimiento</p>
+            <p className="text-xs text-warning-600 mt-0.5">Contactar a los responsables antes del vencimiento</p>
           </div>
         </div>
       )}
@@ -152,12 +152,12 @@ function CollectionPie({ debts }: { debts: DashboardModel['debts'] }) {
   return (
     <Card className="border-0 shadow-sm h-full">
       <CardContent className="p-5">
-        <h2 className="text-base font-semibold text-gray-800 mb-1">Estado de Cobranza</h2>
-        <p className="text-xs text-gray-400 mb-4">Del total de deudas registradas</p>
+        <h2 className="text-base font-semibold text-foreground mb-1">Estado de Cobranza</h2>
+        <p className="text-xs text-muted-foreground mb-4">Del total de deudas registradas</p>
 
         {totalOriginal === 0 ? (
-          <div className="flex flex-col items-center justify-center h-48 text-gray-400 gap-2">
-            <CheckCircle2 className="w-10 h-10 text-green-400" />
+          <div className="flex flex-col items-center justify-center h-48 text-muted-foreground gap-2">
+            <CheckCircle2 className="w-10 h-10 text-secondary-400" />
             <p className="text-sm">Sin deudas registradas</p>
           </div>
         ) : (
@@ -177,23 +177,23 @@ function CollectionPie({ debts }: { debts: DashboardModel['debts'] }) {
 
             {/* Rate badge in centre is faked via overlay — use stat rows instead */}
             <div className="grid grid-cols-2 gap-3 mt-2">
-              <div className="bg-green-50 rounded-lg p-3 text-center">
-                <p className="text-[11px] text-gray-500 uppercase tracking-wide">Cobrado</p>
-                <p className="text-lg font-bold text-green-600">Bs {totalCollected.toFixed(0)}</p>
+              <div className="bg-secondary-100 rounded-lg p-3 text-center">
+                <p className="text-[11px] text-muted-foreground uppercase tracking-wide">Cobrado</p>
+                <p className="text-lg font-bold text-secondary-600">Bs {totalCollected.toFixed(0)}</p>
               </div>
-              <div className="bg-red-50 rounded-lg p-3 text-center">
-                <p className="text-[11px] text-gray-500 uppercase tracking-wide">Pendiente</p>
-                <p className="text-lg font-bold text-red-600">Bs {totalPending.toFixed(0)}</p>
+              <div className="bg-error-100 rounded-lg p-3 text-center">
+                <p className="text-[11px] text-muted-foreground uppercase tracking-wide">Pendiente</p>
+                <p className="text-lg font-bold text-error-600">Bs {totalPending.toFixed(0)}</p>
               </div>
             </div>
 
             {/* Collection rate bar */}
             <div className="mt-4">
-              <div className="flex justify-between text-xs text-gray-500 mb-1">
+              <div className="flex justify-between text-xs text-muted-foreground mb-1">
                 <span>Tasa de cobro</span>
-                <span className="font-semibold text-gray-700">{rate.toFixed(1)}%</span>
+                <span className="font-semibold text-foreground">{rate.toFixed(1)}%</span>
               </div>
-              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-2 bg-muted rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-700"
                   style={{
@@ -229,8 +229,8 @@ function InscriptionsChart({
       <CardContent className="p-5">
         <div className="flex items-start justify-between mb-4 gap-2 flex-wrap">
           <div>
-            <h2 className="text-base font-semibold text-gray-800">{title}</h2>
-            <p className="text-xs text-gray-400 mt-0.5">{total} inscripciones en el período</p>
+            <h2 className="text-base font-semibold text-foreground">{title}</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">{total} inscripciones en el período</p>
           </div>
           <TrendChip pct={trend} />
         </div>
@@ -267,34 +267,34 @@ function DebtTable({ debts, title }: { debts: DashboardModel['debts']; title?: s
       <CardContent className="p-5 space-y-3">
         <div className="flex items-center justify-between flex-wrap gap-2">
           <div>
-            <h2 className="text-base font-semibold text-gray-800">{title ?? 'Deudas Pendientes'}</h2>
-            <p className="text-xs text-gray-400 mt-0.5">Ordenadas por urgencia</p>
+            <h2 className="text-base font-semibold text-foreground">{title ?? 'Deudas Pendientes'}</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">Ordenadas por urgencia</p>
           </div>
-          <div className="flex gap-2 text-xs text-gray-500 flex-wrap">
-            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red-500 inline-block"/>Vencida</span>
-            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-yellow-400 inline-block"/>Por vencer</span>
-            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-500 inline-block"/>Vigente</span>
+          <div className="flex gap-2 text-xs text-muted-foreground flex-wrap">
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-error-1000 inline-block"/>Vencida</span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-warning-400 inline-block"/>Por vencer</span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-secondary-1000 inline-block"/>Vigente</span>
           </div>
         </div>
 
-        <div className="rounded-lg overflow-hidden border border-gray-100">
+        <div className="rounded-lg overflow-hidden border border-border">
           <Table>
             <TableHeader>
-              <TableRow className="bg-gray-50 hover:bg-gray-50">
-                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Estado</TableHead>
-                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Cód.</TableHead>
-                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Estudiante</TableHead>
-                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wide text-right">Total (Bs)</TableHead>
-                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wide text-right">Saldo (Bs)</TableHead>
-                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wide text-right">% Cobrado</TableHead>
-                <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Vencimiento</TableHead>
+              <TableRow className="bg-muted hover:bg-muted">
+                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Estado</TableHead>
+                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Cód.</TableHead>
+                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Estudiante</TableHead>
+                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wide text-right">Total (Bs)</TableHead>
+                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wide text-right">Saldo (Bs)</TableHead>
+                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wide text-right">% Cobrado</TableHead>
+                <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Vencimiento</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {sorted.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center text-gray-400 py-10">
-                    <CheckCircle2 className="w-8 h-8 text-green-400 mx-auto mb-2" />
+                  <TableCell colSpan={7} className="text-center text-muted-foreground py-10">
+                    <CheckCircle2 className="w-8 h-8 text-secondary-400 mx-auto mb-2" />
                     No hay deudas pendientes
                   </TableCell>
                 </TableRow>
@@ -310,26 +310,26 @@ function DebtTable({ debts, title }: { debts: DashboardModel['debts']; title?: s
                   : 0;
 
                 return (
-                  <TableRow key={debt.id} className="hover:bg-gray-50/50">
+                  <TableRow key={debt.id} className="hover:bg-muted/50">
                     <TableCell>
                       <div className="flex flex-col gap-0.5">
                         <Badge variant="outline" className={`text-[10px] w-fit ${cfg.className}`}>
                           {cfg.label}
                         </Badge>
                         {daysOverdue !== null && (
-                          <span className="text-[10px] text-red-400">{daysOverdue}d atrás</span>
+                          <span className="text-[10px] text-error-400">{daysOverdue}d atrás</span>
                         )}
                       </div>
                     </TableCell>
-                    <TableCell className="text-sm text-gray-500">{studentCode(debt)}</TableCell>
-                    <TableCell className="text-sm font-medium text-gray-800">{studentName(debt)}</TableCell>
-                    <TableCell className="text-right text-sm text-gray-600">{Number(debt.totalAmount).toFixed(2)}</TableCell>
+                    <TableCell className="text-sm text-muted-foreground">{studentCode(debt)}</TableCell>
+                    <TableCell className="text-sm font-medium text-foreground">{studentName(debt)}</TableCell>
+                    <TableCell className="text-right text-sm text-muted-foreground">{Number(debt.totalAmount).toFixed(2)}</TableCell>
                     <TableCell className="text-right">
-                      <span className="text-sm font-semibold text-red-600">{Number(debt.remainingBalance).toFixed(2)}</span>
+                      <span className="text-sm font-semibold text-error-600">{Number(debt.remainingBalance).toFixed(2)}</span>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <div className="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
                           <div
                             className="h-full rounded-full"
                             style={{
@@ -338,10 +338,10 @@ function DebtTable({ debts, title }: { debts: DashboardModel['debts']; title?: s
                             }}
                           />
                         </div>
-                        <span className="text-xs text-gray-500 w-8 text-right">{collected.toFixed(0)}%</span>
+                        <span className="text-xs text-muted-foreground w-8 text-right">{collected.toFixed(0)}%</span>
                       </div>
                     </TableCell>
-                    <TableCell className="text-sm text-gray-500">
+                    <TableCell className="text-sm text-muted-foreground">
                       {debt.dueDate ? format(new Date(debt.dueDate), 'dd MMM yyyy', { locale: es }) : '—'}
                     </TableCell>
                   </TableRow>
@@ -513,19 +513,19 @@ const dashboard = () => {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold text-gray-900">Dashboard Global</h1>
-          <p className="text-sm text-gray-500 mt-0.5">Vista consolidada de todas las sucursales</p>
+          <h1 className="text-xl font-bold text-foreground">Dashboard Global</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">Vista consolidada de todas las sucursales</p>
         </div>
-        <div className="flex items-center gap-2 bg-white border border-gray-100 rounded-lg px-3 py-2 shadow-sm">
+        <div className="flex items-center gap-2 bg-card border border-border rounded-lg px-3 py-2 shadow-sm">
           <Building2 className="w-4 h-4" style={{ color: '#6BA539' }} />
-          <span className="text-sm font-semibold text-gray-700">
+          <span className="text-sm font-semibold text-foreground">
             {(globalMetrics as any)?.totalBranches ?? 0} sucursales
           </span>
         </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="bg-white border border-gray-100 shadow-sm p-1 rounded-lg">
+        <TabsList className="bg-card border border-border shadow-sm p-1 rounded-lg">
           <TabsTrigger value="general"     className="text-sm data-[state=active]:bg-primary data-[state=active]:text-white rounded-md">Vista General</TabsTrigger>
           <TabsTrigger value="comparativa" className="text-sm data-[state=active]:bg-primary data-[state=active]:text-white rounded-md">Comparativa</TabsTrigger>
         </TabsList>
@@ -547,8 +547,8 @@ const dashboard = () => {
           {/* Bar chart: students + teachers per branch */}
           <Card className="border-0 shadow-sm">
             <CardContent className="p-5">
-              <h2 className="text-base font-semibold text-gray-800 mb-1">Capacidad por Sucursal</h2>
-              <p className="text-xs text-gray-400 mb-4">Estudiantes, profesores y saldo pendiente (Bs)</p>
+              <h2 className="text-base font-semibold text-foreground mb-1">Capacidad por Sucursal</h2>
+              <p className="text-xs text-muted-foreground mb-4">Estudiantes, profesores y saldo pendiente (Bs)</p>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={comparativeData} barSize={18}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
@@ -567,42 +567,42 @@ const dashboard = () => {
           {/* Comparative table with collection rate */}
           <Card className="border-0 shadow-sm">
             <CardContent className="p-5 space-y-3">
-              <h2 className="text-base font-semibold text-gray-800">Resumen Financiero por Sucursal</h2>
-              <div className="rounded-lg overflow-hidden border border-gray-100">
+              <h2 className="text-base font-semibold text-foreground">Resumen Financiero por Sucursal</h2>
+              <div className="rounded-lg overflow-hidden border border-border">
                 <Table>
                   <TableHeader>
-                    <TableRow className="bg-gray-50 hover:bg-gray-50">
-                      <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Sucursal</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wide text-right">Alumnos</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wide text-right">Profesores</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wide text-right">Ratio</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wide text-right">Deudas vencidas</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wide text-right">Saldo (Bs)</TableHead>
-                      <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Tasa cobro</TableHead>
+                    <TableRow className="bg-muted hover:bg-muted">
+                      <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Sucursal</TableHead>
+                      <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wide text-right">Alumnos</TableHead>
+                      <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wide text-right">Profesores</TableHead>
+                      <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wide text-right">Ratio</TableHead>
+                      <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wide text-right">Deudas vencidas</TableHead>
+                      <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wide text-right">Saldo (Bs)</TableHead>
+                      <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Tasa cobro</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {comparativeTableData.map((row) => (
-                      <TableRow key={row.branch.id} className="hover:bg-gray-50/50">
-                        <TableCell className="font-medium text-gray-800 text-sm">{row.branch.name}</TableCell>
+                      <TableRow key={row.branch.id} className="hover:bg-muted/50">
+                        <TableCell className="font-medium text-foreground text-sm">{row.branch.name}</TableCell>
                         <TableCell className="text-right text-sm font-semibold" style={{ color: '#6BA539' }}>{row.metrics.totalStudents}</TableCell>
                         <TableCell className="text-right text-sm font-semibold" style={{ color: '#B0008E' }}>{row.metrics.totalTeachers}</TableCell>
-                        <TableCell className="text-right text-sm text-gray-500">
+                        <TableCell className="text-right text-sm text-muted-foreground">
                           {row.metrics.totalTeachers > 0
                             ? (row.metrics.totalStudents / row.metrics.totalTeachers).toFixed(1)
                             : '—'}
                         </TableCell>
                         <TableCell className="text-right">
                           {row.overdueCount > 0
-                            ? <span className="text-sm font-semibold text-red-600">{row.overdueCount}</span>
-                            : <span className="text-sm text-gray-400">0</span>}
+                            ? <span className="text-sm font-semibold text-error-600">{row.overdueCount}</span>
+                            : <span className="text-sm text-muted-foreground">0</span>}
                         </TableCell>
-                        <TableCell className="text-right text-sm font-semibold text-red-600">
+                        <TableCell className="text-right text-sm font-semibold text-error-600">
                           {row.totalDebt.toFixed(2)}
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2 min-w-[100px]">
-                            <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                            <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
                               <div
                                 className="h-full rounded-full"
                                 style={{
@@ -611,7 +611,7 @@ const dashboard = () => {
                                 }}
                               />
                             </div>
-                            <span className="text-xs text-gray-500 w-10 text-right">{row.rate.toFixed(0)}%</span>
+                            <span className="text-xs text-muted-foreground w-10 text-right">{row.rate.toFixed(0)}%</span>
                           </div>
                         </TableCell>
                       </TableRow>
@@ -626,8 +626,8 @@ const dashboard = () => {
           {(data.allBranchesData?.length ?? 0) > 0 && (
             <Card className="border-0 shadow-sm">
               <CardContent className="p-5">
-                <h2 className="text-base font-semibold text-gray-800 mb-1">Tendencia de Inscripciones por Sucursal</h2>
-                <p className="text-xs text-gray-400 mb-4">Comparación mensual entre sucursales</p>
+                <h2 className="text-base font-semibold text-foreground mb-1">Tendencia de Inscripciones por Sucursal</h2>
+                <p className="text-xs text-muted-foreground mb-4">Comparación mensual entre sucursales</p>
                 <ResponsiveContainer width="100%" height={280}>
                   <LineChart
                     data={data.allBranchesData![0].inscriptionsData.map((item, i) => ({

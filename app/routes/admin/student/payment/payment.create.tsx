@@ -18,9 +18,9 @@ export const PaymentCreate = (props: Props) => {
     debt,
     amount,
     dueDate,
-    onInputChange,
     onResetForm,
     onValueChange,
+    onDecimalChange,
     isFormValid,
     amountValid,
     dueDateValid,
@@ -49,9 +49,9 @@ export const PaymentCreate = (props: Props) => {
             name="amount"
             value={amount}
             label="Monto"
-            onChange={onInputChange}
             error={!!amountValid && formSubmitted}
             helperText={formSubmitted ? amountValid : ""}
+            {...onDecimalChange('amount')}
           />
           {
             (debt.remainingBalance > amount) &&

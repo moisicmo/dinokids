@@ -2,6 +2,9 @@
 
 
 import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 interface InputPhonesCustomProps {
   name: string;
@@ -43,24 +46,22 @@ export const InputPhonesCustom = ({
 
   return (
     <div className="mb-2 w-full">
-      {label && <label className="block text-sm font-medium text-gray-700">{label}</label>}
+      {label && <Label className="mb-1">{label}</Label>}
 
       {phones.map((phone, index) => (
         <div key={index} className="flex items-center gap-2 mb-1">
-          <input
+          <Input
             type="text"
             name={`${name}[${index}]`}
             value={phone}
             onChange={(e) => handleChange(index, e.target.value)}
-            className={`block w-full rounded-md border text-sm px-3 py-2 ${
-              error ? 'border-red-500' : 'border-gray-300'
-            }`}
+            className={cn(error && "border-destructive")}
             placeholder="Ingrese número"
           />
           <button
             type="button"
             onClick={() => handleRemovePhone(index)}
-            className="text-red-600 hover:text-red-800 text-sm"
+            className="text-destructive hover:text-destructive/80 text-sm"
           >
             ✕
           </button>
@@ -70,13 +71,13 @@ export const InputPhonesCustom = ({
       <button
         type="button"
         onClick={handleAddPhone}
-        className="text-blue-600 hover:text-blue-800 text-sm mt-1"
+        className="text-primary hover:text-primary/80 text-sm mt-1"
       >
         + Agregar teléfono
       </button>
 
       {helperText && (
-        <p className={`text-sm mt-1 ${error ? 'text-red-600' : 'text-gray-500'}`}>{helperText}</p>
+        <p className={cn("text-sm mt-1", error ? "text-destructive" : "text-muted-foreground")}>{helperText}</p>
       )}
     </div>
   );

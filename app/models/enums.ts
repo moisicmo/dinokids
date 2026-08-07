@@ -7,6 +7,17 @@ export enum EducationLevel {
   SECUNDARIA = "secundario",
 }
 
+export enum StudentStatus {
+  ACTIVO = "Activo",
+  ABANDONO = "Abandono",
+  INACTIVO = "Inactivo",
+}
+
+export enum CashMovementType {
+  INCOME = "Ingreso",
+  EXPENSE = "Egreso",
+}
+
 export enum DayOfWeek {
   MONDAY = 'lunes',
   TUESDAY = 'martes',
@@ -69,6 +80,9 @@ export enum TypeSubject {
   reportByStudent = 'reportes por estudiante',
   sentCorrespondenceAll = 'historial global de envios',
   pdfTemplate = 'plantillas pdf',
+  cashBox = 'caja',
+  income = 'ingresos',
+  expenses = 'egresos',
 }
 
 export enum TypeDebt {

@@ -99,14 +99,14 @@ export const ScheduleCustom: React.FC<Props> = ({ schedules, selectedSchedules, 
       >
         <div />
         {displayDays.map(([key, label]) => (
-          <div key={key} className="text-xs font-bold text-center bg-gray-100 p-1 sm:p-2 md:p-3 whitespace-nowrap">
+          <div key={key} className="text-xs font-bold text-center bg-muted text-foreground p-1 sm:p-2 md:p-3 whitespace-nowrap">
             {label}
           </div>
         ))}
 
         {hours.map(hour => (
           <React.Fragment key={hour}>
-            <div className="text-center bg-amber-50 text-xs">{hour}</div>
+            <div className="text-center bg-warning-100 text-xs">{hour}</div>
             {displayDays.map(([key]) => {
               const event = getEvent(key, hour);
               const overlapStyle = event ? getOverlapStyle(event.start, event.end, hour) : null;

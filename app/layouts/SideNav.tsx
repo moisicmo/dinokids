@@ -1,11 +1,10 @@
 import { useLocation } from 'react-router';
 import logo from '@/assets/images/logo.png';
 import { SideNavCustom } from '@/components';
-import { useMenu } from '@/hooks/useMenuStore';
 import { useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useAuthStore } from '@/hooks';
+import { useAuthStore, useMenu } from '@/hooks';
 
 interface Props {
   open: boolean;
@@ -32,9 +31,9 @@ export const SideNav = (props: Props) => {
     <nav className="w-[220px] h-full flex flex-col overflow-hidden">
 
       {/* ── Header limpio ── */}
-      <div className="flex flex-col items-center px-4 pt-5 pb-4 border-b border-gray-100">
+      <div className="flex flex-col items-center px-4 pt-5 pb-4 border-b border-border">
         <img src={logo} alt="Logo" className="w-20 mb-3" />
-        <p className="font-semibold text-sm text-gray-800 leading-tight text-center">{user as string}</p>
+        <p className="font-semibold text-sm text-foreground leading-tight text-center">{user as string}</p>
         {roleUser?.name && (
           <span
             className="mt-1.5 text-[10px] font-medium px-2.5 py-0.5 rounded-full text-white"
@@ -46,7 +45,7 @@ export const SideNav = (props: Props) => {
       </div>
 
       {/* ── Navegación ── */}
-      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5 bg-white">
+      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5 bg-card">
         {filteredMenuItems.map((item) => {
           if (item.path) {
             return (
@@ -78,7 +77,7 @@ export const SideNav = (props: Props) => {
                   }
                 />
                 {isExpanded && (
-                  <div className="ml-5 pl-3 border-l border-gray-100 space-y-0.5">
+                  <div className="ml-5 pl-3 border-l border-border space-y-0.5">
                     {item.group.map((sub) => (
                       <SideNavCustom
                         key={sub.title}
@@ -98,15 +97,15 @@ export const SideNav = (props: Props) => {
       </div>
 
       {/* ── Footer ── */}
-      <div className="px-4 py-3 border-t border-gray-100 bg-white">
-        <p className="text-[10px] text-gray-400 text-center">DinoKids © {new Date().getFullYear()}</p>
+      <div className="px-4 py-3 border-t border-border bg-card">
+        <p className="text-[10px] text-muted-foreground text-center">DinoKids © {new Date().getFullYear()}</p>
       </div>
     </nav>
   );
 
   if (isLargeScreen) {
     return (
-      <aside className="h-screen fixed top-0 left-0 shadow-sm z-40 bg-white border-r border-gray-100">
+      <aside className="h-screen fixed top-0 left-0 shadow-sm z-40 bg-card border-r border-border">
         {content}
       </aside>
     );
@@ -119,7 +118,7 @@ export const SideNav = (props: Props) => {
       )}
       <aside
         className={cn(
-          'fixed top-0 left-0 h-full z-50 w-[220px] bg-white shadow-xl transition-transform duration-300',
+          'fixed top-0 left-0 h-full z-50 w-[220px] bg-card shadow-xl transition-transform duration-300',
           open ? 'translate-x-0' : '-translate-x-full'
         )}
       >

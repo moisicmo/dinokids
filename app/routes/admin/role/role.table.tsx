@@ -74,7 +74,7 @@ export const RoleTable = (props: Props) => {
           <TableRow>
             <TableHead className="w-1/3">Rol</TableHead>
             <TableHead className="w-2/3">Permisos</TableHead>
-            <TableHead className="sticky right-0 z-10 bg-white">Acciones</TableHead>
+            <TableHead className="sticky right-0 z-10 bg-card">Acciones</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -86,7 +86,7 @@ export const RoleTable = (props: Props) => {
               <TableRow key={item.id}>
                 <TableCell>
                   <div className="font-medium">{item.name}</div>
-                  <div className="text-xs text-gray-500 mt-1">
+                  <div className="text-xs text-muted-foreground mt-1">
                     {item.permissions.length} permiso{item.permissions.length !== 1 ? 's' : ''}
                   </div>
                 </TableCell>
@@ -95,7 +95,7 @@ export const RoleTable = (props: Props) => {
                     <AccordionItem value="permissions" className="border-0">
                       <AccordionTrigger className="py-1 hover:no-underline">
                         <div className="flex items-center gap-2">
-                          <Shield className="w-4 h-4 text-gray-500" />
+                          <Shield className="w-4 h-4 text-muted-foreground" />
                           <span className="text-sm">
                             {moduleCount} módulo{moduleCount !== 1 ? 's' : ''}
                           </span>
@@ -107,7 +107,7 @@ export const RoleTable = (props: Props) => {
                             <div className="flex items-center justify-between">
                               <span className="text-sm font-medium truncate">{module}</span>
                             </div>
-                            <div className="text-xs text-gray-500 mt-1">
+                            <div className="text-xs text-muted-foreground mt-1">
                               {actions.join(', ')}
                             </div>
                           </div>
@@ -116,7 +116,7 @@ export const RoleTable = (props: Props) => {
                     </AccordionItem>
                   </Accordion>
                 </TableCell>
-                <TableCell className="sticky right-0 z-10 bg-white">
+                <TableCell className="sticky right-0 z-10 bg-card">
                   <ActionButtons
                     item={item}
                     onEdit={hasPermission(TypeAction.update, TypeSubject.role) ? handleEdit : undefined}

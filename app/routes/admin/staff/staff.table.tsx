@@ -58,7 +58,7 @@ export const StaffTable = (props: Props) => {
             <TableHead>Correo</TableHead>
             <TableHead>Teléfono</TableHead>
             <TableHead>Rol</TableHead>
-            <TableHead className="sticky right-0 z-10 bg-white">Acciones</TableHead>
+            <TableHead className="sticky right-0 z-10 bg-card">Acciones</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -70,7 +70,7 @@ export const StaffTable = (props: Props) => {
               <TableCell>{item.user.email}</TableCell>
               <TableCell>{item.user.phone?.join(", ")}</TableCell>
               <TableCell>{item.user.role?.name}</TableCell>
-              <TableCell className="sticky right-0 z-10 bg-white">
+              <TableCell className="sticky right-0 z-10 bg-card">
                 <ActionButtons
                   item={item}
                   onEdit={hasPermission(TypeAction.update, TypeSubject.staff) ? handleEdit : undefined}

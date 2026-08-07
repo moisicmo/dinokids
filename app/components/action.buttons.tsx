@@ -45,16 +45,16 @@ export const ActionButtons = <T extends { id?: string; userId?: string }>({
           className="cursor-pointer"
         >
           {isSelected ? (
-            <ChevronUp color="var(--color-black)" className="w-5 h-5" />
+            <ChevronUp className="w-5 h-5 text-foreground" />
           ) : (
-            <ChevronDown color="var(--color-black)" className="w-5 h-5" />
+            <ChevronDown className="w-5 h-5 text-foreground" />
           )}
 
         </button>
       )}
       {onPayment && identifier && (
         (item as any).remainingBalance === 0 ? (
-          <span className="text-success text-secondary flex items-center gap-1 text-sm">
+          <span className="text-secondary flex items-center gap-1 text-sm">
             Sin deudas
           </span>
         ) : (
@@ -114,7 +114,7 @@ export const ActionButtons = <T extends { id?: string; userId?: string }>({
       )}
       {onReport && (
         <button onClick={() => onReport(item)} title="Hacer informe" className="cursor-pointer">
-          <FileText className="w-5 h-5 text-purple-500" />
+          <FileText color="var(--color-tertiary)" className="w-5 h-5" />
         </button>
       )}
     </div>

@@ -9,4 +9,5 @@ export interface AuthModel {
   refreshToken: string;
   role: RoleModel[];
   branches: BranchModel[];
+  superStaff: boolean;
 }

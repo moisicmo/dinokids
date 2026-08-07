@@ -42,124 +42,125 @@ const Login = () => {
 
   return (
     <>
-      <div className="min-h-screen flex">
-
-        {/* ── Panel izquierdo: branding ── */}
+      {/* "Jardín" — tarjeta centrada flotando sobre manchas verdes ambientales,
+          mismo lenguaje visual que el panel de marca anterior, ya no partido en dos. */}
+      <div
+        className="min-h-screen relative flex items-center justify-center overflow-hidden px-6 py-12"
+        style={{ backgroundColor: '#F7F4E9' }}
+      >
+        {/* Manchas decorativas */}
         <motion.div
-          className="hidden lg:flex lg:w-[45%] relative flex-col items-center justify-center p-12 overflow-hidden"
-          style={{ backgroundColor: '#6BA539' }}
-          initial={{ x: -60, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="absolute -top-24 -left-24 w-[340px] h-[340px] rounded-full"
+          style={{ backgroundColor: '#6BA539', opacity: 0.9 }}
+          initial={{ scale: 0.7, opacity: 0 }}
+          animate={{ scale: 1, opacity: 0.9 }}
+          transition={{ duration: 0.7, ease: 'easeOut' }}
+        />
+        <motion.div
+          className="absolute -bottom-20 right-[6%] w-[260px] h-[260px] rounded-full"
+          style={{ backgroundColor: '#4F7D2A', opacity: 0.55 }}
+          initial={{ scale: 0.7, opacity: 0 }}
+          animate={{ scale: 1, opacity: 0.55 }}
+          transition={{ duration: 0.7, delay: 0.05, ease: 'easeOut' }}
+        />
+        <motion.div
+          className="absolute top-[14%] right-[10%] w-[110px] h-[110px] rounded-full"
+          style={{ backgroundColor: '#B0008E', opacity: 0.7 }}
+          initial={{ scale: 0.6, opacity: 0 }}
+          animate={{ scale: 1, opacity: 0.7 }}
+          transition={{ duration: 0.6, delay: 0.15, ease: 'easeOut' }}
+        />
+        <motion.div
+          className="absolute bottom-[16%] left-[8%] w-[70px] h-[70px] rounded-full"
+          style={{ backgroundColor: '#6BA539', opacity: 0.5 }}
+          initial={{ scale: 0.6, opacity: 0 }}
+          animate={{ scale: 1, opacity: 0.5 }}
+          transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
+        />
+        <motion.div
+          className="absolute top-[38%] left-[4%] w-[170px] h-[170px] rounded-full"
+          style={{ backgroundColor: '#4F7D2A', opacity: 0.3 }}
+          initial={{ scale: 0.7, opacity: 0 }}
+          animate={{ scale: 1, opacity: 0.3 }}
+          transition={{ duration: 0.7, delay: 0.1, ease: 'easeOut' }}
+        />
+
+        {/* Tarjeta */}
+        <motion.div
+          className="relative z-10 w-full max-w-[400px] bg-card rounded-[26px] shadow-2xl px-9 py-10"
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
         >
-          {/* Circles decorativos — amigables */}
-          <div className="absolute -top-16 -left-16 w-64 h-64 rounded-full bg-white/10" />
-          <div className="absolute -bottom-16 -right-16 w-72 h-72 rounded-full bg-white/10" />
-          <div className="absolute top-1/4 right-8 w-24 h-24 rounded-full bg-white/10" />
-          <div className="absolute bottom-1/4 left-8 w-16 h-16 rounded-full bg-white/15" />
-          {/* Círculo acento magenta */}
-          <div
-            className="absolute top-8 right-12 w-12 h-12 rounded-full opacity-60"
-            style={{ backgroundColor: '#B0008E' }}
-          />
-
-          {/* Content */}
-          <div className="relative z-10 text-center text-white">
-            <motion.img
-              src={logo}
-              alt="DinoKids"
-              className="w-36 mx-auto mb-6 drop-shadow-lg"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-            />
-            <motion.p
-              className="text-white/85 text-base max-w-xs mx-auto leading-relaxed font-medium"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.35, duration: 0.5 }}
-            >
-              Sistema de gestión educativa
-            </motion.p>
+          {/* Logo */}
+          <div className="flex items-center gap-2.5 mb-6">
+            <img src={logo} alt="DinoKids" className="w-10" />
+            <span className="font-extrabold text-lg text-foreground">
+              Dino<span style={{ color: '#B0008E' }}>Kids</span>
+            </span>
           </div>
-        </motion.div>
 
-        {/* ── Panel derecho: formulario ── */}
-        <div className="flex-1 flex items-center justify-center bg-gray-50 px-6 py-12">
-          <motion.div
-            className="w-full max-w-sm"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.15 }}
-          >
-            {/* Logo mobile */}
-            <div className="flex flex-col items-center mb-8 lg:hidden">
-              <img src={logo} alt="DinoKids" className="w-20 mb-3" />
-              <h1 className="text-2xl font-bold" style={{ color: '#B0008E' }}>DinoKids</h1>
-            </div>
+          {/* Heading */}
+          <div className="mb-7">
+            <h2 className="text-2xl font-bold text-foreground">Bienvenido de vuelta</h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              Ingresa tus credenciales para acceder al sistema
+            </p>
+          </div>
 
-            {/* Heading */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900">Bienvenido de vuelta</h2>
-              <p className="text-sm text-gray-500 mt-1">
-                Ingresa tus credenciales para acceder al sistema
-              </p>
-            </div>
+          {/* Form */}
+          <form onSubmit={loginSubmit} className="space-y-5">
+            <InputCustom
+              name="email"
+              value={email}
+              type="email"
+              label="Correo electrónico"
+              placeholder="correo@ejemplo.com"
+              onChange={onInputChange}
+              error={!!emailValid && formSubmitted}
+              helperText={formSubmitted ? emailValid ?? '' : ''}
+            />
 
-            {/* Form */}
-            <form onSubmit={loginSubmit} className="space-y-5">
-              <InputCustom
-                name="email"
-                value={email}
-                type="email"
-                label="Correo electrónico"
-                placeholder="correo@ejemplo.com"
-                onChange={onInputChange}
-                error={!!emailValid && formSubmitted}
-                helperText={formSubmitted ? emailValid ?? '' : ''}
-              />
-
-              <InputCustom
-                name="password"
-                value={password}
-                type={showPassword ? 'text' : 'password'}
-                label="Contraseña"
-                placeholder="••••••••"
-                onChange={onInputChange}
-                error={!!passwordValid && formSubmitted}
-                helperText={formSubmitted ? passwordValid ?? '' : ''}
-                endAdornment={
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="text-gray-400 hover:text-gray-600 transition-colors"
-                  >
-                    {showPassword ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-                  </button>
-                }
-              />
-
-              <Button
-                type="submit"
-                className="w-full font-semibold h-11 text-sm text-white"
-                style={{ backgroundColor: '#B0008E' }}
-              >
-                Ingresar al sistema
-              </Button>
-
-              <div className="text-center pt-1">
+            <InputCustom
+              name="password"
+              value={password}
+              type={showPassword ? 'text' : 'password'}
+              label="Contraseña"
+              placeholder="••••••••"
+              onChange={onInputChange}
+              error={!!passwordValid && formSubmitted}
+              helperText={formSubmitted ? passwordValid ?? '' : ''}
+              endAdornment={
                 <button
                   type="button"
-                  onClick={() => setShowForgotPassword(true)}
-                  className="text-sm font-medium hover:underline transition-colors"
-                  style={{ color: '#B0008E' }}
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="text-muted-foreground hover:text-muted-foreground transition-colors"
                 >
-                  ¿Olvidaste tu contraseña?
+                  {showPassword ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                 </button>
-              </div>
-            </form>
-          </motion.div>
-        </div>
+              }
+            />
+
+            <Button
+              type="submit"
+              className="w-full font-semibold h-11 text-sm text-white"
+              style={{ backgroundColor: '#B0008E' }}
+            >
+              Ingresar al sistema
+            </Button>
+
+            <div className="text-center pt-1">
+              <button
+                type="button"
+                onClick={() => setShowForgotPassword(true)}
+                className="text-sm font-medium hover:underline transition-colors"
+                style={{ color: '#B0008E' }}
+              >
+                ¿Olvidaste tu contraseña?
+              </button>
+            </div>
+          </form>
+        </motion.div>
       </div>
 
       {showValidateEmail && (

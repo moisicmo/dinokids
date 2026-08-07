@@ -1,4 +1,4 @@
-import type { FormPermissionValidations, PermissionModel } from "..";
+import type { PermissionModel } from "..";
 
 export interface RoleRequest {
   name: string;
@@ -17,7 +17,7 @@ export const formRoleInit: FormRoleModel = {
 
 export interface FormRoleValidations {
   name: [(value: string) => boolean, string];
-  permissions: [(value: FormPermissionValidations[]) => boolean, string];
+  permissions: [(value: PermissionModel[]) => boolean, string];
 }
 
 

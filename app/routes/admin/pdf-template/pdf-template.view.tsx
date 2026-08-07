@@ -50,7 +50,7 @@ const PdfTemplateView = () => {
   return (
     <>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-gray-800">Plantillas PDF</h2>
+        <h2 className="text-xl font-semibold text-foreground">Plantillas PDF</h2>
         {hasPermission(TypeAction.create, TypeSubject.pdfTemplate) && (
           <Button onClick={() => setShowCreate(true)}>
             Nueva plantilla
@@ -58,14 +58,14 @@ const PdfTemplateView = () => {
         )}
       </div>
 
-      <p className="text-sm text-gray-500 mb-4">
+      <p className="text-sm text-muted-foreground mb-4">
         Crea y edita las plantillas para los documentos PDF que se generan automáticamente
         (contratos de inscripción, recibos, etc.). Marca una plantilla como <strong>predeterminada</strong> para
         que se use en la generación automática.
       </p>
 
       {loading ? (
-        <div className="flex justify-center py-12 text-gray-400">Cargando plantillas...</div>
+        <div className="flex justify-center py-12 text-muted-foreground">Cargando plantillas...</div>
       ) : (
         <PdfTemplateTable
           templates={templates}

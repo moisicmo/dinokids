@@ -68,7 +68,7 @@ export const InscriptionTable = (props: Props) => {
             <TableHead>Nombre</TableHead>
             <TableHead>Precios</TableHead>
             <TableHead>Asignaciones</TableHead>
-            <TableHead className="sticky right-0 z-10 bg-white">Acciones</TableHead>
+            <TableHead className="sticky right-0 z-10 bg-card">Acciones</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -81,11 +81,11 @@ export const InscriptionTable = (props: Props) => {
                   <div
                     key={price.id}
                   >
-                    <p className="text-sm text-gray-700">
+                    <p className="text-sm text-foreground">
                       <span className="font-medium">Costo de la inscripción:</span>{' '}
                       {price.inscriptionPrice} Bs
                     </p>
-                    <p className="text-sm text-gray-700">
+                    <p className="text-sm text-foreground">
                       <span className="font-medium">Costo de la mensualidad:</span>{' '}
                       {price.monthPrice} Bs
                     </p>
@@ -97,16 +97,16 @@ export const InscriptionTable = (props: Props) => {
                   {item.assignmentRooms.map((assignmentRoom) => (
                     <div
                       key={assignmentRoom.id}
-                      className="border border-gray-200 rounded-md p-3 shadow-sm bg-gray-50"
+                      className="border border-border rounded-md p-3 shadow-sm bg-muted"
                     >
-                      <p className="font-semibold text-sm text-gray-800 flex items-center gap-1">
-                        <CalendarClock className="w-4 h-4 text-gray-500" />
+                      <p className="font-semibold text-sm text-foreground flex items-center gap-1">
+                        <CalendarClock className="w-4 h-4 text-muted-foreground" />
                         {`${assignmentRoom.room.name} - ${assignmentRoom.room.specialty.name}`}
                       </p>
-                      <p className="text-xs text-gray-600 italic">
+                      <p className="text-xs text-muted-foreground italic">
                         Inicio: {format(new Date(assignmentRoom.start), 'dd-MMMM-yyyy', { locale: es })}
                       </p>
-                      <ul className="mt-2 list-disc list-inside text-sm text-gray-700 space-y-1">
+                      <ul className="mt-2 list-disc list-inside text-sm text-foreground space-y-1">
                         {assignmentRoom.assignmentSchedules.map((schedule) => (
                           <li key={schedule.id}>
                             {`${getDay(schedule.day)} de ${format(new Date(schedule.schedule.start), 'HH:mm', { locale: es })} a ${format(new Date(schedule.schedule.end), 'HH:mm', { locale: es })}`}
@@ -117,7 +117,7 @@ export const InscriptionTable = (props: Props) => {
                   ))}
                 </div>
               </TableCell>
-              <TableCell className="sticky right-0 z-10 bg-white">
+              <TableCell className="sticky right-0 z-10 bg-card">
                 <ActionButtons
                   item={item}
                   onEdit={hasPermission(TypeAction.update, TypeSubject.inscription) ? handleEdit : undefined}

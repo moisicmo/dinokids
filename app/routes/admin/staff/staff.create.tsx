@@ -1,6 +1,8 @@
-import { useEffect, useState, type FormEvent } from 'react';
-import { useForm, useRoleStore, useBranchStore } from '@/hooks';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useForm, useRoleStore, useBranchStore, useAuthStore } from '@/hooks';
 import { Button, SelectCustom, UserFormFields } from '@/components';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { type BranchModel, formStaffInit, formStaffValidations, type StaffModel, type StaffRequest } from '@/models';
 
 interface Props {
@@ -21,11 +23,18 @@ export const StaffCreate = (props: Props) => {
   } = props;
   const { dataRole, getRoles } = useRoleStore();
   const { dataBranch, getBranches } = useBranchStore();
+  const { isSuperAdmin } = useAuthStore();
+
+  const initialForm = useMemo(
+    () => (item ? { ...item, role: item.user.role ?? null } : formStaffInit),
+    [item],
+  );
 
   const {
     user,
     role,
     branches,
+    superStaff,
     onInputChange,
     onResetForm,
     isFormValid,
@@ -33,7 +42,7 @@ export const StaffCreate = (props: Props) => {
     userValid,
     roleValid,
     branchesValid,
-  } = useForm(item ?? formStaffInit, formStaffValidations);
+  } = useForm(initialForm, formStaffValidations);
 
   const [formSubmitted, setFormSubmitted] = useState(false);
 
@@ -53,6 +62,7 @@ export const StaffCreate = (props: Props) => {
         roleId: role?.id ?? '',
         brancheIds: branches.map((branch: BranchModel) => branch.id),
         numberCard: user.numberCard? user.numberCard.trim() :null,
+        ...(isSuperAdmin ? { superStaff } : {}),
       });
     } else {
       await onUpdate(item.userId, {
@@ -65,6 +75,7 @@ export const StaffCreate = (props: Props) => {
         roleId: role?.id ?? '',
         brancheIds: branches.map((branch: BranchModel) => branch.id),
         numberCard: user.numberCard? user.numberCard.trim() :null,
+        ...(isSuperAdmin ? { superStaff } : {}),
       });
     }
 
@@ -78,17 +89,16 @@ export const StaffCreate = (props: Props) => {
     }
   }, [item]);
 
-  if (!open) return null;
-
   useEffect(() => {
     getRoles();
     getBranches();
   }, [])
 
+  if (!open) return null;
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
+      <div className="bg-card rounded-lg w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-bold mb-4">
           {item ? `Editar ${item.user.name}` : 'Nuevo Staff'}
         </h2>
@@ -132,13 +142,25 @@ export const StaffCreate = (props: Props) => {
             error={!!branchesValid && formSubmitted}
             helperText={formSubmitted ? branchesValid : ''}
           />
+          {isSuperAdmin && (
+            <div className="flex items-center gap-2">
+              <Switch
+                id="superStaff"
+                checked={!!superStaff}
+                onCheckedChange={(checked) => onValueChange('superStaff', checked)}
+              />
+              <Label htmlFor="superStaff" className="text-sm">
+                Super Administrador (acceso a todas las sucursales)
+              </Label>
+            </div>
+          )}
           <div className="flex justify-end gap-2 pt-2">
             <Button
               onClick={() => {
                 onResetForm();
                 handleClose();
               }}
-              color='bg-gray-400'
+              color='bg-muted'
             >
               Cancelar
             </Button>

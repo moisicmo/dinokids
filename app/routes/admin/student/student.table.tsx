@@ -1,22 +1,24 @@
 import { useEffect, useState } from 'react';
-import { TypeAction, TypeSubject, type BaseResponse, type StudentModel } from '@/models';
+import { StudentStatus, TypeAction, TypeSubject, type BaseResponse, type StudentModel } from '@/models';
 import { useDebounce, usePermissionStore } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
-import { ActionButtons, InputCustom } from '@/components';
-import React from 'react';
-import { DebtTable, DocumentEditor } from '.';
+import { ActionButtons, InputCustom, SelectCustom, type ValueSelect } from '@/components';
+import { DocumentEditor } from '.';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 interface Props {
   handleEdit: (student: StudentModel) => void;
   limitInit?: number;
   dataStudent: BaseResponse<StudentModel>;
-  onRefresh: (page?: number, limit?: number, keys?: string) => void;
+  onRefresh: (page?: number, limit?: number, keys?: string, status?: string) => void;
   onDelete: (id: string) => void;
   onSessionTracking?: (student: StudentModel) => void;
   onWeeklyPlanning?: (student: StudentModel) => void;
   onEvaluationPlanning?: (student: StudentModel) => void;
 }
+
+const statusOptions: ValueSelect[] = Object.entries(StudentStatus).map(([key, value]) => ({ id: key, value }));
+const statusFilterOptions: ValueSelect[] = [{ id: '', value: 'Todos los estados' }, ...statusOptions];
 
 export const StudentTable = (props: Props) => {
   const {
@@ -32,9 +34,9 @@ export const StudentTable = (props: Props) => {
 
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(limitInit);
-  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [reportStudent, setReportStudent] = useState<StudentModel | null>(null);
   const [query, setQuery] = useState('');
+  const [status, setStatus] = useState('');
   const debouncedQuery = useDebounce(query, 500);
   const { hasPermission } = usePermissionStore();
   useEffect(() => {
@@ -45,27 +47,30 @@ export const StudentTable = (props: Props) => {
   }, [dataStudent.total, rowsPerPage]);
 
   useEffect(() => {
-    onRefresh(page, rowsPerPage, debouncedQuery);
-  }, [page, rowsPerPage, debouncedQuery]);
-
-  const handleSelect = async (id: string) => {
-    if (expandedId === id) {
-      // Si ya está abierto, ciérralo
-      setExpandedId(null);
-      return;
-    }
-    setExpandedId(id);
-  };
+    onRefresh(page, rowsPerPage, debouncedQuery, status);
+  }, [page, rowsPerPage, debouncedQuery, status]);
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center gap-3">
         <InputCustom
           name="query"
           value={query}
           placeholder="Buscar estudiante..."
           onChange={(e) => setQuery(e.target.value)}
         />
+        <div className="w-48">
+          <SelectCustom
+            label=""
+            options={statusFilterOptions}
+            selected={statusFilterOptions.find((opt) => opt.id === status) ?? null}
+            onSelect={(value) => {
+              if (value && !Array.isArray(value)) {
+                setStatus(value.id);
+              }
+            }}
+          />
+        </div>
       </div>
       <Table className='mb-3'>
         <TableHeader>
@@ -76,41 +81,32 @@ export const StudentTable = (props: Props) => {
             <TableHead>Correo</TableHead>
             <TableHead>Colegio</TableHead>
             <TableHead>Grado</TableHead>
-            <TableHead className="sticky right-0 z-10 bg-white">Acciones</TableHead>
+            <TableHead>Estado</TableHead>
+            <TableHead className="sticky right-0 z-10 bg-card">Acciones</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {dataStudent.data.map((item) => (
-            <React.Fragment key={item.userId}>
-              <TableRow>
-                <TableCell>{item.code}</TableCell>
-                <TableCell>{item.user.numberDocument}</TableCell>
-                <TableCell>{`${item.user.name} ${item.user.lastName}`}</TableCell>
-                <TableCell>{item.user.email}</TableCell>
-                <TableCell>{item.school?.name}</TableCell>
-                <TableCell>{`${item?.grade}º ${item?.educationLevel}`}</TableCell>
-                <TableCell className="sticky right-0 z-10 bg-white">
-                  <ActionButtons
-                    item={item}
-                    onSelect={handleSelect}
-                    isSelected={expandedId === item.userId}
-                    onEdit={hasPermission(TypeAction.update, TypeSubject.student) ? handleEdit : undefined}
-                    onDelete={hasPermission(TypeAction.delete, TypeSubject.student) ? onDelete : undefined}
-                    onSessionTracking={hasPermission(TypeAction.create, TypeSubject.sessionTracking) ? onSessionTracking : undefined}
-                    onWeeklyPlanning={hasPermission(TypeAction.create, TypeSubject.weeklyPlanning) ? onWeeklyPlanning : undefined}
-                    onEvaluationPlanning={hasPermission(TypeAction.create, TypeSubject.evaluationPlanning) ? onEvaluationPlanning : undefined}
-                    onReport={(s) => setReportStudent(s)}
-                  />
-                </TableCell>
-              </TableRow>
-              {expandedId === item.userId && (
-                <TableRow className="bg-gray-50">
-                  <TableCell colSpan={12} className="p-0">
-                    <DebtTable studentId={expandedId} />
-                  </TableCell>
-                </TableRow>
-              )}
-            </React.Fragment>
+            <TableRow key={item.userId}>
+              <TableCell>{item.code}</TableCell>
+              <TableCell>{item.user.numberDocument}</TableCell>
+              <TableCell>{`${item.user.name} ${item.user.lastName}`}</TableCell>
+              <TableCell>{item.user.email}</TableCell>
+              <TableCell>{item.school?.name}</TableCell>
+              <TableCell>{`${item?.grade}º ${item?.educationLevel}`}</TableCell>
+              <TableCell>{item.status}</TableCell>
+              <TableCell className="sticky right-0 z-10 bg-card">
+                <ActionButtons
+                  item={item}
+                  onEdit={hasPermission(TypeAction.update, TypeSubject.student) ? handleEdit : undefined}
+                  onDelete={hasPermission(TypeAction.delete, TypeSubject.student) ? onDelete : undefined}
+                  onSessionTracking={hasPermission(TypeAction.create, TypeSubject.sessionTracking) ? onSessionTracking : undefined}
+                  onWeeklyPlanning={hasPermission(TypeAction.create, TypeSubject.weeklyPlanning) ? onWeeklyPlanning : undefined}
+                  onEvaluationPlanning={hasPermission(TypeAction.create, TypeSubject.evaluationPlanning) ? onEvaluationPlanning : undefined}
+                  onReport={(s) => setReportStudent(s)}
+                />
+              </TableCell>
+            </TableRow>
           ))}
         </TableBody>
       </Table>

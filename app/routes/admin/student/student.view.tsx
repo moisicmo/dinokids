@@ -24,7 +24,7 @@ const studentView = () => {
     <>
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-gray-800">Estudiantes</h2>
+        <h2 className="text-xl font-semibold text-foreground">Estudiantes</h2>
         {
           hasPermission(TypeAction.create, TypeSubject.student) &&
           <Button

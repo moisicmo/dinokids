@@ -1,4 +1,4 @@
-import { EducationLevel, Gender, type InscriptionModel, type TutorModel, type UserModel } from "..";
+import { EducationLevel, Gender, StudentStatus, type InscriptionModel, type TutorModel, type UserModel } from "..";
 
 export interface StudentModel {
   userId: string;
@@ -15,6 +15,8 @@ export interface StudentModel {
   };
   grade: number;
   educationLevel: EducationLevel;
+  status: StudentStatus;
+  abandonedAt: string | null;
   tutors: TutorModel[];
   user: UserModel;
   inscriptions: InscriptionModel[];

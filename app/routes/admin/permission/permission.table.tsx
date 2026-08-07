@@ -1,29 +1,22 @@
 import { useEffect, useState } from 'react';
-import { TypeAction, TypeSubject, type BaseResponse, type PermissionModel } from '@/models';
+import { TypeAction, type BaseResponse, type PermissionModel } from '@/models';
 import { useDebounce } from '@/hooks';
 import { PaginationControls } from '@/components/pagination.control';
-import { ActionButtons, InputCustom } from '@/components';
+import { InputCustom } from '@/components';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 interface Props {
-  handleEdit: (permission: PermissionModel) => void;
   limitInit?: number;
-  itemSelect?: (permission: PermissionModel) => void;
   dataRole: BaseResponse<PermissionModel>;
   onRefresh: (page?: number, limit?: number, keys?: string) => void;
-  onDelete: (id: string) => void;
 }
 
 export const PermissionTable = (props: Props) => {
   const {
-    handleEdit,
-    itemSelect,
     limitInit = 10,
     dataRole,
     onRefresh,
-    onDelete,
   } = props;
-
 
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(limitInit);

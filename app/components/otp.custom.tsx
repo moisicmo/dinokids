@@ -68,14 +68,14 @@ export const OtpCustom = ({
             onKeyDown={(e) => handleKeyDown(i, e)}
             className={cn(
               "w-12 h-12 text-center text-lg font-semibold tracking-widest",
-              error ? "border-red-500" : "border-gray-300",
+              error ? "border-destructive" : "border-input",
               className
             )}
           />
         ))}
       </div>
       {helperText && (
-        <p className={cn("text-sm text-center", error ? "text-red-600" : "text-muted-foreground")}>
+        <p className={cn("text-sm text-center", error ? "text-destructive" : "text-muted-foreground")}>
           {helperText}
         </p>
       )}

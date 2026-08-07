@@ -63,8 +63,8 @@ export const RoomTable = (props: Props) => {
               <TableHead>Especialidad</TableHead>
               <TableHead>Profesor</TableHead>
               <TableHead>Auxiliar</TableHead>
-              <TableHead className="sticky right-0 z-10 bg-white">Horario</TableHead>
-              <TableHead className="sticky right-0 z-10 bg-white">Acciones</TableHead>
+              <TableHead className="sticky right-0 z-10 bg-card">Horario</TableHead>
+              <TableHead className="sticky right-0 z-10 bg-card">Acciones</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -88,7 +88,7 @@ export const RoomTable = (props: Props) => {
                     <CalendarClock color="var(--color-info)" className="w-5 h-5" />
                   </button>
                 </TableCell>
-                <TableCell className="sticky right-0 z-10 bg-white">
+                <TableCell className="sticky right-0 z-10 bg-card">
                   <ActionButtons
                     item={room}
                     onEdit={hasPermission(TypeAction.update, TypeSubject.room) ? handleEdit : undefined}

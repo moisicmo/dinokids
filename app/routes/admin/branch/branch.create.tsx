@@ -70,7 +70,7 @@ export const BranchCreate = (props: Props) => {
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
+      <div className="bg-card rounded-lg w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-bold mb-4">
           {item ? 'Editar Sucursal' : 'Nueva Sucursal'}
         </h2>
@@ -125,7 +125,7 @@ export const BranchCreate = (props: Props) => {
             >Cancelar</Button>
             <Button
               type='submit'
-              color='bg-gray-400'
+              color='bg-muted'
             >{item ? 'Editar' : 'Crear'}</Button>
           </div>
         </form>

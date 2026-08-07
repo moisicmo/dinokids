@@ -46,6 +46,7 @@ export const InscriptionCreate = (props: Props) => {
     isFormValid,
     onValueChange,
     onArrayChange,
+    onDecimalChange,
     studentValid,
     inscriptionPriceValid,
     monthPriceValid,
@@ -113,7 +114,7 @@ export const InscriptionCreate = (props: Props) => {
   return (
     <>
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6">
+      <div className="bg-card rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6">
         <h2 className="text-xl font-bold mb-4">
           {item ? 'Editar inscripción' : 'Nueva Inscripción'}
         </h2>
@@ -164,9 +165,9 @@ export const InscriptionCreate = (props: Props) => {
                     name="inscriptionPrice"
                     value={inscriptionPrice}
                     label="Precio de la inscripción"
-                    onChange={onInputChange}
                     error={!!inscriptionPriceValid && formSubmitted}
                     helperText={formSubmitted ? inscriptionPriceValid : ''}
+                    {...onDecimalChange('inscriptionPrice')}
                   />
                 </div>
                 <div className="flex-1">
@@ -174,9 +175,9 @@ export const InscriptionCreate = (props: Props) => {
                     name="monthPrice"
                     value={monthPrice}
                     label="Precio de la mensualidad"
-                    onChange={onInputChange}
                     error={!!monthPriceValid && formSubmitted}
                     helperText={formSubmitted ? monthPriceValid : ''}
+                    {...onDecimalChange('monthPrice')}
                   />
                 </div>
               </div>

@@ -55,7 +55,7 @@ export const BranchTable = (props: Props) => {
             <TableHead>Nombre</TableHead>
             <TableHead>Dirección</TableHead>
             <TableHead>Teléfono</TableHead>
-            <TableHead className="sticky right-0 z-10 bg-white">Acciones</TableHead>
+            <TableHead className="sticky right-0 z-10 bg-card">Acciones</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -64,7 +64,7 @@ export const BranchTable = (props: Props) => {
               <TableCell>{item.name}</TableCell>
               <TableCell>{`${item.address.city} ${item.address.zone}/${item.address.detail}`}</TableCell>
               <TableCell>{item.phone}</TableCell>
-              <TableCell className="sticky right-0 z-10 bg-white">
+              <TableCell className="sticky right-0 z-10 bg-card">
                 <ActionButtons
                   item={item}
                   onEdit={hasPermission(TypeAction.update, TypeSubject.branch) ? handleEdit : undefined}

@@ -28,7 +28,7 @@ export const BodyForm = ({
         return (
           <div
             key={q.question}
-            className="bg-white border rounded-xl p-3"
+            className="bg-card border rounded-xl p-3"
           >
             <label className="block font-semibold mb-3">
               {q.question}
@@ -70,9 +70,11 @@ export const BodyForm = ({
             )}
 
             {(q.typeAnswer === "yes_no" ||
-              q.typeAnswer === "scale_3") && (
+              q.typeAnswer === "yes_no_comment" ||
+              q.typeAnswer === "scale_3" ||
+              q.typeAnswer === "scale_3_comment") && (
                 <div className="flex gap-3 mt-2">
-                  {(q.typeAnswer === "yes_no"
+                  {(q.typeAnswer === "yes_no" || q.typeAnswer === "yes_no_comment"
                     ? ["Sí", "No"]
                     : ["No Adquirido", "En Proceso", "Adquirido"]
                   ).map((opt) => (
@@ -107,7 +109,7 @@ export const BodyForm = ({
                     e.target.value
                   )
                 }
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                className="w-full border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-info-300"
               >
                 <option value="">— Seleccionar —</option>
                 {q.options.map((opt) => (

@@ -1,48 +1,26 @@
-import { useCallback, useState } from 'react';
-import type { PermissionModel } from '@/models';
-import { PermissionCreate, PermissionTable } from '.';
-import { Button } from '@/components';
+import { PermissionTable } from '.';
 import { usePermissionStore } from '@/hooks';
 
+// Catálogo de solo lectura — el backend nunca expuso create/update/delete
+// para Permission (PermissionController solo tiene @Get), es intencional:
+// los permisos son estructurales y se administran desde el seed, no desde
+// el panel. Lo que sí se edita acá es qué permisos tiene cada Rol
+// (routes/admin/role), este listado es solo la referencia.
 const permissionView = () => {
-    const { dataPermission, getPermissions,createPermission, updatePermission, deletePermission } = usePermissionStore();
-
-  const [openDialog, setOpenDialog] = useState(false);
-  const [itemEdit, setItemEdit] = useState<PermissionModel | null>(null);
-
-  const handleDialog = useCallback((value: boolean) => {
-    if (!value) setItemEdit(null);
-    setOpenDialog(value);
-  }, []);
+  const { dataPermission, getPermissions } = usePermissionStore();
 
   return (
     <>
       {/* Encabezado */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-gray-800">Permisos</h2>
+        <h2 className="text-xl font-semibold text-foreground">Permisos</h2>
       </div>
 
-      {/* Tabla de role */}
+      {/* Tabla de permisos */}
       <PermissionTable
-        handleEdit={(v) => {
-          setItemEdit(v);
-          handleDialog(true);
-        }}
         dataRole={dataPermission}
         onRefresh={getPermissions}
-        onDelete={deletePermission}
       />
-
-      {/* Dialogo para crear o editar */}
-      {openDialog && (
-        <PermissionCreate
-          open={openDialog}
-          handleClose={() => handleDialog(false)}
-          item={itemEdit == null ? null : { ...itemEdit }}
-          onCreate={createPermission}
-          onUpdate={updatePermission}
-        />
-      )}
     </>
   );
 };

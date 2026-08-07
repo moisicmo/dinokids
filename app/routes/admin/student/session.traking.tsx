@@ -116,7 +116,7 @@ export const SessionTrackingModal = ({
   
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg w-full max-w-6xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-card rounded-lg w-full max-w-6xl max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <h2 className="text-xl font-bold mb-4">
             Seguimiento de Sesiones
@@ -195,7 +195,7 @@ export const SessionTrackingModal = ({
                 <div className="flex items-center justify-center">
                   <Button
                     type="button"
-                    color="bg-red-400"
+                    color="bg-error-400"
                     onClick={() => removeRow(index)}
                   >
                     ✕
@@ -207,7 +207,7 @@ export const SessionTrackingModal = ({
             <Button
               type="button"
               onClick={addRow}
-              color="bg-blue-500"
+              color="bg-info-1000"
             >
               + Agregar sesión
             </Button>
@@ -215,7 +215,7 @@ export const SessionTrackingModal = ({
             <div className="flex justify-end gap-2 pt-4">
               <Button
                 type="button"
-                color="bg-gray-400"
+                color="bg-muted"
                 onClick={() => {
                   onResetForm();
                   onClose();

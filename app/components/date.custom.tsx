@@ -1,4 +1,8 @@
 import { memo, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 interface Props {
   id?: string;
@@ -112,37 +116,32 @@ export const DateTimePickerCustom = memo((props: Props) => {
   return (
     <div className="mb-4 w-full">
       {label && (
-        <label htmlFor={id || name} className="block text-sm font-medium text-gray-700">
+        <Label htmlFor={id || name} className="block mb-1">
           {label}
-        </label>
+        </Label>
       )}
       {mode === 'time' ? (
-        <select
-          id={id || name}
-          name={name}
+        <Select
           value={value ? formatValue() : ''}
-          onChange={handleChange}
-          className={`
-            mt-1 block w-full rounded-md border px-3 py-2 text-sm
-            focus:outline-none focus:ring-2
-            focus:ring-[var(--color-primary)]
-            focus:border-[var(--color-primary)]
-            accent:color-[var(--color-primary)]
-            ${error ? 'border-red-500' : 'border-gray-300'}
-            ${className}
-          `}
+          onValueChange={(time) => handleChange({ target: { value: time } } as React.ChangeEvent<HTMLSelectElement>)}
+          disabled={disabled}
         >
-          <option value="" disabled={value !== null}>
-            {placeholder || 'Seleccione una hora'}
-          </option>
-          {timeOptions.map((time) => (
-            <option key={time} value={time}>
-              {time}
-            </option>
-          ))}
-        </select>
+          <SelectTrigger
+            id={id || name}
+            className={cn("w-full", error && "border-destructive", className)}
+          >
+            <SelectValue placeholder={placeholder || 'Seleccione una hora'} />
+          </SelectTrigger>
+          <SelectContent>
+            {timeOptions.map((time) => (
+              <SelectItem key={time} value={time}>
+                {time}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       ) : (
-        <input
+        <Input
           id={id || name}
           name={name}
           type={inputType}
@@ -153,19 +152,11 @@ export const DateTimePickerCustom = memo((props: Props) => {
           disabled={disabled}
           min={min}
           max={max}
-          className={`
-            mt-1 block w-full rounded-md border px-3 py-2 text-sm
-            focus:outline-none focus:ring-2
-            focus:ring-[var(--color-primary)]
-            focus:border-[var(--color-primary)]
-            accent:color-[var(--color-primary)]
-            ${error ? 'border-red-500' : 'border-gray-300'}
-            ${className}
-          `}
+          className={cn(error && "border-destructive", className)}
         />
       )}
       {helperText && (
-        <p className={`text-sm mt-1 ${error ? 'text-error' : 'text-gray-500'}`}>
+        <p className={cn("text-sm mt-1", error ? "text-destructive" : "text-muted-foreground")}>
           {helperText}
         </p>
       )}

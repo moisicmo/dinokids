@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { usePermissionStore, useReportStore } from "@/hooks";
-import { usePrintStore } from "@/hooks/usePrint";
+import { usePrintStore } from "@/hooks";
 import { useState } from "react";
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -81,7 +81,7 @@ const ReportInscription = () => {
               <Button
                 variant="outline"
                 onClick={handleDownload}
-                className="flex items-center gap-2 border-green-500 text-green-600 hover:bg-green-50"
+                className="flex items-center gap-2 border-secondary-500 text-secondary-600 hover:bg-secondary-100"
               >
                 <Download className="w-4 h-4" />
                 Descargar XLSX
@@ -97,7 +97,7 @@ const ReportInscription = () => {
             <div className="flex items-center justify-between">
               <h3 className="text-base font-semibold">
                 Vista Previa
-                <span className="ml-2 text-sm font-normal text-gray-400">
+                <span className="ml-2 text-sm font-normal text-muted-foreground">
                   {previewData.length} registro{previewData.length !== 1 ? 's' : ''}
                 </span>
               </h3>
@@ -114,7 +114,7 @@ const ReportInscription = () => {
               <TableBody>
                 {previewData.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={3} className="text-center text-gray-400 py-8">
+                    <TableCell colSpan={3} className="text-center text-muted-foreground py-8">
                       No hay inscripciones en el rango seleccionado.
                     </TableCell>
                   </TableRow>
